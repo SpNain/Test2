@@ -1,0 +1,37 @@
+body{
+  background: linear-gradient(45deg,black,gray);
+  background-attachment: fixed;
+}
+
+.transparent-container{
+  background: black;
+  box-shadow: 0 0 10px rgb(255, 255, 255);
+}
+
+.button{
+  width: 30%;
+  background: transparent;
+  border-radius: 30px;
+  cursor: pointer;
+  color: white;
+}
+
+.button:hover{
+  background-color: white;
+  box-shadow: 0 0 13px #fff;
+  color: black;
+}
+
+input[placeholder]:focus{
+  box-shadow: 0 0 10px #060606;
+}
+
+.card{
+  margin: 5px;
+  background: rgba(0,0,0,0.3);
+  color: white;
+  border-color: white;
+  border-radius: 20px;
+  padding: 10px;
+  width: 300px;
+}
