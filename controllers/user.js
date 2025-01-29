@@ -12,13 +12,13 @@ exports.getFormPage = async(request,response,next)=>{
 exports.addUserDetails = async(request,response,next)=>{
     try {
         console.log(request.body);
-        const { name, email, phone, date } = request.body;
+        const { userName, userEmail, userPhone, userDate} = request.body;
         console.log("add user details fxn");
         let userd = await userDetails.create({
-            Name:name,
-            Email:email,
-            Phone:phone,
-            Date:date
+            Name:userName,
+            Email:userEmail,
+            Phone:userPhone,
+            Date:userDate
         })
         console.log(userd);
         response.redirect('/user/appointments');
