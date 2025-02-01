@@ -5,7 +5,7 @@ exports.getHomePage = async(req,res,next)=>{
     try{
         res.sendFile('index.html',{root:'views/user'})
     }catch(err){
-        console.log("error in getting home page", err);
+        console.error(err);
         res.status(500).json({
             error:err
           })
@@ -14,10 +14,11 @@ exports.getHomePage = async(req,res,next)=>{
 
 exports.addAttendanceDataWithDate = async (req, res) => {
     try {
-        const { Date, combinedStatus } = req.body;
+        const { date, combinedStatus } = req.body;
         console.log("aadwd")
+        console.log(date)
 
-        if (!Date || !combinedStatus || typeof combinedStatus !== "object") {
+        if (!date || !combinedStatus || typeof combinedStatus !== "object") {
             return res.status(400).json({ message: "Invalid request data" });
         }
 
@@ -48,15 +49,39 @@ exports.addAttendanceDataWithDate = async (req, res) => {
             if (status) {
                 // Use Sequelize magic method to create attendance entry
                 await student.createAttendance({
-                    date: Date,
+                    date: date,
                     status: status
                 });
             }
         }
 
-        res.status(201).json({ message: "Attendance recorded successfully" });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
+        res.status(200).json({ message : "Attendance data saved successfully" });
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error:err });
+    }
+}
+
+exports.getDateUI = async (req, res) => {
+    try{
+        const { date } = req.params;
+
+        const attendanceData = await Attendance.findAll({ where: { date }, include: Student });
+
+        if (attendanceData.length > 0) {
+            res.json({ attendanceData: attendanceData.map(ele => ({ id: ele.Student.id, name: ele.Student.name, status: ele.status })) });
+        } else {
+            const allStudents = await Student.findAll();
+            if(allStudents.length > 0)
+                res.json({ allStudents: allStudents.map(student => ({ id: student.id, name: student.name })) });
+            else
+                res.json({ noStudent: [] });
+        }
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            error:err
+          })
     }
 }
