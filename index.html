@@ -15,20 +15,20 @@
     <div class="container mt-3">
         <div class="row d-flex align-items-center" id="menu-container">
             <!-- Left Section (Date Input & Search Button) -->
-            <div class="col-md-7 d-flex gap-2 align-items-center">
+            <div class="col-md-6 d-flex align-items-center gap-2 m-1">
                 <label for="date" ><b>Select Date:</b></label>
                 <input type="date" class="form-control w-50" id="dateInput">
                 <button class="btn btn-primary" onclick="fetchStudents()">Search</button>
             </div>
             <!-- Right Section (Fetch Buttons) -->
-            <div class="col-md-5 d-flex justify-content-around">
+            <div class="col-md-5 d-flex justify-content-around gap-2 m-1">
                 <button class="btn btn-warning text-white">Fetch Students Details</button>
                 <button class="btn btn-success">Fetch Attendance Report</button>
             </div>
         </div>
     </div>
 
-    <div class="container mt-5 d-flex justify-content-center flex-column align-items-center" id="data-container">
+    <div class="container mt-5 d-flex justify-content-center flex-column" id="data-container">
         <h1>1. Select a date.</h1>
         <h1>2. Click on search button.</h1>
     </div>

@@ -27,12 +27,12 @@ function fetchStudents() {
             <label class="col-4">${user.name}</label>
             <div class="col-3">
             <label for="${user.id}_present">
-            <input type="radio" id="${user.id}_present" name="${user.id}" value="✅ Present" required> Present
+            <input class="form-control" type="radio" id="${user.id}_present" name="${user.id}" value="✅ Present" required> Present
             </label>
             </div>
             <div class="col-3">
             <label for="${user.id}_absent">
-            <input type="radio" id="${user.id}_absent" name="${user.id}" value="❌ Absent"> Absent
+            <input class="form-control" type="radio" id="${user.id}_absent" name="${user.id}" value="❌ Absent"> Absent
             </label>
             </div>
         </div>
@@ -42,14 +42,13 @@ function fetchStudents() {
 
   form.innerHTML += `
     <div class="row mt-5 d-flex justify-content-center">
-    <button type="submit" class="btn btn-info col-2">Mark Attendance</button>
+    <button class="form-control" type="submit" class="btn btn-info col-2">Mark Attendance</button>
     </div>`;
 
   document.getElementById("data-container").replaceChildren(form);
 }
 
 function submitAttendance(event) {
-
   event.preventDefault(); // Prevent page refresh
 
   const formData = new FormData(event.target); // Get form data
@@ -65,21 +64,19 @@ function submitAttendance(event) {
 }
 
 function displayAttendance(attendanceData) {
-
   const arDiv = document.createElement("div");
 
   arDiv.id = "arDiv";
-    arDiv.className = "w-100";
-    
-    for (let key in attendanceData) {
-        arDiv.innerHTML += `
+  arDiv.className = "w-100";
+
+  for (let key in attendanceData) {
+    arDiv.innerHTML += `
         <div class="user row mt-3">
-        <p class="col-4">${key}</p>
-        <p class="col-8">${attendanceData[key]}</p>
+        <p class="col-6">${key}</p>
+        <p class="col-6">${attendanceData[key]}</p>
         </div>
-        `
-    }
+        `;
+  }
 
   document.getElementById("data-container").replaceChildren(arDiv);
-
 }
