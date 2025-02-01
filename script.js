@@ -27,12 +27,12 @@ function fetchStudents() {
             <label class="col-4">${user.name}</label>
             <div class="col-3">
             <label for="${user.id}_present">
-            <input class="form-control" type="radio" id="${user.id}_present" name="${user.id}" value="✅ Present" required> Present
+            <input type="radio" id="${user.id}_present" name="${user.id}" value="✅ Present" required> Present
             </label>
             </div>
             <div class="col-3">
             <label for="${user.id}_absent">
-            <input class="form-control" type="radio" id="${user.id}_absent" name="${user.id}" value="❌ Absent"> Absent
+            <input type="radio" id="${user.id}_absent" name="${user.id}" value="❌ Absent"> Absent
             </label>
             </div>
         </div>
@@ -42,7 +42,7 @@ function fetchStudents() {
 
   form.innerHTML += `
     <div class="row mt-5 d-flex justify-content-center">
-    <button class="form-control" type="submit" class="btn btn-info col-2">Mark Attendance</button>
+    <button type="submit" class="btn btn-info col-2">Mark Attendance</button>
     </div>`;
 
   document.getElementById("data-container").replaceChildren(form);
