@@ -1,169 +1,111 @@
-let url =
-  "http://localhost:3000";
+const API_URL = "http://localhost:3000";
 
-const nameInput = document.querySelector("#name");
-const emailInput = document.querySelector("#email");
-const phoneInput = document.querySelector("#phone");
-const dateInput = document.querySelector("#date");
+async function fetchStudents() {
+  const date = document.getElementById("dateInput").value;
+  if (!date) return alert("Please select a date");
 
-const bookingForm = document.querySelector("#bookingForm");
-bookingForm.addEventListener("submit", onSubmit);
+  const form = document.createElement("form");
 
-window.addEventListener("DOMContentLoaded", refresh);
+  // Set attributes
+  form.id = "attendanceForm";
+  form.className = "w-100";
 
-async function refresh() {
+  // Why form.onsubmit = submitAttendance(event); Fails? because in this way submitAttendance(event) immediately executes the function and didn't wait for the form to be submitted. 
+  form.onsubmit = function (event) {
+    submitAttendance(event,date);
+  };
+
+  // console.log(form);
+
   try {
-    let response = await axios.get(`${url}/user/allappointments`);
+    let response = await axios.get(`${API_URL}/student/allstudents`);
     console.log(response.data);
-    for (let i = 0; i < response.data.length; i++) {
-      displayUserOnScreen(response.data[i]);
-    }
-  } catch (error) {
+
+    let allStudents = response.data;
+    allStudents.forEach((student) => {
+      form.innerHTML += `
+          <div class="row mt-3">
+              <label class="col-4">${student.name}</label>
+              <div class="col-3">
+              <label for="${student.id}_present">
+              <input type="radio" id="${student.id}_present" name="${student.id}" value="Present" required> Present
+              </label>
+              </div>
+              <div class="col-3">
+              <label for="${student.id}_absent">
+              <input type="radio" id="${student.id}_absent" name="${student.id}" value="Absent"> Absent
+              </label>
+              </div>
+          </div>`;
+    });
+  }
+  catch (error) {
     console.log(error);
   }
-}
 
-function onSubmit(event) {
-  event.preventDefault();
+  // let user = [
+  //   { name: "A", id: "1" },
+  //   { name: "B", id: "2" },
+  //   { name: "C", id: "3" },
+  //   { name: "D", id: "4" },
+  //   { name: "E", id: "5" },
+  // ];
 
-  addDetailsCard();
-
-  nameInput.value = "";
-  emailInput.value = "";
-  phoneInput.value = "";
-  dateInput.value = "";
-}
-
-async function addDetailsCard() {
-  console.log("addDetailsCard run")
-  let userDetailsObj = {
-    userName: `${nameInput.value}`,
-    userEmail: `${emailInput.value}`,
-    userPhone: `${phoneInput.value}`,
-    userDate: `${dateInput.value}`
-    // uniqueKey: `${new Date().getTime()}`,
-  };
-  console.log(userDetailsObj);
   
-  if (
-    userDetailsObj.userName == "" ||
-    userDetailsObj.userPhone == "" ||
-    userDetailsObj.userEmail == ""
-  ) {
-    alert(`Fill all the details`);
-  } else {
-    try {
-      console.log(userDetailsObj);
-      let response = await axios.post(`${url}/user/appointments`, userDetailsObj);
-      console.log(response.data);
-      displayUserOnScreen(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-}
 
-async function deleteDetailsCard(id) {
-
-  try {
-    let response = await axios.delete(`${url}/user/appointments/delete/${id}`);
-    document.getElementById(`${id}`).remove();
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-function editDetailsCard(id,userName, userEmail, userPhone, userDate) {
-
-  document.getElementById(
-    `${id}`
-  ).innerHTML = `<form action="#" class="w-75 mx-auto" id="editBookingForm">
-  <!-- Name -->
-  <div class="col mb-3">
-  <label for="editName" class="col-form-label">Name</label>
-  <input type="text" class="form-control" name="editName" id="editName" value=${userName}>
-  </div>
-  
-  <!-- Email -->
-  <div class="col mb-3">
-  <label for="editEmail" class="col-form-label">Email</label>
-  <input type="email" class="form-control" name="editEmail" id="editEmail" required value=${userEmail}>
-  </div>
-  
-  <!-- Phone Number -->
-  <div class="col mb-3">
-  <label for="editPhone" class="col-form-label">Phone Number</label>
-  <input type="number" class="form-control" name="editPhone" id="editPhone" value=${userPhone}>
-  </div>
-  
-  <!-- Date -->
-  <div class="col mb-3">
-  <label for="editDate" class="col-form-label">Date</label>
-  <input type="date" class="form-control" name="editDate" id="editDate" value=${userDate}>
-  </div>
-  
-  <!-- Submit Button -->
-  <div class="col mt-4 mb-2">
-    <div class="col-12 d-flex justify-content-center">
-    <input type="submit" class="form-control button d-flex justify-content-center bg-success" id="submit" value="Done">
-    </div>
-    </div>
-    </form>`;
-
-  const editBookingForm = document.querySelector("#editBookingForm");
-  editBookingForm.addEventListener("submit", addEditedCard);
-}
-
-async function addEditedCard(event) {
-  event.preventDefault();
-
-  let editedUserObj = {
-    userName: event.target.editName.value,
-    userEmail: event.target.editEmail.value,
-    userPhone: event.target.editPhone.value,
-    userDate: event.target.editDate.value,
-    // uniqueKey: targetObj.uniqueKey,
-  };
-
-  try {
-    let response = await axios.put(`${url}/user/appointments/edit/${event.target.parentNode.id}`, editedUserObj);
-    // console.log(response.data);
-    // updateResponseData("put", editedUserObj);
-
-    document.getElementById(`${event.target.parentNode.id}`).innerHTML = `<div>
-      <h5> ${editedUserObj.userName} </h5>
-      <h6> Email : ${editedUserObj.userEmail} </h6>
-      <h6> Phone Number : ${editedUserObj.userPhone} </h6>
-      <h6> Date : ${editedUserObj.userDate} </h6>
-    </div>
-    <div class ="d-flex justify-content-end">
-      <button class="btn btn-danger m-2 p-2" onclick="deleteDetailsCard(${editedUserObj.id})">X</button>
-      <button class="btn btn-primary m-2 p-2" onclick="editDetailsCard(${editedUserObj.id, editedUserObj.userName, editedUserObj.userEmail, editedUserObj.userPhone, editedUserObj.userDate})">Edit</button>
+  form.innerHTML += `
+    <div class="row mt-5 d-flex justify-content-center">
+    <button type="submit" class="btn btn-info col-2">Mark Attendance</button>
     </div>`;
+
+  document.getElementById("data-container").replaceChildren(form);
+}
+
+async function submitAttendance(event,date) {
+  event.preventDefault(); // Prevent page refresh
+
+  const formData = new FormData(event.target); // Get form data
+  const attendanceData = {};
+
+  for (const [key, value] of formData.entries()) {
+    attendanceData[key] = value;
+  }
+
+  // console.log(attendanceData); // Outputs selected values
+
+  let attendanceDataWithDate = {};
+
+  attendanceDataWithDate = {
+    Date: date,
+    combinedStatus : attendanceData
+  }
+
+  console.log(attendanceDataWithDate)
+
+  try {
+    let response = await axios.post(`${API_URL}/attendance/attendancedatawithdate`, attendanceDataWithDate);
+    console.log(response.data)
   } catch (error) {
     console.log(error);
   }
+
+  displayAttendance(attendanceData);
 }
 
-function displayUserOnScreen(userDetailsObj) {
-  document.querySelector(
-    ".detailsObjectsDiv"
-  ).innerHTML += `<div class="card"  id=${userDetailsObj.id}>
-  <div>
-  <h5> ${userDetailsObj.userName} </h5>
-  <h6> Email : ${userDetailsObj.userEmail} </h6>
-  <h6> Phone Number : ${userDetailsObj.userPhone} </h6>
-  <h6> Date : ${userDetailsObj.userDate} </h6>
-  </div>
-  <div class ="d-flex justify-content-end">
-  <button class="btn btn-danger m-2 p-2" onclick="deleteDetailsCard(${userDetailsObj.id})">X</button>
-  <button class="btn btn-primary m-2 p-2" onclick="editDetailsCard(${userDetailsObj.id, userDetailsObj.userName, userDetailsObj.userEmail, userDetailsObj.userPhone, userDetailsObj.userDate})">Edit</button>
-  </div>
-  </div>`;
-}
+function displayAttendance(attendanceData) {
+  const arDiv = document.createElement("div");
 
-// function getTargetObj(element) {
-//   for (let i = 0; i < responseData.length; i++) {
-//     if (responseData[i].uniqueKey == element.id) return responseData[i];
-//   }
-// }
+  arDiv.id = "arDiv";
+  arDiv.className = "w-100";
+
+  for (let key in attendanceData) {
+    arDiv.innerHTML += `
+        <div class="user row mt-3">
+        <p class="col-6">${key}</p>
+        <p class="col-6">${attendanceData[key]}</p>
+        </div>
+        `;
+  }
+
+  document.getElementById("data-container").replaceChildren(arDiv);
+}

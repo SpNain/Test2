@@ -1,5 +1,7 @@
+const {DB_NAME,DB_USER,DB_PASSWORD} = require('./secrets');
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('booking_appointment_app_db','root','Mysql@99',{
+
+const sequelize = new Sequelize(DB_NAME,DB_USER,DB_PASSWORD,{
     dialect:'mysql',
     host:'localhost',
     logging:false

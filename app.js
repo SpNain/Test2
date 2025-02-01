@@ -1,16 +1,29 @@
-const express = require('express');
-const cors = require('cors');
-const sequelize = require('./util/database');
+const path = require('path');
 
-const userRouter = require('./routes/user');
+const express = require('express');
+const cors = require("cors");
+
 
 const app = express();
-
+app.use(express.json());
 app.use(cors());
-app.use(express.urlencoded({extended:false}));
-app.use(express.static('public'));
-app.use('/user',userRouter);
 
+const sequelize = require('./util/database');
+
+const Student = require('./models/student');
+const Attendance = require('./models/attendance');
+
+const studentRoutes = require('./routes/student');
+const attendanceRoutes = require('./routes/attendance');
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+
+app.use('/student', studentRoutes);
+app.use('/attendance',attendanceRoutes);
+
+Student.hasMany(Attendance);
+Attendance.belongsTo(Student);
 
 async function initiate(){
     try{
@@ -23,4 +36,5 @@ async function initiate(){
         console.log("error", err);
     }
 }
+
 initiate();
