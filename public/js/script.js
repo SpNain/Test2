@@ -121,3 +121,32 @@ async function submitAttendance(event, dateValue) {
   }
 
 }
+
+async function fetchAttendanceReport() {
+  try {
+    let response = await axios.get(`${API_URL}/attendance/report`);
+    let allStudentsAttendanceReport = response.data;
+
+    const reportDiv = document.createElement("div"); // attendance result div
+
+    reportDiv.id = "reportDiv";
+    reportDiv.className = "w-100";
+
+    
+    allStudentsAttendanceReport.forEach((studentsAttendanceReport) => {
+      console.log(studentsAttendanceReport);
+      reportDiv.innerHTML += `
+      <div class="row mt-3" id="${studentsAttendanceReport.studentId}">
+        <p class="col-5">${studentsAttendanceReport.studentName}</p>
+        <p class="col-2">${studentsAttendanceReport.presentCount}/${studentsAttendanceReport.totalAttendance}</p>
+        <p class="col-2">${((studentsAttendanceReport.presentCount / studentsAttendanceReport.totalAttendance) * 100).toFixed(2)}%</p>
+      </div>
+      `;
+    });
+    
+    document.getElementById("data-container").replaceChildren(reportDiv);
+  }
+  catch (error) {
+    console.log(error);
+  }
+}
