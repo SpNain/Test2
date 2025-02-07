@@ -22,11 +22,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/student', studentRoutes);
 app.use('/attendance',attendanceRoutes);
 
-Student.hasMany(Attendance);
-Attendance.belongsTo(Student);
+Student.hasMany(Attendance, { onDelete: 'CASCADE', foreignKey: 'StudentId' });
+Attendance.belongsTo(Student, { foreignKey: 'StudentId' });
 
 async function initiate(){
-    try{
+    try {
+        // await sequelize.sync({ force: true })
         await sequelize.sync();
         app.listen(3000,()=>{
             console.log("Server started on port 3000");

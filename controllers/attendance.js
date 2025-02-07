@@ -7,7 +7,7 @@ exports.getHomePage = async (req, res, next) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err
+      error: err,
     });
   }
 };
@@ -15,23 +15,10 @@ exports.getHomePage = async (req, res, next) => {
 exports.addAttendanceDataWithDate = async (req, res) => {
   try {
     const { date, combinedStatus } = req.body;
-    console.log("aadwd");
-    console.log(date);
 
     if (!date || !combinedStatus || typeof combinedStatus !== "object") {
       return res.status(400).json({ message: "Invalid request data" });
     }
-
-    // Fetching students from the database based on ids
-    // Why we are doing this ? -> taaki hum check kr ske ki jin jin students ki attendance aayi h
-    // wo saare students database me exist krte h ya nhi kyunki aisa ho skta h ki koi id ko manipulate krke bhejde frontend se
-    // hmare pass ids ka array h jiski madad se hum un sb students ko nikal lenge jinki ids iss array me h
-    // ab jo ids table me nhi h wo student nhi aayenge
-    // aur baad me hum check kr lenge ki ids aur allstudents ki length same h ya nhi
-    // Case 1 : agr to saari bheji gyi ids complete hogi ya manipulated nhi hogi to saare students aayenge aur length wale if me enter nhi honge
-    // Case 2 : agr kuch saari ids nhi aayi hogi ya ids ko manipulate kiya hoga to fir hum length wale if me enter krke reponse send kr denge
-    // Case 3 : agr frontend se saari ids na bheji jaaye i mean ki kuch ids ke liye data na bhej jaaye but jo bhi ids aayi h wo saari shi h to fir bhi hum if me enter honge kyunki kuch students miss ho jaayenge
-    // waise iske liye humne frontend pe required lga rkha h radio buttons pe but fir maybe koi dom manipulation krke aadha adhura data bhej bhi skta h
 
     const ids = Object.keys(combinedStatus); // creates a array of ids
     const allStudents = await Student.findAll({
@@ -108,30 +95,61 @@ exports.getAttendanceReport = async (req, res) => {
       include: [
         {
           model: Attendance,
-          attributes: ['status'],
+          attributes: ["status"],
         },
       ],
     });
 
     // Process the data to compute present count and total attendance count
-    const allStudentsAttendanceReport = allStudentsWithStatus.map(studentWithStatus => {
-      const totalAttendance = studentWithStatus.Attendances.length;
-      const presentCount = studentWithStatus.Attendances.filter(att => att.status === 'Present').length;
+    const allStudentsAttendanceReport = allStudentsWithStatus.map(
+      (studentWithStatus) => {
+        const totalAttendance = studentWithStatus.Attendances.length;
+        const presentCount = studentWithStatus.Attendances.filter(
+          (att) => att.status === "Present"
+        ).length;
 
-      return {
-        studentId: studentWithStatus.id,
-        studentName: studentWithStatus.name,
-        presentCount,
-        totalAttendance
-      };
-    });
-    
+        return {
+          studentId: studentWithStatus.id,
+          studentName: studentWithStatus.name,
+          presentCount,
+          totalAttendance,
+        };
+      }
+    );
 
     res.status(200).json(allStudentsAttendanceReport);
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err
+      error: err,
     });
   }
 };
+
+/*
+getattendance report
+json response
+
+[
+  {
+    "studentId": 1,
+    "studentName": "a",
+    "presentCount": 3,
+    "totalAttendance": 5
+  },
+  {
+    "studentId": 2,
+    "studentName": "b",
+    "presentCount": 3,
+    "totalAttendance": 5
+  },
+  {
+    "studentId": 3,
+    "studentName": "c",
+    "presentCount": 3,
+    "totalAttendance": 5
+  }
+]
+
+
+*/

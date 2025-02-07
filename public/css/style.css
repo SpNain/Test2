@@ -4,7 +4,7 @@ body {
 }
 
 #menu-container {
-    background-color: #d7d7d7; /* Light gray */
+    background-color: hsl(0, 0%, 84%); /* Light gray */
     padding: 15px;
     border-radius: 8px; /* Optional: Adds rounded corners */
 }

@@ -13,7 +13,6 @@ async function fetchUIForDate() {
     let response = await axios.get(`${API_URL}/attendance/${dateValue}`);
 
     if (response.data.attendanceData) {
-      console.log("Attendance data");
 
       let attendanceData = response.data.attendanceData;
 
@@ -33,13 +32,11 @@ async function fetchUIForDate() {
 
       document.getElementById("data-container").replaceChildren(arDiv);
     } else if (response.data.allStudents) {
-      console.log("All students");
 
       let allStudents = response.data.allStudents;
 
-      const form = document.createElement("form");
+      const form = document.createElement("form"); // attendance form
 
-      // Set attributes
       form.id = "attendanceForm";
       form.className = "w-100";
 
@@ -72,8 +69,8 @@ async function fetchUIForDate() {
 
       document.getElementById("data-container").replaceChildren(form);
     } else {
-      console.log("No student");
-      const nsDiv = document.createElement("div"); // no student div
+
+      const nsDiv = document.createElement("div"); // No student div
 
       nsDiv.innerHTML += `
       <h2>No student exist in the system.</h2>
@@ -88,16 +85,15 @@ async function fetchUIForDate() {
 }
 
 async function submitAttendance(event, dateValue) {
-  event.preventDefault(); // Prevent page refresh
 
-  const formData = new FormData(event.target); // Get form data
+  event.preventDefault();
+
+  const formData = new FormData(event.target);
   const attendanceData = {};
 
   for (const [key, value] of formData.entries()) {
     attendanceData[key] = value;
   }
-
-  // console.log(attendanceData); // Outputs selected values
 
   let attendanceDataWithDate = {};
 
@@ -105,8 +101,6 @@ async function submitAttendance(event, dateValue) {
     date: dateValue,
     combinedStatus: attendanceData,
   };
-
-  // console.log(attendanceDataWithDate);
 
   try {
     await axios.post(
@@ -130,7 +124,7 @@ async function fetchAttendanceReport() {
     reportDiv.className = "w-100";
 
     allStudentsAttendanceReport.forEach((studentsAttendanceReport) => {
-      console.log(studentsAttendanceReport);
+
       reportDiv.innerHTML += `
       <div class="row mt-3" id="${studentsAttendanceReport.studentId}">
         <p class="col-5">${studentsAttendanceReport.studentName}</p>
@@ -211,13 +205,12 @@ function addNewStudent() {
   </div>`;
 
   document.getElementById("data-container").replaceChildren(asForm);
-  // document.getElementById("add-New-Student").insertAdjacentHTML('beforebegin', asForm.outerHTML);
 }
 
 async function addEditStudentData(event,id) {
   event.preventDefault();
 
-  const formData = new FormData(event.target); // Get form data
+  const formData = new FormData(event.target);
   const studentDetails = {};
 
   for (const [key, value] of formData.entries()) {
@@ -261,7 +254,7 @@ async function deleteStudent(id) {
 }
 
 function editStudent(name, id) {
-  const esForm = document.createElement("form"); // add student form
+  const esForm = document.createElement("form"); // edit student form
 
   // Set attributes
   esForm.id = "asForm";
