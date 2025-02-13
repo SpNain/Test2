@@ -1,6 +1,5 @@
 const path = require("path");
 const User = require("../models/userModel");
-const Expense = require("../models/expenseModel");
 const sequelize = require("../util/database");
 
 exports.getLeaderboardPage = (req, res, next) => {
@@ -9,27 +8,23 @@ exports.getLeaderboardPage = (req, res, next) => {
   );
 };
 
-exports.getLeaderboard = (req, res, next) => {
-  Expense.findAll({
+exports.getAllUsersForLeaderboard = (req, res, next) => {
+  User.findAll({
     attributes: [
-      [sequelize.fn("sum", sequelize.col("amount")), "totalExpense"],
-      [sequelize.col("user.name"), "name"],
+      [sequelize.col("name"), "name"],
+      [sequelize.col("totalExpenses"), "totalExpenses"],
     ],
-    group: ["userId"],
-    include: [
-      {
-        model: User,
-        attributes: [],
-      },
-    ],
-    order: [[sequelize.fn("sum", sequelize.col("amount")), "DESC"]],
+    order: [[sequelize.col("totalExpenses"), "DESC"]],
   })
-    .then((expenses) => {
-      const result = expenses.map((expense) => ({
-        name: expense.getDataValue("name"),
-        amount: expense.getDataValue("totalExpense"),
+    .then((users) => {
+      const result = users.map((user) => ({
+        name: user.getDataValue("name"),
+        totalExpenses: user.getDataValue("totalExpenses"),
       }));
       res.send(JSON.stringify(result));
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.error('Error fetching users for leaderboard:', err);
+      res.status(500).send('An error occurred while retrieving the leaderboard.');
+    });
 };

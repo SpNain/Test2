@@ -12,13 +12,12 @@ categoryItems.forEach((item) => {
 });
 
 async function getLeaderboard() {
-  const response = await axios.get("http://localhost:3000/premium/getLeaderboard");
+  const response = await axios.get("http://localhost:3000/premium/getAllUsersForLeaderboard");
   let position = 1;
   response.data.forEach((user) => {
     let name = user.name;
-    let amount = user.amount;
+    let amount = user.totalExpenses;
 
-    console.log(name, amount);
     let tr = document.createElement("tr");
     tr.setAttribute("class", "trStyle");
 
