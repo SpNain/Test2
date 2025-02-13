@@ -200,35 +200,11 @@ async function editExpense(e) {
     (err) => console.log(err);
   }
 }
-/*
-FLOW OF CODE :
-frontend me buyPremium pe click hoga
-token nikal ke createOrder pe post request jaayegi order ke saath jisme order id h
-ab usse pahle token ka use krke authentication hoga
-fir backend pe createOrder fxn me cashfree ke liye order structure hoga
-order_meta me return url pe payement done (success or fail) hone ke baad hmara page redirect hoga jo bhi url humne provide kra hoga
-ye mostly _self (means dusre page pe jaake payment krna) ke case me kaam me aata h
-maine _modal use kra h isme iska koi itna khaas kaam nhi h
-ab order structure hone ke baad hmara order create hoga
-aur agr hmara order create ho jaata h cashfree pe to fir hum hmari order table me bhi order create kr denge whase reponse me aaye data ka use krke
-aur response me orderId and paymentId bhej denge frontend pe jaha se call lgi thi whape
-ab humara order create hone ke baad hume frontend pe response milega
-aur agr response me paymentId aa jaati h to fir hum cashfree ke code ka use krke payment modal open kr denge payment krne ke liye
-ab jaise hi hmari payment complete ho jaayegi to hum getPaymentStatus pe get ki request maar denge
-aur backend pe getPaymentStatus me hum orderId ki madad se order nikal lenge aur fir us order ka status find krke response me send kr denge
-aur hume order ka status frontend pe mil jaayega
-aur us orderStatus ko updateTransactionStatus pe bhej denge update hone ke liye
-aur backend pe orderId ki madad se order nikal ke order ke status ko update kr denge
-aur user ke isPremiumUser ko true kr denge
-aur fir nya token generate krke response send kr denge
-aur frontend pe fir hum us nye token ko localstorage me set kr denge
-aur fir window ko reload kr denge jisse isPremiumUser fxn run ho aur user premium set ho jaaye
-*/
+
 async function buyPremium(e) {
   try {
-    console.log("bph");
     const token = localStorage.getItem("token");
-    // Get payment session ID from backend
+
     const response = await axios.post(
       "http://localhost:3000/purchase/createOrder",
       { orderId: `${Date.now()}` },
@@ -246,32 +222,24 @@ async function buyPremium(e) {
         mode: "sandbox",
       });
 
-      // Initialize checkout options
       let checkoutOptions = {
         paymentSessionId: paymentId,
 
-        //? New page payment options
-        redirectTarget: "_modal", // (default)
+        redirectTarget: "_modal",
       };
 
-      // Start the checkout process
       const result = await cashfree.checkout(checkoutOptions);
 
       if (result.error) {
-        // This will be true whenever user clicks on close icon inside the modal or any error happens during the payment
         console.log(
           "User has closed the popup or there is some payment error, Check for Payment Status"
         );
         console.log(result.error);
       }
       if (result.redirect) {
-        // This will be true when the payment redirection page couldn't be opened in the same window
-        // This is an exceptional case only when the page is opened inside an inAppBrowser
-        // In this case the customer will be redirected to return url once payment is completed
         console.log("Payment will be redirected");
       }
       if (result.paymentDetails) {
-        // This will be called whenever the payment is completed irrespective of transaction status
         console.log("Payment has been completed, Check for Payment Status");
         const statusResponse = await axios.get(
           `http://localhost:3000/purchase/getPaymentStatus/${orderId}`,

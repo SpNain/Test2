@@ -12,9 +12,9 @@ categoryItems.forEach((item) => {
 });
 
 async function getLeaderboard() {
-  const res = await axios.get("http://localhost:3000/premium/getLeaderboard");
+  const response = await axios.get("http://localhost:3000/premium/getLeaderboard");
   let position = 1;
-  res.data.forEach((user) => {
+  response.data.forEach((user) => {
     let name = user.name;
     let amount = user.amount;
 
