@@ -25,63 +25,59 @@ async function addExpense() {
     const descriptionValue = description.value.trim();
     const amountValue = amount.value.trim();
 
-    if (categoryValue == "Select Category") {
+    if (categoryValue === "Select Category") {
       alert("Select the Category!");
-      window.location.href("/homePage");
+      return window.location.href = "/homePage";
     }
     if (!descriptionValue) {
       alert("Add the Description!");
-      window.location.href("/homePage");
+      return window.location.href = "/homePage";
     }
     if (!parseInt(amountValue)) {
-      alert("Please enter the valid amount!");
-      window.location.href("/homePage");
+      alert("Please enter a valid amount!");
+      return window.location.href = "/homePage";
     }
 
     const currentDate = new Date();
     const day = currentDate.getDate();
     const month = currentDate.getMonth() + 1;
     const year = currentDate.getFullYear();
-
+    
     const formattedDay = day < 10 ? `0${day}` : day;
     const formattedMonth = month < 10 ? `0${month}` : month;
-
     const dateStr = `${formattedDay}-${formattedMonth}-${year}`;
 
     const token = localStorage.getItem("token");
-    const res = await axios
-      .post(
-        "http://localhost:3000/expense/addExpense",
-        {
-          date: dateStr,
-          category: categoryValue,
-          description: descriptionValue,
-          amount: parseInt(amountValue),
-        },
-        { headers: { Authorization: token } }
-      )
-      .then((res) => {
-        if (res.status == 200) {
-          window.location.reload();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  } catch {
-    console.error("AddExpense went wrong");
+
+    const response = await axios.post(
+      "http://localhost:3000/expense/addExpense",
+      {
+        date: dateStr,
+        category: categoryValue,
+        description: descriptionValue,
+        amount: parseInt(amountValue),
+      },
+      { headers: { Authorization: token } }
+    );
+
+    if (response.status === 200) {
+      window.location.reload();
+    }
+  } catch (err) {
+    console.error("AddExpense went wrong:", err);
   }
 }
+
 
 async function getAllExpenses() {
   // e.preventDefault();
   try {
     const token = localStorage.getItem("token");
-    const res = await axios.get(
+    const allExpenses = await axios.get(
       "http://localhost:3000/expense/getAllExpenses",
       { headers: { Authorization: token } }
     );
-    res.data.forEach((expenses) => {
+    allExpenses.data.forEach((expenses) => {
       const id = expenses.id;
       const date = expenses.date;
       const categoryValue = expenses.category;
@@ -133,8 +129,8 @@ async function getAllExpenses() {
       tr.appendChild(td3);
       tr.appendChild(td4);
     });
-  } catch {
-    (err) => console.log(err);
+  } catch (err) {
+    console.error("GetAllExpenses went wrong:", err);
   }
 }
 
@@ -144,14 +140,14 @@ async function deleteExpense(e) {
     if (e.target.classList.contains("delete")) {
       let tr = e.target.parentElement.parentElement;
       let id = tr.children[0].textContent;
-      const res = await axios.get(
+      await axios.get(
         `http://localhost:3000/expense/deleteExpense/${id}`,
         { headers: { Authorization: token } }
       );
       window.location.reload();
     }
-  } catch {
-    (err) => console.log(err);
+  } catch (err) {
+    console.error("DeleteExpense went wrong:", err);
   }
 }
 
@@ -166,11 +162,11 @@ async function editExpense(e) {
       let tr = e.target.parentElement.parentElement;
       let id = tr.children[0].textContent;
 
-      const res = await axios.get(
+      const allExpenses = await axios.get(
         "http://localhost:3000/expense/getAllExpenses",
         { headers: { Authorization: token } }
       );
-      res.data.forEach((expense) => {
+      allExpenses.data.forEach((expense) => {
         if (expense.id == id) {
           categoryValue.textContent = expense.category;
           descriptionValue.value = expense.description;
@@ -181,8 +177,7 @@ async function editExpense(e) {
 
           addExpenseBtn.addEventListener("click", async function update(e) {
             e.preventDefault();
-            console.log("request to backend for edit");
-            const res = await axios.post(
+            await axios.post(
               `http://localhost:3000/expense/editExpense/${id}`,
               {
                 category: categoryValue.textContent.trim(),
@@ -196,8 +191,8 @@ async function editExpense(e) {
         }
       });
     }
-  } catch {
-    (err) => console.log(err);
+  } catch (err) {
+    console.error("EditExpense went wrong:", err);
   }
 }
 

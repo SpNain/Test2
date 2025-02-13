@@ -43,10 +43,11 @@ exports.createOrder = async (req, res) => {
         paymentId: response.data.payment_session_id,
       });
     } else {
+      console.error(err);
       res.status(500).json({ error: "Failed to create order" });
     }
   } catch (err) {
-    console.error("Error creating order:", err);
+    console.error(err);
     res.status(500).json({ error: err });
   }
 };
@@ -75,7 +76,7 @@ exports.getPaymentStatus = async (req, res) => {
     }
     res.status(200).json({ orderStatus: orderStatus });
   } catch (err) {
-    console.error("Error fetching order status:", err);
+    console.error(err);
     res.status(500).json({ error: err });
   }
 };
@@ -97,7 +98,7 @@ exports.updateTransactionStatus = async (req, res) => {
       token: userController.generateAccessToken(req.user.id, req.user.email),
     });
   } catch (err) {
-    console.error("Error updating order status:", err);
+    console.error(err);
     res.status(500).json({ error: err });
   }
 };
