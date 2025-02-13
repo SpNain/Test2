@@ -304,8 +304,10 @@ async function isPremiumUser() {
   });
   if (res.data.isPremiumUser) {
     buyPremiumBtn.innerHTML = "Premium Member &#128081";
+    buyPremiumBtn.removeEventListener("click", buyPremium);
     reportsLink.removeAttribute("onclick");
     leaderboardLink.removeAttribute("onclick");
+    leaderboardLink.setAttribute("href", "/premium/getLeaderboardPage");
   }
 }
 
