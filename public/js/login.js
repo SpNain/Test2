@@ -21,12 +21,14 @@ async function login() {
   };
 
   try {
-    const response = await axios.post("http://localhost:3000/user/login", loginDetails);
-    
+    const response = await axios.post(
+      "http://localhost:3000/user/login",
+      loginDetails
+    );
+
     alert(response.data.message);
     localStorage.setItem("token", response.data.token);
     window.location.href = "/homePage";
-
   } catch (err) {
     if (err.response) {
       const errorMessage = err.response.data.message;

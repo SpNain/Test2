@@ -5,9 +5,7 @@ const jwt = require("jsonwebtoken");
 const sequelize = require("../util/database");
 
 function generateAccessToken(id, email) {
-  return jwt.sign(
-    { userId: id, email: email }, process.env.TOKEN_SECRET_KEY
-  );
+  return jwt.sign({ userId: id, email: email }, process.env.TOKEN_SECRET_KEY);
 }
 
 exports.isPremiumUser = (req, res, next) => {
@@ -30,10 +28,17 @@ exports.postUserSignUp = async (req, res, next) => {
   const { name, email, password } = req.body;
 
   try {
-    const existingUser = await User.findOne({ where: { email }, transaction: t });
+    const existingUser = await User.findOne({
+      where: { email },
+      transaction: t,
+    });
     if (existingUser) {
       await t.rollback();
-      return res.status(409).send(`<script>alert('This email is already taken. Please choose another one.'); window.location.href='/'</script>`);
+      return res
+        .status(409)
+        .send(
+          `<script>alert('This email is already taken. Please choose another one.'); window.location.href='/'</script>`
+        );
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -47,8 +52,11 @@ exports.postUserSignUp = async (req, res, next) => {
     );
 
     await t.commit();
-    res.status(200).send(`<script>alert('User Created Successfully!'); window.location.href='/'</script>`);
-
+    res
+      .status(200)
+      .send(
+        `<script>alert('User Created Successfully!'); window.location.href='/'</script>`
+      );
   } catch (err) {
     await t.rollback();
     console.error(err);
@@ -87,16 +95,15 @@ exports.postUserLogin = async (req, res, next) => {
       message: "Login successful!",
       token: generateAccessToken(user.id, user.email),
     });
-
   } catch (err) {
     await t.rollback();
     console.error(err);
     res.status(500).json({
       success: false,
       message: "Something went wrong!",
-      error: err
+      error: err,
     });
   }
 };
 
-exports.generateAccessToken = generateAccessToken; 
+exports.generateAccessToken = generateAccessToken;

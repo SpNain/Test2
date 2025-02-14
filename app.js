@@ -12,6 +12,7 @@ const expenseRouter = require("./router/expenseRouter");
 const purchaseMembershipRouter = require("./router/purchaseMembershipRouter");
 const leaderboardRouter = require("./router/leaderboardRouter");
 const passwordRouter = require("./router/passwordRouter");
+const reportsRouter = require("./router/reportsRouter");
 
 const User = require("./models/userModel");
 const Expense = require("./models/expenseModel");
@@ -38,6 +39,8 @@ app.use("/premium", leaderboardRouter);
 app.use("/password", passwordRouter);
 app.use("/password", passwordRouter);
 
+app.use("/reports", reportsRouter);
+
 User.hasMany(Expense);
 Expense.belongsTo(User);
 
@@ -47,17 +50,16 @@ Order.belongsTo(User);
 ResetPassword.belongsTo(User);
 User.hasMany(ResetPassword);
 
-async function initiate(){
-    try {
-        // await sequelize.sync({ force: true })
-        await sequelize.sync();
-        app.listen(3000,()=>{
-            console.log("Server started on port 3000");
-        })
-        
-    }catch(err){
-        console.log("error", err);
-    }
+async function initiate() {
+  try {
+    // await sequelize.sync({ force: true })
+    await sequelize.sync();
+    app.listen(3000, () => {
+      console.log("Server started on port 3000");
+    });
+  } catch (err) {
+    console.log("error", err);
+  }
 }
 
 initiate();

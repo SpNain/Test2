@@ -15,6 +15,6 @@ const User = sequelize.define("users", {
   totalExpenses: {
     type: Sequelize.INTEGER,
     defaultValue: 0,
-  }
+  },
 });
 module.exports = User;

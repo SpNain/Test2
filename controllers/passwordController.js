@@ -25,7 +25,6 @@ exports.forgotPasswordPage = async (req, res, next) => {
 
 exports.sendMail = async (req, res, next) => {
   try {
-
     const email = req.body.email;
     const requestId = uuidv4();
 
@@ -104,10 +103,7 @@ exports.updatePassword = async (req, res, next) => {
         { where: { id: requestId } }
       );
       const newPassword = await hashPassword(password);
-      await User.update(
-        { password: newPassword },
-        { where: { id: userId } }
-      );
+      await User.update({ password: newPassword }, { where: { id: userId } });
       return res
         .status(200)
         .json({ message: "Successfully changed password!" });

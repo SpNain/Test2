@@ -42,14 +42,12 @@ exports.addExpense = async (req, res, next) => {
 
     await t.commit();
     res.status(200).json({ message: "Expense added successfully." });
-
   } catch (err) {
     await t.rollback();
     console.error(err);
     res.status(500).json({ error: err });
   }
 };
-
 
 exports.getAllExpenses = async (req, res, next) => {
   try {
@@ -85,14 +83,12 @@ exports.deleteExpense = async (req, res, next) => {
 
     await t.commit();
     res.status(200).json({ message: "Expense deleted successfully." });
-
   } catch (err) {
     await t.rollback();
     console.error(err);
     res.status(500).json({ error: err });
   }
 };
-
 
 exports.editExpense = async (req, res, next) => {
   const t = await sequelize.transaction();
@@ -126,7 +122,6 @@ exports.editExpense = async (req, res, next) => {
 
     await t.commit();
     res.status(200).json({ message: "Expense updated successfully." });
-
   } catch (err) {
     await t.rollback();
     console.error(err);

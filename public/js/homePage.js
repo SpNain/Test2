@@ -27,22 +27,22 @@ async function addExpense() {
 
     if (categoryValue === "Select Category") {
       alert("Select the Category!");
-      return window.location.href = "/homePage";
+      return (window.location.href = "/homePage");
     }
     if (!descriptionValue) {
       alert("Add the Description!");
-      return window.location.href = "/homePage";
+      return (window.location.href = "/homePage");
     }
     if (!parseInt(amountValue)) {
       alert("Please enter a valid amount!");
-      return window.location.href = "/homePage";
+      return (window.location.href = "/homePage");
     }
 
     const currentDate = new Date();
     const day = currentDate.getDate();
     const month = currentDate.getMonth() + 1;
     const year = currentDate.getFullYear();
-    
+
     const formattedDay = day < 10 ? `0${day}` : day;
     const formattedMonth = month < 10 ? `0${month}` : month;
     const dateStr = `${formattedDay}-${formattedMonth}-${year}`;
@@ -67,7 +67,6 @@ async function addExpense() {
     console.error("AddExpense went wrong:", err);
   }
 }
-
 
 async function getAllExpenses() {
   // e.preventDefault();
@@ -140,10 +139,9 @@ async function deleteExpense(e) {
     if (e.target.classList.contains("delete")) {
       let tr = e.target.parentElement.parentElement;
       let id = tr.children[0].textContent;
-      await axios.get(
-        `http://localhost:3000/expense/deleteExpense/${id}`,
-        { headers: { Authorization: token } }
-      );
+      await axios.get(`http://localhost:3000/expense/deleteExpense/${id}`, {
+        headers: { Authorization: token },
+      });
       window.location.reload();
     }
   } catch (err) {
@@ -237,23 +235,24 @@ async function buyPremium(e) {
       if (result.paymentDetails) {
         console.log("Payment has been completed, Check for Payment Status");
         const statusResponse = await axios.get(
-          `http://localhost:3000/purchase/getPaymentStatus/${orderId}`,
+          `http://localhost:3000/purchase/getPaymentStatus/${orderId}`
         );
 
         const statusUpdateResponse = await axios.post(
           "http://localhost:3000/purchase/updateTransactionStatus",
           {
-            orderId : orderId,
-            status: statusResponse.data.orderStatus
+            orderId: orderId,
+            status: statusResponse.data.orderStatus,
           },
           { headers: { Authorization: token } }
         );
 
-        alert("Welcome to our Premium Membership, You have now access to Reports and LeaderBoard");
+        alert(
+          "Welcome to our Premium Membership, You have now access to Reports and LeaderBoard"
+        );
         localStorage.setItem("token", statusUpdateResponse.data.token);
         window.location.reload();
       }
-
     }
   } catch (err) {
     console.error("Error:", err);
@@ -271,6 +270,7 @@ async function isPremiumUser() {
     reportsLink.removeAttribute("onclick");
     leaderboardLink.removeAttribute("onclick");
     leaderboardLink.setAttribute("href", "/premium/getLeaderboardPage");
+    reportsLink.setAttribute("href", "/reports/getReportsPage");
   }
 }
 
