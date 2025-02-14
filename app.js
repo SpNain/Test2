@@ -16,6 +16,7 @@ const passwordRouter = require("./router/passwordRouter");
 const User = require("./models/userModel");
 const Expense = require("./models/expenseModel");
 const Order = require("./models/ordersModel");
+const ResetPassword = require("./models/resetPasswordModel");
 
 const app = express();
 
@@ -35,12 +36,16 @@ app.use("/purchase", purchaseMembershipRouter);
 app.use("/premium", leaderboardRouter);
 
 app.use("/password", passwordRouter);
+app.use("/password", passwordRouter);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
 
 User.hasMany(Order);
 Order.belongsTo(User);
+
+ResetPassword.belongsTo(User);
+User.hasMany(ResetPassword);
 
 async function initiate(){
     try {
