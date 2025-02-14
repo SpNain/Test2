@@ -57,7 +57,7 @@
 
     <!-- Daily Table -->
 
-    <div class="container table-responsive mt-4 p-3 d-flex bd-highlight" id="table">
+    <div class="container table-responsive mt-4 p-3 d-flex bd-highlight reportTable">
         <!-- Daily table Form -->
 
         <div class="ps-2 pe-5 py-1 ms-3 me-5 my-1 bd-highlight">
@@ -70,7 +70,7 @@
                         <label for="date" class="form-label"> Select Date</label>
                         <input type="date" class="form-control" id="date" />
                     </div>
-                    <button type="submit" class="btn btn-primary showBtn">Show</button>
+                    <button id="dateShowBtn" type="submit" class="btn btn-primary showBtn">Show</button>
                 </form>
             </div>
         </div>
@@ -90,21 +90,21 @@
 
                 <!-- Daily table body -->
 
-                <tbody id="tbodyId">
-                    <tr class="trStyle">
+                <tbody id="tbodyDailyId">
+                    <!-- <tr class="trStyle">
                         <th scope="row">1</th>
                         <td>Dummy</td>
                         <td>Dummy</td>
                         <td>99</td>
-                    </tr>
+                    </tr> -->
                 </tbody>
-                <tfoot>
-                    <tr class="trStyle">
+                <tfoot id="tfootDailyId">
+                    <!-- <tr class="trStyle">
                         <td></td>
                         <td></td>
                         <td id="dailyTotal">Total</td>
                         <td id="dailyTotalAmount">99</td>
-                    </tr>
+                    </tr> -->
                 </tfoot>
             </table>
         </div>
@@ -112,7 +112,7 @@
 
     <!-- Weekly Table -->
 
-    <div class="container table-responsive mt-4 mb-3 p-3 d-flex bd-highlight" id="table">
+    <div class="container table-responsive mt-4 mb-3 p-3 d-flex bd-highlight reportTable">
         <!-- Weekly table Form -->
 
         <div class="ps-2 pe-4 py-1 ms-3 me-5 my-1 bd-highlight">
@@ -125,13 +125,13 @@
                         <label for="week" class="form-label">Select Week</label>
                         <input type="week" class="form-control" id="week" />
                     </div>
-                    <button type="submit" class="btn btn-primary showBtn">Show</button>
+                    <button id="weekShowBtn" type="submit" class="btn btn-primary showBtn">Show</button>
                 </form>
             </div>
         </div>
 
         <div class="p-2 flex-grow-1 bd-highlight">
-            <table id="" class="table table-hover" style="width: 100%">
+            <table id="table2" class="table table-hover" style="width: 100%">
                 <!-- Weekly table head -->
 
                 <thead>
@@ -145,21 +145,21 @@
 
                 <!-- Weekly table body -->
 
-                <tbody id="tbodyId">
-                    <tr class="trStyle">
+                <tbody id="tbodyWeeklyId">
+                    <!-- <tr class="trStyle">
                         <th scope="row">1</th>
                         <td>Dummy</td>
                         <td>Dummy</td>
                         <td>99</td>
-                    </tr>
+                    </tr> -->
                 </tbody>
-                <tfoot>
-                    <tr class="trStyle">
+                <tfoot id="tfootWeeklyId">
+                    <!-- <tr class="trStyle">
                         <td></td>
                         <td></td>
                         <td id="monthlyTotal">Total</td>
                         <td id="monthlyTotalAmount">99</td>
-                    </tr>
+                    </tr> -->
                 </tfoot>
             </table>
         </div>
@@ -167,7 +167,7 @@
 
     <!-- Monthly Table -->
 
-    <div class="container table-responsive mt-4 p-3 d-flex bd-highlight" id="table">
+    <div class="container table-responsive mt-4 p-3 d-flex bd-highlight reportTable">
         <!-- Monthly table Form -->
 
         <div class="px-2 py-1 ms-3 me-4 my-1 bd-highlight">
@@ -180,7 +180,7 @@
                         <label for="month" class="form-label">Select Month</label>
                         <input type="month" class="form-control" id="month" />
                     </div>
-                    <button type="submit" class="btn btn-primary showBtn">Show</button>
+                    <button id="monthShowBtn" type="submit" class="btn btn-primary showBtn">Show</button>
                 </form>
             </div>
         </div>
@@ -200,21 +200,21 @@
 
                 <!-- Monthly table body -->
 
-                <tbody id="tbodyId">
-                    <tr class="trStyle">
+                <tbody id="tbodyMonthlyId">
+                    <!-- <tr class="trStyle">
                         <th scope="row">1</th>
                         <td>Dummy</td>
                         <td>Dummy</td>
                         <td>99</td>
-                    </tr>
+                    </tr> -->
                 </tbody>
-                <tfoot>
-                    <tr class="trStyle">
+                <tfoot id="tfootMonthlyId">
+                    <!-- <tr class="trStyle">
                         <td></td>
                         <td></td>
                         <td id="monthlyTotal">Total</td>
                         <td id="monthlyTotalAmount">99</td>
-                    </tr>
+                    </tr> -->
                 </tfoot>
             </table>
         </div>
@@ -234,7 +234,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"
         integrity="sha512-QTnb9BQkG4fBYIt9JGvYmxPpd6TBeKp6lsUrtiVQsrJ9sb33Bn9s0wMQO9qVBFbPX3xHRAsBHvXlcsrnJjExjg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- <script src="/js/reports.js"></script> -->
+    <script src="/js/reports.js"></script>
 </body>
 
 </html>

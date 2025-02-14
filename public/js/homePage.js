@@ -45,7 +45,7 @@ async function addExpense() {
 
     const formattedDay = day < 10 ? `0${day}` : day;
     const formattedMonth = month < 10 ? `0${month}` : month;
-    const dateStr = `${formattedDay}-${formattedMonth}-${year}`;
+    const dateStr = `${year}-${formattedMonth}-${formattedDay}`;
 
     const token = localStorage.getItem("token");
 
@@ -91,14 +91,12 @@ async function getAllExpenses() {
       let idValue = document.createElement("th");
       idValue.setAttribute("scope", "row");
       idValue.setAttribute("style", "display: none");
+      tr.appendChild(idValue);
+      idValue.appendChild(document.createTextNode(id));
 
       let th = document.createElement("th");
       th.setAttribute("scope", "row");
-
-      tr.appendChild(idValue);
       tr.appendChild(th);
-
-      idValue.appendChild(document.createTextNode(id));
       th.appendChild(document.createTextNode(date));
 
       let td1 = document.createElement("td");
