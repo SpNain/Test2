@@ -95,3 +95,32 @@ body {
   background-color: #293241;
   border: none;
 }
+
+#dailyTotal,
+#dailyTotalAmount,
+#weeklyTotal,
+#weeklyTotalAmount,
+#monthlyTotal,
+#monthlyTotalAmount {
+  font-weight: bolder !important;
+}
+
+.btn-download {
+  background-color: #28a745; /* Green color */
+  color: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1; /* Ensures it stays on top of other elements */
+  transition: background-color 0.3s ease;
+}
+.btn-download:hover {
+  background-color: #218838;
+}
