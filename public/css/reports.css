@@ -106,7 +106,7 @@ body {
 }
 
 .btn-download {
-  background-color: #28a745; /* Green color */
+  background-color: #28a745;
   color: white;
   border-radius: 50%;
   width: 60px;
@@ -118,9 +118,17 @@ body {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 1; /* Ensures it stays on top of other elements */
+  z-index: 1;
   transition: background-color 0.3s ease;
 }
 .btn-download:hover {
   background-color: #218838;
+}
+
+.btn-download:visited,
+.btn-download:active,
+.btn-download:focus {
+  background-color: #28a745;
+  color: white;
+  text-decoration: none;
 }

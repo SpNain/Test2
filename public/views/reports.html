@@ -55,172 +55,76 @@
         </div>
     </nav>
 
-    <!-- Daily Table -->
-
-    <div class="container table-responsive mt-4 p-3 d-flex bd-highlight reportTable">
-        <!-- Daily table Form -->
-
-        <div class="ps-2 pe-5 py-1 ms-3 me-5 my-1 bd-highlight">
-            <div class="my-1">
-                <h3>DAILY REPORTS</h3>
-            </div>
-            <div>
-                <form>
-                    <div class="mb-3">
-                        <label for="date" class="form-label"> Select Date</label>
-                        <input type="date" class="form-control" id="date" />
-                    </div>
-                    <button id="dateShowBtn" type="submit" class="btn btn-primary showBtn">Show</button>
-                </form>
-            </div>
+    <!-- Report Type Buttons -->
+    <div class="container mt-3">
+        <div class="btn-group" role="group" aria-label="Report Types">
+            <button id="btnDaily" class="btn btn-primary">Daily Reports</button>
+            <button id="btnWeekly" class="btn btn-secondary">Weekly Reports</button>
+            <button id="btnMonthly" class="btn btn-secondary">Monthly Reports</button>
         </div>
+    </div>
 
-        <div class="p-2 flex-grow-1 bd-highlight">
-            <table id="table1" class="table table-hover display" style="width: 100%">
-                <!-- Daily table head -->
+    <!-- Container for dynamic report forms and tables -->
+    <div id="reportsContainer" class="mt-4">
 
-                <thead>
-                    <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Amount</th>
-                    </tr>
-                </thead>
+        <!-- Daily Table -->
 
-                <!-- Daily table body -->
+        <div class="container table-responsive mt-4 p-3 d-flex bd-highlight reportTable">
+            <!-- Daily table Form -->
 
-                <tbody id="tbodyDailyId">
-                    <!-- <tr class="trStyle">
+            <div class="ps-2 pe-5 py-1 ms-3 me-5 my-1 bd-highlight">
+                <div class="my-1">
+                    <h3>DAILY REPORTS</h3>
+                </div>
+                <div>
+                    <form id="dailyForm">
+                        <div class="mb-3">
+                            <label for="date" class="form-label"> Select Date</label>
+                            <input type="date" class="form-control" id="date" />
+                        </div>
+                        <button id="dateShowBtn" type="submit" class="btn btn-primary showBtn">Show</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="dailyTable" class="p-2 flex-grow-1 bd-highlight">
+                <table class="table table-hover display" style="width: 100%">
+                    <!-- Daily table head -->
+
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Amount</th>
+                        </tr>
+                    </thead>
+
+                    <!-- Daily table body -->
+
+                    <tbody id="tbodyDailyId">
+                        <!-- <tr class="trStyle">
                         <th scope="row">1</th>
                         <td>Dummy</td>
                         <td>Dummy</td>
                         <td>99</td>
                     </tr> -->
-                </tbody>
-                <tfoot id="tfootDailyId">
-                    <!-- <tr class="trStyle">
+                    </tbody>
+                    <tfoot id="tfootDailyId">
+                        <!-- <tr class="trStyle">
                         <td></td>
                         <td></td>
                         <td id="dailyTotal">Total</td>
                         <td id="dailyTotalAmount">99</td>
                     </tr> -->
-                </tfoot>
-            </table>
+                    </tfoot>
+                </table>
+            </div>
         </div>
+
     </div>
 
-    <!-- Weekly Table -->
-
-    <div class="container table-responsive mt-4 mb-3 p-3 d-flex bd-highlight reportTable">
-        <!-- Weekly table Form -->
-
-        <div class="ps-2 pe-4 py-1 ms-3 me-5 my-1 bd-highlight">
-            <div class="my-1">
-                <h3>WEEKLY REPORTS</h3>
-            </div>
-            <div>
-                <form>
-                    <div class="mb-3">
-                        <label for="week" class="form-label">Select Week</label>
-                        <input type="week" class="form-control" id="week" />
-                    </div>
-                    <button id="weekShowBtn" type="submit" class="btn btn-primary showBtn">Show</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="p-2 flex-grow-1 bd-highlight">
-            <table id="table2" class="table table-hover" style="width: 100%">
-                <!-- Weekly table head -->
-
-                <thead>
-                    <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Amount</th>
-                    </tr>
-                </thead>
-
-                <!-- Weekly table body -->
-
-                <tbody id="tbodyWeeklyId">
-                    <!-- <tr class="trStyle">
-                        <th scope="row">1</th>
-                        <td>Dummy</td>
-                        <td>Dummy</td>
-                        <td>99</td>
-                    </tr> -->
-                </tbody>
-                <tfoot id="tfootWeeklyId">
-                    <!-- <tr class="trStyle">
-                        <td></td>
-                        <td></td>
-                        <td id="monthlyTotal">Total</td>
-                        <td id="monthlyTotalAmount">99</td>
-                    </tr> -->
-                </tfoot>
-            </table>
-        </div>
-    </div>
-
-    <!-- Monthly Table -->
-
-    <div class="container table-responsive mt-4 p-3 d-flex bd-highlight reportTable">
-        <!-- Monthly table Form -->
-
-        <div class="px-2 py-1 ms-3 me-4 my-1 bd-highlight">
-            <div class="my-1">
-                <h3>MONTHLY REPORTS</h3>
-            </div>
-            <div>
-                <form>
-                    <div class="mb-3">
-                        <label for="month" class="form-label">Select Month</label>
-                        <input type="month" class="form-control" id="month" />
-                    </div>
-                    <button id="monthShowBtn" type="submit" class="btn btn-primary showBtn">Show</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="p-2 flex-grow-1 bd-highlight">
-            <table id="table2" class="table table-hover display" style="width: 100%">
-                <!-- Monthly table head -->
-
-                <thead>
-                    <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Amount</th>
-                    </tr>
-                </thead>
-
-                <!-- Monthly table body -->
-
-                <tbody id="tbodyMonthlyId">
-                    <!-- <tr class="trStyle">
-                        <th scope="row">1</th>
-                        <td>Dummy</td>
-                        <td>Dummy</td>
-                        <td>99</td>
-                    </tr> -->
-                </tbody>
-                <tfoot id="tfootMonthlyId">
-                    <!-- <tr class="trStyle">
-                        <td></td>
-                        <td></td>
-                        <td id="monthlyTotal">Total</td>
-                        <td id="monthlyTotalAmount">99</td>
-                    </tr> -->
-                </tfoot>
-            </table>
-        </div>
-    </div>
-
-    <div class="d-flex justify-content-center mt-5" data-bs-toggle="tooltip" title="Download Your Expense Report">
+    <div data-bs-toggle="tooltip" title="Download Your Expense Report">
         <a href="#" class="btn btn-download">
             <i class="bi bi-arrow-down"></i>
         </a>
