@@ -22,7 +22,7 @@ body {
   box-shadow: 4px 4px 9px #293241;
   margin: 20px 193px;
 }
-#table {
+#containerDiv {
   border-radius: 10px;
   background-color: #d2eaf7;
   /* background-image: linear-gradient(to bottom right, #c7e9fd, #3d5a80); */
@@ -84,4 +84,14 @@ body {
 #tableHead {
   background-color: #3d5a80;
   color: white;
+}
+
+.page-link {
+  background-color: #3d5a80;
+  color: white;
+}
+
+.page-link:hover {
+  background-color: #a2c9de;
+  color: #233b64;
 }

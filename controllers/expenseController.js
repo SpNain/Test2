@@ -59,6 +59,27 @@ exports.getAllExpenses = async (req, res, next) => {
   }
 };
 
+exports.getAllExpensesForPage = async (req, res, next) => {
+  try {
+    const pageNo = req.params.pageNo;
+    const limit = 10;
+    const offset = (pageNo - 1) * limit;
+    const totalExpenses = await Expense.count({
+      where: { userId: req.user.id },
+    });
+    const totalPages = Math.ceil(totalExpenses / limit);
+    const expenses = await Expense.findAll({
+      where: { userId: req.user.id },
+      offset: offset,
+      limit: limit,
+    });
+    res.json({ expenses: expenses, totalPages: totalPages });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
+  }
+};
+
 exports.deleteExpense = async (req, res, next) => {
   const t = await sequelize.transaction();
   const id = req.params.id;

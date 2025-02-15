@@ -22,4 +22,10 @@ router.post(
   expenseController.editExpense
 );
 
+router.get(
+  "/getAllExpensesForPage/:pageNo",
+  userAuthentication,
+  expenseController.getAllExpensesForPage
+);
+
 module.exports = router;
