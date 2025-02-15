@@ -61,8 +61,14 @@ exports.getAllExpenses = async (req, res, next) => {
 
 exports.getAllExpensesForPage = async (req, res, next) => {
   try {
-    const pageNo = req.params.pageNo;
-    const limit = 10;
+    const pageNo = parseInt(req.query.pageNo) || 1;
+    const limit = parseInt(req.query.rowsPerPage) || 10;
+    console.log(pageNo, limit)
+
+    if (pageNo < 1 || limit < 1) {
+      return res.status(400).json({ error: "Invalid pagination parameters" });
+    }
+
     const offset = (pageNo - 1) * limit;
     const totalExpenses = await Expense.count({
       where: { userId: req.user.id },

@@ -95,3 +95,16 @@ body {
   background-color: #a2c9de;
   color: #233b64;
 }
+
+.pagination{
+  margin: 0px;
+}
+
+.activePage{
+  background-color: #29346e;
+}
+
+.disabledPage{
+  pointer-events: none;
+  background-color: #3d5a8078;
+}

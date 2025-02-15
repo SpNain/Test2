@@ -23,7 +23,7 @@ router.post(
 );
 
 router.get(
-  "/getAllExpensesForPage/:pageNo",
+  "/getAllExpensesForPage",
   userAuthentication,
   expenseController.getAllExpensesForPage
 );

@@ -7,6 +7,7 @@ const tableBody = document.getElementById("tbodyId");
 const buyPremiumBtn = document.getElementById("buyPremiumBtn");
 const reportsLink = document.getElementById("reportsLink");
 const leaderboardLink = document.getElementById("leaderboardLink");
+const rowsPerPageSelect = document.getElementById("rowsPerPageSelect");
 
 categoryItems.forEach((item) => {
   item.addEventListener("click", (e) => {
@@ -70,9 +71,10 @@ async function addExpense() {
 
 async function getAllExpensesForPage(pageNo) {
   try {
+    let rowsPerPage = parseInt(rowsPerPageSelect.value);
     const token = localStorage.getItem("token");
     const response = await axios.get(
-      `http://localhost:3000/expense/getAllExpensesForPage/${pageNo}`,
+      `http://localhost:3000/expense/getAllExpensesForPage?pageNo=${pageNo}&rowsPerPage=${rowsPerPage}`,
       { headers: { Authorization: token } }
     );
 
@@ -129,29 +131,65 @@ async function getAllExpensesForPage(pageNo) {
       tr.appendChild(td4);
     });
 
-    if (!document.getElementById("paginationUL")) {
-      const paginationNav = document.getElementById("paginationNav");
-
-      const ul = document.createElement("ul");
-      ul.id = "paginationUL";
-      ul.className = "pagination justify-content-md-end";
-
-      for (let i = 1; i <= response.data.totalPages; i++) {
-        const li = document.createElement("li");
-        const a = document.createElement("a");
-        li.setAttribute("class", "page-item");
-        a.setAttribute("class", "page-link");
-        a.setAttribute("href", "#");
-        a.appendChild(document.createTextNode(i));
-        li.appendChild(a);
-        ul.appendChild(li);
-        paginationNav.appendChild(ul);
-        a.addEventListener("click", () => getAllExpensesForPage(i));
-      }
-    }
+    addPaginationNav(pageNo, response.data.totalPages);
   } catch (err) {
     console.error("getAllExpensesForPage went wrong:", err);
   }
+}
+
+function addPaginationNav(currentPage, totalPages) {
+  document.getElementById("paginationUL")?.remove();
+
+  const paginationNav = document.getElementById("paginationNav");
+
+  const ul = document.createElement("ul");
+  ul.id = "paginationUL";
+  ul.className = "pagination";
+
+  const prevLi = document.createElement("li");
+  const prevA = document.createElement("a");
+  prevLi.setAttribute("class", "page-item");
+  prevA.setAttribute("class", "page-link");
+  prevA.setAttribute("href", "#");
+  currentPage === 1
+    ? prevA.setAttribute("class", "page-link disabledPage")
+    : null;
+  prevA.appendChild(document.createTextNode("<"));
+  prevLi.appendChild(prevA);
+  ul.appendChild(prevLi);
+  prevLi.addEventListener("click", () => {
+    if (currentPage > 1) getAllExpensesForPage(currentPage - 1);
+  });
+
+  for (let i = 1; i <= totalPages; i++) {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    li.setAttribute("class", "page-item");
+    a.setAttribute("class", "page-link");
+    i === currentPage ? a.setAttribute("class", "page-link activePage") : null;
+    a.setAttribute("href", "#");
+    a.appendChild(document.createTextNode(i));
+    li.appendChild(a);
+    ul.appendChild(li);
+    a.addEventListener("click", () => getAllExpensesForPage(i));
+  }
+
+  const nextLi = document.createElement("li");
+  const nextA = document.createElement("a");
+  nextLi.setAttribute("class", "page-item");
+  nextA.setAttribute("class", "page-link");
+  nextA.setAttribute("href", "#");
+  currentPage === totalPages
+    ? nextA.setAttribute("class", "page-link disabledPage")
+    : null;
+  nextA.appendChild(document.createTextNode(">"));
+  nextLi.appendChild(nextA);
+  ul.appendChild(nextLi);
+  nextLi.addEventListener("click", () => {
+    if (currentPage < totalPages) getAllExpensesForPage(currentPage + 1);
+  });
+
+  paginationNav.appendChild(ul);
 }
 
 async function deleteExpense(e) {
@@ -300,6 +338,7 @@ addExpenseBtn.addEventListener("click", addExpense);
 
 document.addEventListener("DOMContentLoaded", isPremiumUser);
 document.addEventListener("DOMContentLoaded", () => getAllExpensesForPage(1));
+rowsPerPageSelect.addEventListener("change", () => getAllExpensesForPage(1));
 
 tableBody.addEventListener("click", (e) => {
   deleteExpense(e);
