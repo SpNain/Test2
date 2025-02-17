@@ -1,7 +1,9 @@
 const path = require("path");
+
 const Expense = require("../models/expenseModel");
 const User = require("../models/userModel");
 const sequelize = require("../util/database");
+const AwsService = require("../services/awsService");
 
 exports.getHomePage = async (req, res, next) => {
   try {
@@ -63,7 +65,6 @@ exports.getAllExpensesForPage = async (req, res, next) => {
   try {
     const pageNo = parseInt(req.query.pageNo) || 1;
     const limit = parseInt(req.query.rowsPerPage) || 10;
-    console.log(pageNo, limit)
 
     if (pageNo < 1 || limit < 1) {
       return res.status(400).json({ error: "Invalid pagination parameters" });
@@ -153,5 +154,38 @@ exports.editExpense = async (req, res, next) => {
     await t.rollback();
     console.error(err);
     res.status(500).json({ error: err });
+  }
+};
+
+exports.downloadAllExpenses = async (req, res, next) => {
+  try {
+
+    const expenses = await req.user.getExpenses({
+      attributes: ["date", "category", "description", "amount"],
+    });
+
+    const filename = `AllExpenses/${
+      req.user.name
+    }_Expenses_${new Date().toISOString()}.csv`;
+
+    let csv = "";
+
+    if (expenses.length > 0) {
+      
+      const headers = Object.keys(expenses[0].dataValues);
+      csv += headers.join(",") + "\n";
+
+      expenses.forEach((row) => {
+        const values = headers.map((header) => `"${row.dataValues[header]}"`);
+        csv += values.join(",") + "\n";
+      });
+    }
+
+    const downloadURL = await AwsService.uploadToS3(csv, filename);
+    res.status(200).json({downloadURL, success:true});
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err , success:false});
   }
 };

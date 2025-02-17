@@ -1,6 +1,10 @@
 const path = require("path");
 const Expense = require("../models/expenseModel");
 const { Op } = require("sequelize");
+const AwsService = require("../services/awsService");
+
+let currentReportData = [];
+let currentReportType = "";
 
 exports.getReportsPage = (req, res, next) => {
   try {
@@ -19,6 +23,10 @@ exports.dailyReports = async (req, res, next) => {
     const expenses = await Expense.findAll({
       where: { date: date, userId: req.user.id },
     });
+
+    currentReportData = expenses;
+    currentReportType = "Daily";
+
     res.status(200).json(expenses);
   } catch (err) {
     console.error(err);
@@ -55,9 +63,12 @@ exports.weeklyReports = async (req, res, next) => {
           [Op.lte]: weekObj.endDate,
         },
         userId: req.user.id,
-      },
-      raw: true,
+      }
     });
+
+    currentReportData = expenses;
+    currentReportType = "Weekly";
+
     res.status(200).json(expenses);
   } catch (err) {
     console.error(err);
@@ -75,9 +86,45 @@ exports.monthlyReports = async (req, res, next) => {
         },
         userId: req.user.id,
       },
-      raw: true,
     });
+
+    currentReportData = expenses;
+    currentReportType = "Monthly";
+
     res.status(200).json(expenses);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
+  }
+};
+
+exports.downloadReport = async (req, res, next) => {
+  try {
+    const filename = `${currentReportType} Report/${
+      req.user.name
+    }_Expenses_${new Date().toISOString()}.csv`;
+
+    let csv = "";
+
+    if (currentReportData.length > 0) {
+      const excludedKeys = ["id", "createdAt", "updatedAt", "userId"];
+      const headers = Object.keys(currentReportData[0].dataValues).filter(
+        (key) => !excludedKeys.includes(key)
+      );
+      csv += headers.join(",") + "\n";
+
+      currentReportData.forEach((row) => {
+        const values = headers.map((header) => `"${row.dataValues[header]}"`);
+        csv += values.join(",") + "\n";
+      });
+    }
+
+    if(currentReportData.length === 0) return res.status(200).json({downloadURL: "", message:"To download again, re-fetch the data.", success: false});
+    currentReportData = [];
+    currentReportType = "";
+
+    const downloadURL = await AwsService.uploadToS3(csv, filename);
+    res.status(200).json({downloadURL, success:true});
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err });

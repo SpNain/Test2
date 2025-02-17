@@ -330,6 +330,35 @@ async function isPremiumUser() {
     leaderboardLink.removeAttribute("onclick");
     leaderboardLink.setAttribute("href", "/premium/getLeaderboardPage");
     reportsLink.setAttribute("href", "/reports/getReportsPage");
+
+    const divEle = document.createElement("div");
+
+    divEle.setAttribute("data-bs-toggle", "tooltip");
+
+    divEle.title = "Download All Your Expenses";
+
+    divEle.innerHTML = `
+      <a href="#" class="btn btn-download downloadAllExpenses">
+          <i class="bi bi-arrow-down"></i>
+      </a>`;
+
+    divEle.addEventListener("click", downloadAllExpenses);
+
+    document
+      .getElementById("containerDiv")
+      .insertAdjacentElement("afterend", divEle);
+  }
+}
+
+async function downloadAllExpenses() {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get("http://localhost:3000/expense/downloadAllExpenses", {
+      headers: { Authorization: token },
+    });
+    window.location.href = response.data.downloadURL;
+  } catch (err) {
+    console.error("Error in downloading all the expenses:", err);
   }
 }
 

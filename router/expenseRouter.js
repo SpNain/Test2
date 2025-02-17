@@ -28,4 +28,12 @@ router.get(
   expenseController.getAllExpensesForPage
 );
 
+router.get(
+  "/downloadAllExpenses",
+  userAuthentication,
+  expenseController.downloadAllExpenses
+);
+
+
+
 module.exports = router;

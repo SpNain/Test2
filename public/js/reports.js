@@ -1,7 +1,3 @@
-let currentReportData = [];
-let currentReportType = "";
-
-
 async function getDailyReport(e) {
 
   const dateInput = document.getElementById("date");
@@ -24,9 +20,6 @@ async function getDailyReport(e) {
       { date: dateValue },
       { headers: { Authorization: token } }
     );
-
-    currentReportData = response.data;
-    currentReportType = "daily";
 
     tbodyDaily.innerHTML = "";
     tfootDaily.innerHTML = "";
@@ -156,9 +149,6 @@ async function getWeeklyReport(e) {
       { headers: { Authorization: token } }
     );
 
-    currentReportData = response.data;
-    currentReportType = "weekly";
-
     tbodyWeekly.innerHTML = "";
     tfootWeekly.innerHTML = "";
     response.data.forEach((expense) => {
@@ -283,9 +273,6 @@ async function getMonthlyReport(e) {
       { headers: { Authorization: token } }
     );
 
-    currentReportData = response.data;
-    currentReportType = "monthly";
-
     tbodyMonthly.innerHTML = "";
     tfootMonthly.innerHTML = "";
     response.data.forEach((expense) => {
@@ -387,45 +374,20 @@ document.getElementById("btnMonthly").addEventListener("click", function () {
   loadMonthlyReportForm();
 });
 
+const downloadReportBtn = document.querySelector(".downloadReport");
+downloadReportBtn.addEventListener("click", downloadReports);
 
-
-function downloadCSV(csvContent, filename) {
-  const csvFile = new Blob([csvContent], { type: "text/csv" });
-  const downloadLink = document.createElement("a");
-  downloadLink.download = filename;
-  downloadLink.href = window.URL.createObjectURL(csvFile);
-  downloadLink.style.display = "none";
-  document.body.appendChild(downloadLink);
-  downloadLink.click();
-  document.body.removeChild(downloadLink);
-}
-
-function exportDataToCSV(data, filename) {
-  let csv = "";
-  if (data.length > 0) {
-
-    const excludedKeys = ["id", "createdAt", "updatedAt", "userId"];
-    const headers = Object.keys(data[0]).filter(
-      (key) => !excludedKeys.includes(key)
-    );
-
-    csv += headers.join(",") + "\n";
-
-    data.forEach((row) => {
-      const values = headers.map((header) => `"${row[header]}"`);
-      csv += values.join(",") + "\n";
+async function downloadReports() {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get("http://localhost:3000/reports/downloadReport", {
+      headers: { Authorization: token },
     });
+    if (response.data.success)
+      window.location.href = response.data.downloadURL;
+    else
+      alert(response.data.message);
+  } catch (err) {
+    console.error("Error in downloading the report:", err);
   }
-  downloadCSV(csv, filename);
 }
-
-const downloadBtn = document.querySelector(".btn-download");
-downloadBtn.addEventListener("click", function (e) {
-  e.preventDefault();
-  if (!currentReportData || currentReportData.length === 0) {
-    alert("No report data available for download. Please fetch a report first.");
-    return;
-  }
-  const filename = `${currentReportType}_report.csv`;
-  exportDataToCSV(currentReportData, filename);
-});

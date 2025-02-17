@@ -23,4 +23,10 @@ router.post(
   reportsController.monthlyReports
 );
 
+router.get(
+  "/downloadReport",
+  userAuthentication,
+  reportsController.downloadReport
+);
+
 module.exports = router;
