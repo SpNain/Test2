@@ -1,9 +1,15 @@
 const express = require("express");
+const cors = require("cors");
+const morgan = require("morgan");
 
 const bodyParser = require("body-parser");
 
 const dotenv = require("dotenv");
 dotenv.config();
+
+
+const path = require("path");
+const fs = require("fs");
 
 const sequelize = require("./util/database");
 
@@ -22,11 +28,19 @@ const ResetPassword = require("./models/resetPasswordModel");
 const Download = require("./models/downloadModel");
 
 const app = express();
+app.use(cors());
 
 app.use(express.static("public"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }
+);
+
+app.use(morgan("combined", { stream: accessLogStream }));
 
 app.use("/", userRouter);
 app.use("/user", userRouter);

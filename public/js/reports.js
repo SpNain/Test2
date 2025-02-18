@@ -389,3 +389,16 @@ async function downloadReports() {
     console.error("Error in downloading the report:", error);
   }
 }
+
+const logoutBtn = document.getElementById("logoutBtn");
+
+async function logout() {
+  try {
+    localStorage.clear();
+    window.location.href = "/";
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+logoutBtn.addEventListener("click", logout);

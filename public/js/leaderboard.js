@@ -1,4 +1,5 @@
 const lTbody = document.getElementById("lTbodyId");
+const logoutBtn = document.getElementById("logoutBtn");
 
 async function getLeaderboard() {
   try {
@@ -36,4 +37,14 @@ async function getLeaderboard() {
   }
 }
 
+async function logout() {
+  try {
+    localStorage.clear();
+    window.location.href = "/";
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", getLeaderboard);
+logoutBtn.addEventListener("click", logout);

@@ -1,4 +1,5 @@
 const dTbody = document.getElementById("dTbodyId");
+const logoutBtn = document.getElementById("logoutBtn");
 
 function extractInfo(str) {
   try {
@@ -93,4 +94,14 @@ async function getAllDownloads() {
   }
 }
 
+async function logout() {
+  try {
+    localStorage.clear();
+    window.location.href = "/";
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", getAllDownloads);
+logoutBtn.addEventListener("click", logout);

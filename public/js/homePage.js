@@ -8,6 +8,7 @@ const buyPremiumBtn = document.getElementById("buyPremiumBtn");
 const reportsLink = document.getElementById("reportsLink");
 const leaderboardLink = document.getElementById("leaderboardLink");
 const rowsPerPageSelect = document.getElementById("rowsPerPageSelect");
+const logoutBtn = document.getElementById("logoutBtn");
 
 categoryItems.forEach((item) => {
   item.addEventListener("click", (e) => {
@@ -71,6 +72,10 @@ async function addExpense() {
 
 async function getAllExpensesForPage(pageNo) {
   try {
+    
+    if (localStorage.getItem("rpp")) {
+      rowsPerPageSelect.value = parseInt(localStorage.getItem("rpp"));
+    }
     let rowsPerPage = parseInt(rowsPerPageSelect.value);
     const token = localStorage.getItem("token");
     const response = await axios.get(
@@ -384,7 +389,10 @@ addExpenseBtn.addEventListener("click", addExpense);
 
 document.addEventListener("DOMContentLoaded", isPremiumUser);
 document.addEventListener("DOMContentLoaded", () => getAllExpensesForPage(1));
-rowsPerPageSelect.addEventListener("change", () => getAllExpensesForPage(1));
+rowsPerPageSelect.addEventListener("change", () => {
+  localStorage.setItem("rpp", rowsPerPageSelect.value);
+  getAllExpensesForPage(1)
+});
 
 tableBody.addEventListener("click", (e) => {
   deleteExpense(e);
@@ -393,3 +401,14 @@ tableBody.addEventListener("click", (e) => {
 tableBody.addEventListener("click", (e) => {
   editExpense(e);
 });
+
+async function logout() {
+  try {
+    localStorage.clear();
+    window.location.href = "/";
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+logoutBtn.addEventListener("click", logout);
