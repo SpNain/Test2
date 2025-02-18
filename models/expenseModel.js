@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../util/database");
 
-const Expenses = sequelize.define("expenses", {
+const Expense = sequelize.define("expenses", {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -26,4 +26,4 @@ const Expenses = sequelize.define("expenses", {
   },
 });
 
-module.exports = Expenses;
+module.exports = Expense;

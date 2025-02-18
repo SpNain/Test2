@@ -1,19 +1,10 @@
-const categoryItems = document.querySelectorAll(".dropdown-item");
-const categoryInput = document.querySelector("#categoryInput");
-const categoryBtn = document.querySelector("#categoryBtn");
-const tbody = document.getElementById("tbodyId");
-
-categoryItems.forEach((item) => {
-  item.addEventListener("click", (e) => {
-    const selectedCategory = e.target.getAttribute("data-value");
-    categoryBtn.textContent = e.target.textContent;
-    categoryInput.value = selectedCategory;
-  });
-});
+const lTbody = document.getElementById("lTbodyId");
 
 async function getLeaderboard() {
+  const token = localStorage.getItem("token");
   const allUsers = await axios.get(
-    "http://localhost:3000/premium/getAllUsersForLeaderboard"
+    "http://localhost:3000/premium/getAllUsersForLeaderboard",
+    { headers: { Authorization: token } }
   );
   let position = 1;
   allUsers.data.forEach((user) => {
@@ -23,7 +14,7 @@ async function getLeaderboard() {
     let tr = document.createElement("tr");
     tr.setAttribute("class", "trStyle");
 
-    tbody.appendChild(tr);
+    lTbody.appendChild(tr);
 
     let th = document.createElement("th");
     th.setAttribute("scope", "row");

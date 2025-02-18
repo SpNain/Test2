@@ -100,7 +100,7 @@ exports.monthlyReports = async (req, res, next) => {
 
 exports.downloadReport = async (req, res, next) => {
   try {
-    const filename = `${currentReportType} Report/${
+    const filename = `${currentReportType}Report/${
       req.user.name
     }_Expenses_${new Date().toISOString()}.csv`;
 
@@ -124,6 +124,11 @@ exports.downloadReport = async (req, res, next) => {
     currentReportType = "";
 
     const downloadURL = await AwsService.uploadToS3(csv, filename);
+
+    await req.user.createDownload({
+      downloadLink: downloadURL
+    });
+
     res.status(200).json({downloadURL, success:true});
   } catch (err) {
     console.error(err);

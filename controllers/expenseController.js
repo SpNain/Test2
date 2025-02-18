@@ -182,6 +182,11 @@ exports.downloadAllExpenses = async (req, res, next) => {
     }
 
     const downloadURL = await AwsService.uploadToS3(csv, filename);
+
+    await req.user.createDownload({
+      downloadLink: downloadURL
+    });
+
     res.status(200).json({downloadURL, success:true});
 
   } catch (err) {

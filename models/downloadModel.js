@@ -1,17 +1,17 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../util/database");
 
-const Media = sequelize.define("Media", {
+const Download = sequelize.define("downloads", {
   id: {
     type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
   },
-  mediaLink: {
+  downloadLink: {
     type: Sequelize.STRING,
     allowNull: false,
   }
 });
 
-module.exports = Media;
+module.exports = Download;

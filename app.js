@@ -13,13 +13,13 @@ const purchaseMembershipRouter = require("./router/purchaseMembershipRouter");
 const leaderboardRouter = require("./router/leaderboardRouter");
 const passwordRouter = require("./router/passwordRouter");
 const reportsRouter = require("./router/reportsRouter");
-const mediaRouter = require("./router/mediaRouter");
+const downloadRouter = require("./router/downloadRouter");
 
 const User = require("./models/userModel");
 const Expense = require("./models/expenseModel");
 const Order = require("./models/ordersModel");
 const ResetPassword = require("./models/resetPasswordModel");
-const Media = require("./models/mediaModel");
+const Download = require("./models/downloadModel");
 
 const app = express();
 
@@ -43,7 +43,7 @@ app.use("/password", passwordRouter);
 
 app.use("/reports", reportsRouter);
 
-app.use("/media", mediaRouter);
+app.use("/download", downloadRouter);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
@@ -54,8 +54,8 @@ Order.belongsTo(User);
 User.hasMany(ResetPassword);
 ResetPassword.belongsTo(User);
 
-User.hasMany(Media);
-Media.belongsTo(User);
+User.hasMany(Download);
+Download.belongsTo(User);
 
 async function initiate() {
   try {
