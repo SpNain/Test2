@@ -64,8 +64,8 @@ async function addExpense() {
     if (response.status === 200) {
       window.location.reload();
     }
-  } catch (err) {
-    console.error("AddExpense went wrong:", err);
+  } catch (error) {
+    console.error("AddExpense went wrong:", error);
   }
 }
 
@@ -132,8 +132,8 @@ async function getAllExpensesForPage(pageNo) {
     });
 
     addPaginationNav(pageNo, response.data.totalPages);
-  } catch (err) {
-    console.error("getAllExpensesForPage went wrong:", err);
+  } catch (error) {
+    console.error("getAllExpensesForPage went wrong:", error);
   }
 }
 
@@ -203,8 +203,8 @@ async function deleteExpense(e) {
       });
       window.location.reload();
     }
-  } catch (err) {
-    console.error("DeleteExpense went wrong:", err);
+  } catch (error) {
+    console.error("DeleteExpense went wrong:", error);
   }
 }
 
@@ -215,6 +215,13 @@ async function editExpense(e) {
     const descriptionValue = document.getElementById("descriptionValue");
     const amountValue = document.getElementById("amountValue");
     const addExpenseBtn = document.getElementById("submitBtn");
+
+    if (categoryValue.value || descriptionValue.value || amountValue.value) {
+      alert("Please clear the form before editing another expense!");
+      window.location.reload();
+      return;
+    }
+
     if (e.target.classList.contains("edit")) {
       let tr = e.target.parentElement.parentElement;
       let id = tr.children[0].textContent;
@@ -248,8 +255,8 @@ async function editExpense(e) {
         }
       });
     }
-  } catch (err) {
-    console.error("EditExpense went wrong:", err);
+  } catch (error) {
+    console.error("EditExpense went wrong:", error);
   }
 }
 
@@ -313,55 +320,62 @@ async function buyPremium(e) {
         window.location.reload();
       }
     }
-  } catch (err) {
-    console.error("Error:", err);
+  } catch (error) {
+    console.error("Error:", error);
   }
 }
 
 async function isPremiumUser() {
-  const token = localStorage.getItem("token");
-  const res = await axios.get("http://localhost:3000/user/isPremiumUser", {
-    headers: { Authorization: token },
-  });
-  if (res.data.isPremiumUser) {
-    buyPremiumBtn.innerHTML = "Premium Member &#128081";
-    buyPremiumBtn.removeEventListener("click", buyPremium);
+  try {
+    const token = localStorage.getItem("token");
+    const res = await axios.get("http://localhost:3000/user/isPremiumUser", {
+      headers: { Authorization: token },
+    });
+    if (res.data.isPremiumUser) {
+      buyPremiumBtn.innerHTML = "Premium Member &#128081";
+      buyPremiumBtn.removeEventListener("click", buyPremium);
 
-    leaderboardLink.removeAttribute("onclick");
-    reportsLink.removeAttribute("onclick");
-    downloadsLink.removeAttribute("onclick");
-    leaderboardLink.setAttribute("href", "/premium/getLeaderboardPage");
-    reportsLink.setAttribute("href", "/reports/getReportsPage");
-    downloadsLink.setAttribute("href", "/download/getDownloadsPage");
+      leaderboardLink.removeAttribute("onclick");
+      reportsLink.removeAttribute("onclick");
+      downloadsLink.removeAttribute("onclick");
+      leaderboardLink.setAttribute("href", "/premium/getLeaderboardPage");
+      reportsLink.setAttribute("href", "/reports/getReportsPage");
+      downloadsLink.setAttribute("href", "/download/getDownloadsPage");
 
-    const divEle = document.createElement("div");
+      const divEle = document.createElement("div");
 
-    divEle.setAttribute("data-bs-toggle", "tooltip");
+      divEle.setAttribute("data-bs-toggle", "tooltip");
 
-    divEle.title = "Download All Your Expenses";
+      divEle.title = "Download All Your Expenses";
 
-    divEle.innerHTML = `
+      divEle.innerHTML = `
       <a href="#" class="btn btn-download downloadAllExpenses">
           <i class="bi bi-arrow-down"></i>
       </a>`;
 
-    divEle.addEventListener("click", downloadAllExpenses);
+      divEle.addEventListener("click", downloadAllExpenses);
 
-    document
-      .getElementById("containerDiv")
-      .insertAdjacentElement("afterend", divEle);
+      document
+        .getElementById("containerDiv")
+        .insertAdjacentElement("afterend", divEle);
+    }
+  } catch (error) {
+    console.error("Error:", error);
   }
 }
 
 async function downloadAllExpenses() {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get("http://localhost:3000/expense/downloadAllExpenses", {
-      headers: { Authorization: token },
-    });
+    const response = await axios.get(
+      "http://localhost:3000/expense/downloadAllExpenses",
+      {
+        headers: { Authorization: token },
+      }
+    );
     window.location.href = response.data.downloadURL;
-  } catch (err) {
-    console.error("Error in downloading all the expenses:", err);
+  } catch (error) {
+    console.error("Error in downloading all the expenses:", error);
   }
 }
 

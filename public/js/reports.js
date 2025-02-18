@@ -1,5 +1,4 @@
 async function getDailyReport(e) {
-
   const dateInput = document.getElementById("date");
   const tbodyDaily = document.getElementById("tbodyDailyId");
   const tfootDaily = document.getElementById("tfootDailyId");
@@ -51,8 +50,8 @@ async function getDailyReport(e) {
     td3.textContent = "Total";
     td4.textContent = totalAmount;
     tr.append(td1, td2, td3, td4);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error("Error in getting daily report", err);
   }
 }
 
@@ -126,7 +125,6 @@ document.getElementById("btnDaily").addEventListener("click", function () {
   loadDailyReportForm();
 });
 
-
 async function getWeeklyReport(e) {
   const weekInput = document.getElementById("week");
   const tbodyWeekly = document.getElementById("tbodyWeeklyId");
@@ -179,8 +177,8 @@ async function getWeeklyReport(e) {
     td3.textContent = "Total";
     td4.textContent = totalAmount;
     tr.append(td1, td2, td3, td4);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error("Error in getting weekly report", err);
   }
 }
 
@@ -250,7 +248,6 @@ document.getElementById("btnWeekly").addEventListener("click", function () {
   loadWeeklyReportForm();
 });
 
-
 async function getMonthlyReport(e) {
   const monthInput = document.getElementById("month");
   const tbodyMonthly = document.getElementById("tbodyMonthlyId");
@@ -303,8 +300,8 @@ async function getMonthlyReport(e) {
     td3.textContent = "Total";
     td4.textContent = totalAmount;
     tr.append(td1, td2, td3, td4);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error("Error in getting monthly report", err);
   }
 }
 
@@ -380,14 +377,15 @@ downloadReportBtn.addEventListener("click", downloadReports);
 async function downloadReports() {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get("http://localhost:3000/reports/downloadReport", {
-      headers: { Authorization: token },
-    });
-    if (response.data.success)
-      window.location.href = response.data.downloadURL;
-    else
-      alert(response.data.message);
-  } catch (err) {
-    console.error("Error in downloading the report:", err);
+    const response = await axios.get(
+      "http://localhost:3000/reports/downloadReport",
+      {
+        headers: { Authorization: token },
+      }
+    );
+    if (response.data.success) window.location.href = response.data.downloadURL;
+    else alert(response.data.message);
+  } catch (error) {
+    console.error("Error in downloading the report:", error);
   }
 }

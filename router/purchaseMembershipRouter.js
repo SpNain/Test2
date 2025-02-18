@@ -1,10 +1,9 @@
 const express = require("express");
+const router = express.Router();
 
 const purchaseMembershipController = require("../controllers/purchaseMembershipController");
-
 const authenticatemiddleware = require("../middleware/auth");
 
-const router = express.Router();
 
 router.post(
   "/createOrder",

@@ -210,3 +210,14 @@ input {
 .container.right-panel-active .overlay-right {
   transform: translateX(20%);
 }
+
+.errorMessage {
+  display: none;
+  color: red;
+  font: italic bold 12px arial, sans-serif;
+}
+
+#signUpBtn,
+#loginBtn {
+  cursor: pointer;
+}

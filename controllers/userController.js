@@ -36,9 +36,7 @@ exports.postUserSignUp = async (req, res, next) => {
       await t.rollback();
       return res
         .status(409)
-        .send(
-          `<script>alert('This email is already taken. Please choose another one.'); window.location.href='/'</script>`
-        );
+        .json({ message: "This email is already taken. Please choose another one." });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -54,9 +52,7 @@ exports.postUserSignUp = async (req, res, next) => {
     await t.commit();
     res
       .status(200)
-      .send(
-        `<script>alert('User Created Successfully!'); window.location.href='/'</script>`
-      );
+      .json({message: "User Created Successfully!"});
   } catch (err) {
     await t.rollback();
     console.error(err);

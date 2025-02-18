@@ -1,4 +1,5 @@
 const resetPasswordEmailBtn = document.getElementById("resetPasswordEmailBtn");
+
 async function sendMail() {
   try {
     const email = document.getElementById("email").value;
@@ -8,7 +9,7 @@ async function sendMail() {
     alert(res.data.message);
     window.location.href = "/";
   } catch (error) {
-    console.log(error);
+    console.error(error);
     alert(error.response.data.message);
     window.location.reload();
   }

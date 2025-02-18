@@ -11,7 +11,7 @@ async function updatePassword() {
     alert(res.data.message);
     window.location.href = "/";
   } catch (error) {
-    console.log(error);
+    console.error(error);
     alert(error.response.data.message);
     window.location.reload();
   }
