@@ -5,7 +5,7 @@ async function getLeaderboard() {
   try {
     const token = localStorage.getItem("token");
     const allUsers = await axios.get(
-      "http://localhost:3000/premium/getAllUsersForLeaderboard",
+      "/premium/getAllUsersForLeaderboard",
       { headers: { Authorization: token } }
     );
     let position = 1;

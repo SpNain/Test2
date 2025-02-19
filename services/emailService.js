@@ -19,7 +19,7 @@ exports.sendResetPasswordEmail = async (email, requestId) => {
       subject: "Expense Tracker Reset Password",
       textContent: "Reset your password using the link below:",
       htmlContent: `<h3>Click the link below to reset your password:</h3>
-        <a href="http://localhost:3000/password/resetPasswordPage/${requestId}">Reset Password</a>`,
+        <a href="${process.env.API_URL}/password/resetPasswordPage/${requestId}">Reset Password</a>`,
     });
   } catch (error) {
     console.error("Error sending email:", error);

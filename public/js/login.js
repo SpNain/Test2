@@ -24,7 +24,7 @@ async function login() {
 
   try {
     const response = await axios.post(
-      "http://localhost:3000/user/login",
+      "/user/login",
       loginDetails
     );
 
@@ -50,7 +50,7 @@ async function signUP() {
   const email = document.getElementById("email");
   const password = document.getElementById("password");
   try {
-    const response = await axios.post("http://localhost:3000/user/signUp", {
+    const response = await axios.post("/user/signUp", {
       name: name.value,
       email: email.value,
       password: password.value,

@@ -52,7 +52,7 @@ async function addExpense() {
     const token = localStorage.getItem("token");
 
     const response = await axios.post(
-      "http://localhost:3000/expense/addExpense",
+      "/expense/addExpense",
       {
         date: dateStr,
         category: categoryValue,
@@ -79,7 +79,7 @@ async function getAllExpensesForPage(pageNo) {
     let rowsPerPage = parseInt(rowsPerPageSelect.value);
     const token = localStorage.getItem("token");
     const response = await axios.get(
-      `http://localhost:3000/expense/getAllExpensesForPage?pageNo=${pageNo}&rowsPerPage=${rowsPerPage}`,
+      `/expense/getAllExpensesForPage?pageNo=${pageNo}&rowsPerPage=${rowsPerPage}`,
       { headers: { Authorization: token } }
     );
 
@@ -203,7 +203,7 @@ async function deleteExpense(e) {
     if (e.target.classList.contains("delete")) {
       let tr = e.target.parentElement.parentElement;
       let id = tr.children[0].textContent;
-      await axios.get(`http://localhost:3000/expense/deleteExpense/${id}`, {
+      await axios.get(`/expense/deleteExpense/${id}`, {
         headers: { Authorization: token },
       });
       window.location.reload();
@@ -232,7 +232,7 @@ async function editExpense(e) {
       let id = tr.children[0].textContent;
 
       const allExpenses = await axios.get(
-        "http://localhost:3000/expense/getAllExpenses",
+        "/expense/getAllExpenses",
         { headers: { Authorization: token } }
       );
       allExpenses.data.forEach((expense) => {
@@ -247,7 +247,7 @@ async function editExpense(e) {
           addExpenseBtn.addEventListener("click", async function update(e) {
             e.preventDefault();
             await axios.post(
-              `http://localhost:3000/expense/editExpense/${id}`,
+              `/expense/editExpense/${id}`,
               {
                 category: categoryValue.textContent.trim(),
                 description: descriptionValue.value,
@@ -270,7 +270,7 @@ async function buyPremium(e) {
     const token = localStorage.getItem("token");
 
     const response = await axios.post(
-      "http://localhost:3000/purchase/createOrder",
+      "/purchase/createOrder",
       { orderId: `${Date.now()}` },
       {
         headers: { Authorization: token },
@@ -306,11 +306,11 @@ async function buyPremium(e) {
       if (result.paymentDetails) {
         console.log("Payment has been completed, Check for Payment Status");
         const statusResponse = await axios.get(
-          `http://localhost:3000/purchase/getPaymentStatus/${orderId}`
+          `/purchase/getPaymentStatus/${orderId}`
         );
 
         const statusUpdateResponse = await axios.post(
-          "http://localhost:3000/purchase/updateTransactionStatus",
+          "/purchase/updateTransactionStatus",
           {
             orderId: orderId,
             status: statusResponse.data.orderStatus,
@@ -333,7 +333,7 @@ async function buyPremium(e) {
 async function isPremiumUser() {
   try {
     const token = localStorage.getItem("token");
-    const res = await axios.get("http://localhost:3000/user/isPremiumUser", {
+    const res = await axios.get("/user/isPremiumUser", {
       headers: { Authorization: token },
     });
     if (res.data.isPremiumUser) {
@@ -373,7 +373,7 @@ async function downloadAllExpenses() {
   try {
     const token = localStorage.getItem("token");
     const response = await axios.get(
-      "http://localhost:3000/expense/downloadAllExpenses",
+      "/expense/downloadAllExpenses",
       {
         headers: { Authorization: token },
       }

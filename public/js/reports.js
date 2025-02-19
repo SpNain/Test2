@@ -15,7 +15,7 @@ async function getDailyReport(e) {
 
     let totalAmount = 0;
     const response = await axios.post(
-      "http://localhost:3000/reports/dailyReports",
+      "/reports/dailyReports",
       { date: dateValue },
       { headers: { Authorization: token } }
     );
@@ -142,7 +142,7 @@ async function getWeeklyReport(e) {
 
     let totalAmount = 0;
     const response = await axios.post(
-      "http://localhost:3000/reports/weeklyReports",
+      "/reports/weeklyReports",
       { week: weekValue },
       { headers: { Authorization: token } }
     );
@@ -265,7 +265,7 @@ async function getMonthlyReport(e) {
 
     let totalAmount = 0;
     const response = await axios.post(
-      "http://localhost:3000/reports/monthlyReports",
+      "/reports/monthlyReports",
       { month: monthValue },
       { headers: { Authorization: token } }
     );
@@ -378,7 +378,7 @@ async function downloadReports() {
   try {
     const token = localStorage.getItem("token");
     const response = await axios.get(
-      "http://localhost:3000/reports/downloadReport",
+      "/reports/downloadReport",
       {
         headers: { Authorization: token },
       }

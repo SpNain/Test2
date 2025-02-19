@@ -20,7 +20,7 @@ class CashfreeService {
           customer_email: user.email,
         },
         order_meta: {
-          return_url: `http://localhost:3000/purchase/getPaymentStatus/${orderId}`,
+          return_url: `${process.env.API_URL}/purchase/getPaymentStatus/${orderId}`,
           payment_methods: "cc, upi, nb",
         },
         order_expiry_time: formattedExpiryDate,

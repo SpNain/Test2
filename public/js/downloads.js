@@ -49,7 +49,7 @@ async function getAllDownloads() {
   try {
     const token = localStorage.getItem("token");
     const response = await axios.get(
-      "http://localhost:3000/download/getAllDownloads",
+      "/download/getAllDownloads",
       { headers: { Authorization: token } }
     );
 
