@@ -1,13 +1,19 @@
+:root {
+  --primary-color: #52616b;
+  --secondary-color: #849ba5;
+  --accent-color: #eef7fc;
+  --background-color: #f8f9fa;
+  --text-color: #424242;
+}
+
 html,
 body {
   height: 100%;
   width: 100%;
-  background-color: #effeff;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
-/* 293241 dark
-  3d5a80 blue
-  98c1d9 light
-*/
+
 .editDelete {
   float: right;
   margin: 3px;
@@ -16,97 +22,106 @@ body {
 #png {
   margin-right: 10px;
 }
+
+/* General Button Styling */
+button {
+  border-radius: 5px;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 #form1 {
   border-radius: 10px;
-  background-color: #3d5a80;
-  box-shadow: 4px 4px 9px #293241;
-  margin: 20px 193px;
+  background-color: var(--secondary-color);
+  box-shadow: 4px 4px 9px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 1000px;
 }
+
 #containerDiv {
   border-radius: 10px;
-  background-color: #d2eaf7;
-  /* background-image: linear-gradient(to bottom right, #c7e9fd, #3d5a80); */
-  box-shadow: 4px 4px 9px #b8b8b8;
+  background-color: var(--accent-color);
+  box-shadow: 4px 4px 9px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 1200px;
 }
+
 #submitBtn {
-  width: 140px;
-  background-color: #293241;
-  border-color: #293241;
+  background-color: var(--primary-color);
   color: white;
 }
+
+#submitBtn:hover {
+  background-color: white;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
 .topBtn {
   background-color: white;
-  border-color: white;
-  color: #293241;
+  color: var(--primary-color);
 }
+
+.topBtn:hover {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
 #navigation {
-  background-color: #233b64;
+  background-color: var(--primary-color);
 }
+
 #categoryBtn {
-  background-color: #293241;
-  width: auto;
-  border-radius: 7px;
-  border: none;
+  background-color: var(--primary-color);
   color: white;
 }
-#category {
-  width: 300px;
+
+#categoryBtn:hover {
+  background-color: white;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
 }
+
 .input-group-text {
-  background-color: #293241;
+  background-color: var(--primary-color);
   color: white;
-  border: none;
-}
-#description {
-  width: 2000px;
 }
 
 .trStyle {
   background-color: transparent;
 }
-#categoryBtn:hover,
-#submitBtn:hover,
-.editDelete:hover {
-  background-color: #ffffff;
-  color: #293241;
-  border-color: #293241;
-}
-.topBtn:hover {
-  background-color: #3d5a80;
-  color: white;
-  border-color: #3d5a80;
-}
-.editDelete {
-  background-color: #293241;
-  border: none;
-}
 
 #tableHead {
-  background-color: #3d5a80;
+  background-color: var(--secondary-color);
   color: white;
 }
 
 .page-link {
-  background-color: #3d5a80;
+  background-color: var(--secondary-color);
   color: white;
 }
 
 .page-link:hover {
-  background-color: #a2c9de;
-  color: #233b64;
+  background-color: var(--primary-color);
+  color: white;
 }
 
-.pagination{
+.pagination {
   margin: 0px;
 }
 
-.activePage{
-  background-color: #29346e;
+.activePage {
+  background-color: var(--primary-color);
+  color: white;
 }
 
-.disabledPage{
+.disabledPage {
   pointer-events: none;
-  background-color: #3d5a8078;
+  background-color: rgba(85, 85, 85, 0.3);
 }
 
 .btn-download {
@@ -125,6 +140,7 @@ body {
   z-index: 1;
   transition: background-color 0.3s ease;
 }
+
 .btn-download:hover {
   background-color: #218838;
 }

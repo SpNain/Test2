@@ -1,17 +1,17 @@
-const signUp = document.getElementById("signUp");
-const signIn = document.getElementById("signIn");
-const container = document.getElementById("container");
+const wrapper = document.querySelector(".wrapper"),
+  signupHeader = document.querySelector(".signup header"),
+  loginHeader = document.querySelector(".login header");
+
+loginHeader.addEventListener("click", () => {
+  wrapper.classList.add("active");
+});
+
+signupHeader.addEventListener("click", () => {
+  wrapper.classList.remove("active");
+});
 
 const signUpError = document.getElementById("signUpError");
 const loginError = document.getElementById("loginError");
-
-signUp.addEventListener("click", () => {
-  container.classList.add("right-panel-active");
-});
-
-signIn.addEventListener("click", () => {
-  container.classList.remove("right-panel-active");
-});
 
 async function login() {
   const loginEmail = document.getElementById("loginEmail");
@@ -23,10 +23,7 @@ async function login() {
   };
 
   try {
-    const response = await axios.post(
-      "/user/login",
-      loginDetails
-    );
+    const response = await axios.post("/user/login", loginDetails);
 
     alert(response.data.message);
     localStorage.setItem("token", response.data.token);
@@ -56,7 +53,7 @@ async function signUP() {
       password: password.value,
     });
     alert(response.data.message);
-    window.location.href = "/";
+    loginHeader.click();
   } catch (error) {
     if (error.response) {
       signUpError.textContent = error.response.data.message;
