@@ -1,36 +1,30 @@
 :root {
-  --primary-color: #52616B;       /* Muted blue-gray for key elements */
-  --secondary-color: #849BA5;     /* Softer blue-gray for backgrounds */
-  --accent-color: #EEF7FC;        /* Very light blue for accents */
-  --background-color: #F8F9FA;    /* Clean, off-white backdrop */
-  --text-color: #424242;          /* Subtle gray for text */
+  --primary-color: #52616B;
+  --secondary-color: #849BA5;
 }
 
 html,
 body {
   height: 100%;
   width: 100%;
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: #F8F9FA;
+  color: #424242;
 }
 
-/* PNG image margin */
 #png {
   margin-right: 10px;
 }
 
 
-/* Data Table Container */
 #dTable {
   border-radius: 10px;
-  background-color: var(--accent-color);
+  background-color: #EEF7FC;
   box-shadow: 4px 4px 9px rgba(0, 0, 0, 0.1);
   margin: 20px auto;
   padding: 20px;
   max-width: 1100px;
 }
 
-/* Top Button */
 .topBtn {
   background-color: white;
   border: 1px solid white;
@@ -43,7 +37,6 @@ body {
   border: 1px solid var(--secondary-color);
 }
 
-/* Navigation Bar */
 #navigation {
   background-color: var(--primary-color);
 }
@@ -53,7 +46,6 @@ body {
   color: white;
 }
 
-/* Transparent Table Row Style */
 .trStyle {
   background-color: transparent;
 }

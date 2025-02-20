@@ -1,12 +1,9 @@
-/* Import Google font - Poppins */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
 
 :root {
-  --primary-color: #52616B;       /* Muted blue-gray for key elements */
-  --secondary-color: #849BA5;     /* Softer blue-gray for accents */
-  --accent-color: #EEF7FC;        /* Very light blue for subtle accents */
-  --background-color: #F8F9FA;    /* Clean, off-white backdrop */
-  --text-color: #424242;          /* Dark gray for text */
+  --primary-color: #52616B;
+  --soft-color: #F8F9FA;
+  --text-color: #424242;
 }
 
 * {
@@ -22,25 +19,21 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  /* Subtle radial gradient using a white to off‑white transition */
-  background: radial-gradient(circle, var(--background-color) 10%, #52616B 100%);
+  background: radial-gradient(circle, var(--soft-color) 10%, #52616B 100%);
 }
 
-/* Wrapper for the form */
 .wrapper {
   position: relative;
   max-width: 470px;
   width: 100%;
   border-radius: 12px;
   padding: 20px 30px 120px;
-  /* A modern gradient blending the primary color into the background */
-  background: linear-gradient(360deg, var(--primary-color) 0%, var(--background-color) 80%);
+  background: linear-gradient(360deg, var(--primary-color) 0%, var(--soft-color) 80%);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   margin-top: 20px;
 }
 
-/* Login Form */
 .form.login {
   position: absolute;
   left: 50%;
@@ -60,7 +53,6 @@ body {
   box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Form Headers */
 .form header {
   font-size: 30px;
   text-align: center;
@@ -87,7 +79,6 @@ body {
   opacity: 0.6;
 }
 
-/* Form Layout */
 .wrapper form {
   display: flex;
   flex-direction: column;
@@ -95,7 +86,6 @@ body {
   margin-top: 40px;
 }
 
-/* Input Styles */
 form input {
   height: 60px;
   outline: none;
@@ -116,7 +106,6 @@ form input {
   box-shadow: 0 1px 0 #ddd;
 }
 
-/* Link Styles */
 form a {
   color: var(--text-color);
   text-decoration: none;
@@ -126,7 +115,6 @@ form a:hover {
   text-decoration: underline;
 }
 
-/* Submit Button */
 form input[type="submit"] {
   margin-top: 15px;
   font-size: 18px;
@@ -141,7 +129,6 @@ form input[type="submit"] {
   border: none;
 }
 
-/* Error Message */
 .errorMessage {
   display: none;
   color: red;

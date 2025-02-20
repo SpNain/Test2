@@ -1,17 +1,14 @@
 :root {
-  --primary-color: #52616B;       /* Muted blue-gray for key elements */
-  --secondary-color: #849BA5;     /* Softer blue-gray for backgrounds & accents */
-  --accent-color: #EEF7FC;        /* Very light blue for accents */
-  --background-color: #F8F9FA;    /* Clean, off-white backdrop */
-  --text-color: #424242;          /* Subtle, dark gray for text */
+  --primary-color: #52616B;
+  --secondary-color: #849BA5;
 }
 
 html,
 body {
   height: 100%;
   width: 100%;
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: #F8F9FA;
+  color: #424242;
 }
 
 #png {
@@ -20,8 +17,7 @@ body {
 
 #lTable {
   border-radius: 10px;
-  background-color: var(--accent-color); /* Updated to use accent color */
-  /* background-image: linear-gradient(to bottom right, #c7e9fd, var(--secondary-color)); */
+  background-color: #eef7fc;
   box-shadow: 4px 4px 9px rgba(184, 184, 184, 1);
 }
 
