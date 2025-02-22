@@ -107,7 +107,7 @@ form input {
 }
 
 form a {
-  color: var(--text-color);
+  color: blue;
   text-decoration: none;
 }
 

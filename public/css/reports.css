@@ -1,28 +1,19 @@
 :root {
   --primary-color: #52616B;
   --secondary-color: #849BA5;
+  --table-color: #eef7fc;
+  --tr-hover-color: rgb(217, 253, 253);
 }
 
-html,
-body {
-  height: 100%;
-  width: 100%;
-  background-color: #F8F9FA;
-  color: #424242;
-}
-
-#png {
-  margin-right: 10px;
-}
-
-#navigation {
-  background-color: var(--primary-color);
+.rTheadId {
+  background-color: var(--secondary-color);
+  color: white;
 }
 
 .reportTable {
   border-radius: 10px;
-  background-color: #EEF7FC;
-  box-shadow: 4px 4px 9px rgba(184, 184, 184, 1);
+  background-color: var(--table-color);
+  box-shadow: 2px 2px 9px rgba(0, 0, 0, 0.5), -2px -2px 9px rgba(0, 0, 0, 0.5);
 }
 
 .showBtn {
@@ -32,21 +23,12 @@ body {
   color: white;
 }
 
-.topBtn {
-  background-color: white;
-  border: 1px solid white;
-  color: var(--primary-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.topBtn:hover {
-  background-color: var(--secondary-color);
-  color: white;
-  border-color: var(--secondary-color);
-}
-
 .trStyle {
   background-color: transparent;
+}
+
+.trStyle:hover {
+  background-color: var(--tr-hover-color);
 }
 
 #dailyTotal,

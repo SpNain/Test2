@@ -1,23 +1,67 @@
 :root {
   --primary-color: #52616b;
   --secondary-color: #849ba5;
+  --hover-color: #343d43;
+  --tr-hover-color: rgb(217, 253, 253);
+  --table-color: #eef7fc;
 }
 
-html,
-body {
-  height: 100%;
-  width: 100%;
+#form1 {
+  border-radius: 10px;
   background-color: #f8f9fa;
-  color: #424242;
+  box-shadow: 2px 2px 9px rgba(0, 0, 0, 0.5), -2px -2px 9px rgba(0, 0, 0, 0.5);
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 1000px;
 }
 
-.editDelete {
-  float: right;
-  margin: 3px;
-  padding: 3px 10px;
+#categoryBtn {
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 20px;
 }
-#png {
-  margin-right: 10px;
+
+.input-group{
+  width:auto;
+}
+
+.input-group-text {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+#submitBtn {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+#categoryBtn:hover, #submitBtn:hover {
+  background-color: var(--hover-color);
+  border: 1px solid var(--hover-color);
+}
+
+#containerDiv {
+  border-radius: 10px;
+  background-color: var(--table-color);
+  box-shadow: 0px 5px 9px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  max-width: 1200px;
+}
+
+#tableHead {
+  background-color: var(--secondary-color);
+  color: white;
+  width: 100%;
+}
+
+.trStyle {
+  background-color: transparent;
+  /* width: 100%; */
+}
+
+.trStyle:hover {
+  background-color: var(--tr-hover-color);
+
 }
 
 button {
@@ -28,72 +72,14 @@ button {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-#form1 {
-  border-radius: 10px;
-  background-color: var(--secondary-color);
-  box-shadow: 4px 4px 9px rgba(0, 0, 0, 0.1);
-  margin: 20px auto;
-  padding: 20px;
-  max-width: 1000px;
+.editDelete {
+  float: right;
+  margin: 3px;
+  padding: 3px 10px;
 }
 
-#containerDiv {
-  border-radius: 10px;
-  background-color: #eef7fc;
-  box-shadow: 4px 4px 9px rgba(0, 0, 0, 0.1);
-  margin: 20px auto;
-  padding: 20px;
-  max-width: 1200px;
-}
-
-#submitBtn {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-#submitBtn:hover {
-  background-color: white;
-  color: var(--primary-color);
-  border: 1px solid var(--primary-color);
-}
-
-.topBtn {
-  background-color: white;
-  color: var(--primary-color);
-}
-
-.topBtn:hover {
-  background-color: var(--secondary-color);
-  color: white;
-}
-
-#navigation {
-  background-color: var(--primary-color);
-}
-
-#categoryBtn {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-#categoryBtn:hover {
-  background-color: white;
-  color: var(--primary-color);
-  border: 1px solid var(--primary-color);
-}
-
-.input-group-text {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.trStyle {
-  background-color: transparent;
-}
-
-#tableHead {
-  background-color: var(--secondary-color);
-  color: white;
+.pagination {
+  margin: 0px;
 }
 
 .page-link {
@@ -102,12 +88,8 @@ button {
 }
 
 .page-link:hover {
-  background-color: var(--primary-color);
+  background-color: var(--hover-color);
   color: white;
-}
-
-.pagination {
-  margin: 0px;
 }
 
 .activePage {

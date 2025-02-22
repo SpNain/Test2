@@ -11,6 +11,7 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+  <link rel="stylesheet" href="/css/navbar.css" />
   <link rel="stylesheet" href="/css/downloads.css" />
 </head>
 
@@ -21,7 +22,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark" id="navigation">
     <div class="container-fluid">
       <a href="/homePage">
-        <img src="/views/euro.png" width="30px" height="30px" id="png" />
+        <img src="/views/logo.png" width="30px" height="30px" id="png" />
       </a>
       <a class="navbar-brand" href="/homePage">Expense Tracker</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -34,18 +35,18 @@
             <a class="nav-link active" aria-current="page" href="/homePage">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/reports/getReportsPage">Reports &#128081</a>
+            <a class="nav-link active" aria-current="page" href="/reports/getReportsPage">Reports &#x1F48E</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/premium/getLeaderboardPage">LeaderBoard &#128081</a>
+            <a class="nav-link active" aria-current="page" href="/premium/getLeaderboardPage">LeaderBoard &#x1F48E</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/download/getDownloadsPage">Downloads &#128081</a>
+            <a class="nav-link active" aria-current="page" href="/download/getDownloadsPage">Downloads &#x1F48E</a>
           </li>
         </ul>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
           <button class="topBtn btn py-1" type="button">
-            Premium Member &#128081
+            Premium Member &#x1F48E
           </button>
           <button id="logoutBtn" class="topBtn btn py-1" type="button">Log out</button>
         </div>
@@ -56,21 +57,21 @@
 
   <!-- Downloads heading -->
    <div class="container d-flex justify-content-center mt-5">
-     <h2 class="">Downloads History &#x2913</h2>
+     <h2>Downloads History &#x2913</h2>
    </div>
 
   <div class="container table-responsive mt-4 p-3 d-flex justify-content-evenly" id="dTable">
-    <table class="table table-hover" >
+    <table class="table table-hover mt-3" style="width: 90%" >
 
 
       <!-- table head -->
 
       <thead id="dTheadId">
         <tr class="">
-          <th scope="col" class="rounded-start" style="width: 10%">S. No.</th>
+          <th scope="col" class="rounded-start" style="width: 15%">S. No.</th>
           <th scope="col" style="width: 40%">Type</th>
-          <th scope="col" style="width: 25%">Download Date</th>
-          <th scope="col" class="rounded-end" style="width: 25%">Download Again</th>
+          <th scope="col" style="width: 30%">Download Date</th>
+          <th scope="col" class="rounded-end" style="width: 13%">&nbsp; Download</th>
         </tr>
       </thead>
 

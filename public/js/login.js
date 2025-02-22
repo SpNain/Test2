@@ -1,12 +1,18 @@
 const wrapper = document.querySelector(".wrapper"),
   signupHeader = document.querySelector(".signup header"),
-  loginHeader = document.querySelector(".login header");
+  loginHeader = document.querySelector(".login header"),
+  signUpAnker = document.querySelector("#signUpAnker");
 
+// wrapper pe agr active class lgi h to login show hoga aur active nahi lga h to signup show hoga
 loginHeader.addEventListener("click", () => {
   wrapper.classList.add("active");
 });
 
 signupHeader.addEventListener("click", () => {
+  wrapper.classList.remove("active");
+});
+
+signUpAnker.addEventListener("click", () => {
   wrapper.classList.remove("active");
 });
 

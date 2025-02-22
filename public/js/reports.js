@@ -84,12 +84,12 @@ function loadDailyReportForm() {
                   <table class="table table-hover display" style="width: 100%">
                       <!-- Daily table head -->
   
-                      <thead>
+                      <thead class="rTheadId">
                           <tr>
-                              <th scope="col">Date</th>
+                              <th scope="col" class="rounded-start">Date</th>
                               <th scope="col">Category</th>
                               <th scope="col">Description</th>
-                              <th scope="col">Amount</th>
+                              <th scope="col" class="rounded-end">Amount</th>
                           </tr>
                       </thead>
   
@@ -209,12 +209,12 @@ function loadWeeklyReportForm() {
             <table class="table table-hover" style="width: 100%">
                 <!-- Weekly table head -->
 
-                <thead>
+                <thead class="rTheadId">
                     <tr>
-                        <th scope="col">Date</th>
+                        <th scope="col" class="rounded-start">Date</th>
                         <th scope="col">Category</th>
                         <th scope="col">Description</th>
-                        <th scope="col">Amount</th>
+                        <th scope="col" class="rounded-end">Amount</th>
                     </tr>
                 </thead>
 
@@ -332,12 +332,12 @@ function loadMonthlyReportForm() {
             <table class="table table-hover display" style="width: 100%">
                 <!-- Monthly table head -->
 
-                <thead>
+                <thead class="rTheadId">
                     <tr>
-                        <th scope="col">Date</th>
+                        <th scope="col" class="rounded-start">Date</th>
                         <th scope="col">Category</th>
                         <th scope="col">Description</th>
-                        <th scope="col">Amount</th>
+                        <th scope="col" class="rounded-end">Amount</th>
                     </tr>
                 </thead>
 
@@ -377,12 +377,9 @@ downloadReportBtn.addEventListener("click", downloadReports);
 async function downloadReports() {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get(
-      "/reports/downloadReport",
-      {
-        headers: { Authorization: token },
-      }
-    );
+    const response = await axios.get("/reports/downloadReport", {
+      headers: { Authorization: token },
+    });
     if (response.data.success) window.location.href = response.data.downloadURL;
     else alert(response.data.message);
   } catch (error) {

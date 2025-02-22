@@ -12,6 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
     <link rel="stylesheet" href="/css/reports.css" />
 </head>
 
@@ -22,7 +23,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark" id="navigation">
         <div class="container-fluid">
             <a href="/homePage">
-                <img src="/views/euro.png" width="30px" height="30px" id="png" />
+                <img src="/views/logo.png" width="30px" height="30px" id="png" />
             </a>
             <a class="navbar-brand" href="/homePage">Expense Tracker</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -36,21 +37,21 @@
                         <a class="nav-link active" aria-current="page" href="/homePage">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/reports/getReportsPage">Reports &#128081
+                        <a class="nav-link active" aria-current="page" href="/reports/getReportsPage">Reports &#x1F48E
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/premium/getLeaderboardPage">LeaderBoard
-                            &#128081
+                            &#x1F48E
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/download/getDownloadsPage">Downloads &#128081</a>
+                        <a class="nav-link active" aria-current="page" href="/download/getDownloadsPage">Downloads &#x1F48E</a>
                       </li>
                 </ul>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button class="topBtn btn py-1" type="button">
-                        Premium Member &#128081
+                        Premium Member &#x1F48E
                     </button>
                     <button id="logoutBtn" class="topBtn btn py-1" type="button">Log out</button>
                 </div>
@@ -94,12 +95,12 @@
                 <table class="table table-hover display" style="width: 100%">
                     <!-- Daily table head -->
 
-                    <thead>
+                    <thead class="rTheadId">
                         <tr>
-                            <th scope="col">Date</th>
+                            <th scope="col" class="rounded-start">Date</th>
                             <th scope="col">Category</th>
                             <th scope="col">Description</th>
-                            <th scope="col">Amount</th>
+                            <th scope="col" class="rounded-end">Amount</th>
                         </tr>
                     </thead>
 

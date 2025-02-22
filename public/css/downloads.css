@@ -1,44 +1,17 @@
 :root {
-  --primary-color: #52616B;
-  --secondary-color: #849BA5;
+  --secondary-color: #849ba5;
+  --tr-hover-color: rgb(217, 253, 253);
+  --table-color: #eef7fc;
 }
-
-html,
-body {
-  height: 100%;
-  width: 100%;
-  background-color: #F8F9FA;
-  color: #424242;
-}
-
-#png {
-  margin-right: 10px;
-}
-
 
 #dTable {
   border-radius: 10px;
-  background-color: #EEF7FC;
-  box-shadow: 4px 4px 9px rgba(0, 0, 0, 0.1);
+  background-color: var(--table-color);
+  box-shadow: 2px 2px 9px rgba(0, 0, 0, 0.5), -2px -2px 9px rgba(0, 0, 0, 0.5);
   margin: 20px auto;
   padding: 20px;
   max-width: 1100px;
-}
-
-.topBtn {
-  background-color: white;
-  border: 1px solid white;
-  color: var(--primary-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-.topBtn:hover {
-  background-color: var(--secondary-color);
-  color: white;
-  border: 1px solid var(--secondary-color);
-}
-
-#navigation {
-  background-color: var(--primary-color);
+  width: 70%;
 }
 
 #dTheadId {
@@ -48,4 +21,8 @@ body {
 
 .trStyle {
   background-color: transparent;
+}
+
+.trStyle:hover {
+  background-color: var(--tr-hover-color);
 }
