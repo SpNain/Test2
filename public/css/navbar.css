@@ -8,7 +8,6 @@ html,
 body {
   height: 100%;
   width: 100%;
-  /* background-color: #f8f9fa; */
   background: radial-gradient(circle, var(--soft-color) 10%, #52616B 100%);
   color: #424242;
 }
