@@ -5,7 +5,6 @@ const container = document.getElementById("container");
 signUp.addEventListener("click", () => {
   container.classList.add("right-panel-active");
 
-  // signup active hote hi login input khaali krdo
   document.getElementById("loginEmail").value = "";
   document.getElementById("loginPassword").value = "";
 });
@@ -13,7 +12,6 @@ signUp.addEventListener("click", () => {
 signIn.addEventListener("click", () => {
   container.classList.remove("right-panel-active");
 
-  // signIn or login active hote hi sign up input khaali krdo
   document.getElementById("name").value = "";
   document.getElementById("email").value = "";
   document.getElementById("number").value = "";

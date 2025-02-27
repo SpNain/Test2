@@ -1,7 +1,4 @@
-const path = require("path");
-const User = require("../models/userModel");
 const Chat = require("../models/chatModel");
-const sequelize = require("../util/database");
 
 exports.sendMessage = async (req, res, next) => {
   try {
@@ -11,6 +8,16 @@ exports.sendMessage = async (req, res, next) => {
     });
 
     res.status(200).json({ message: "Success!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error" });
+  }
+};
+
+exports.getMessages = async (req, res, next) => {
+  try {
+    const messages = await Chat.findAll();
+    res.status(200).json({ messages: messages });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error" });
