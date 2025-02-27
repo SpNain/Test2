@@ -21,6 +21,36 @@ signIn.addEventListener("click", () => {
 });
 
 const signUpError = document.getElementById("signUpError");
+const loginError = document.getElementById("loginError");
+
+async function login() {
+  const loginEmail = document.getElementById("loginEmail");
+  const loginPassword = document.getElementById("loginPassword");
+
+  const loginDetails = {
+    loginEmail: loginEmail.value,
+    loginPassword: loginPassword.value,
+  };
+
+  try {
+    const response = await axios.post("/user/login", loginDetails);
+
+    alert(response.data.message);
+    localStorage.setItem("token", response.data.token);
+    window.location.href = "/";
+  } catch (error) {
+    if (error.response) {
+      loginError.textContent = error.response.data.message;
+      loginError.style.display = "block";
+      setTimeout(() => {
+        loginError.textContent = "";
+        loginError.style.display = "none";
+      }, 3000);
+    } else {
+      alert("An error occurred. Please try again later.");
+    }
+  }
+}
 
 async function signUP() {
   const name = document.getElementById("name");
@@ -50,4 +80,5 @@ async function signUP() {
   }
 }
 
+document.getElementById("loginForm").addEventListener("submit", login);
 document.getElementById("signUpForm").addEventListener("submit", signUP);
