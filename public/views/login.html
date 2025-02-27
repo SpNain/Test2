@@ -13,9 +13,10 @@
   <h2>“We don't heal in isolation, but in community.”</h2>
   <div class="container" id="container">
     <div class="form-container sign-up-container">
-      <form action="/user/signUp" method="post">
+      <form id="signUpForm" onsubmit="return false;">
         <h1>Create Account</h1>
         <span>fill your credentials here</span>
+        <div id="signUpError" class="errorMessage"></div>
         <input type="text" placeholder="Name" name="name" id="name" required />
         <input type="email" placeholder="Email" name="email" id="email" required />
         <input type="text" placeholder="Contact No." pattern="[0-9]*" name="number" id="number" required />
@@ -24,9 +25,10 @@
       </form>
     </div>
     <div class="form-container sign-in-container">
-      <form onsubmit="return false;">
+      <form id="loginForm" onsubmit="return false;">
         <h1>Login</h1>
         <span>use your previous credentials</span>
+        <div id="loginError" class="errorMessage"></div>
         <input type="email" placeholder="Email" name="loginEmail" id="loginEmail" required />
         <input type="password" placeholder="Password" name="loginPassword" id="loginPassword" required />
         <a href="/password/forgotPasswordPage">Forgot your password?</a>
@@ -51,6 +53,9 @@
     </div>
   </div>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"
+  integrity="sha512-QTnb9BQkG4fBYIt9JGvYmxPpd6TBeKp6lsUrtiVQsrJ9sb33Bn9s0wMQO9qVBFbPX3xHRAsBHvXlcsrnJjExjg=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/js/login.js"></script>
 
 </html>

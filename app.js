@@ -20,6 +20,7 @@ const userRouter = require("./router/userRouter");
 
 //Middlewares
 app.use("/", userRouter);
+app.use("/user", userRouter);
 
 async function initiate() {
   try {
