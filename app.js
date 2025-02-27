@@ -21,10 +21,13 @@ app.use(bodyParser.json());
 
 //Routers
 const userRouter = require("./router/userRouter");
+const homePageRouter = require("./router/homePageRouter");
 
 //Middlewares
 app.use("/", userRouter);
 app.use("/user", userRouter);
+
+app.use("/homePage", homePageRouter);
 
 async function initiate() {
   try {

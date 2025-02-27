@@ -37,7 +37,7 @@ async function login() {
 
     alert(response.data.message);
     localStorage.setItem("token", response.data.token);
-    window.location.href = "/";
+    window.location.href = "/homePage";
   } catch (error) {
     if (error.response) {
       loginError.textContent = error.response.data.message;
