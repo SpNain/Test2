@@ -220,3 +220,25 @@ html {
     margin-bottom: 15px !important;
   }
 }
+
+
+/* WebKit browsers (Chrome, Edge, Safari) */
+/* This code makes scroll bar looks modern */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
