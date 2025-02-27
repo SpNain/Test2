@@ -22,12 +22,23 @@ app.use(bodyParser.json());
 //Routers
 const userRouter = require("./router/userRouter");
 const homePageRouter = require("./router/homePageRouter");
+const chatRouter = require("./router/chatRouter");
+
+//Models
+const User = require("./models/userModel");
+const Chat = require("./models/chatModel");
+
+//Associations
+User.hasMany(Chat, { onDelete: "CASCADE", hooks: true });
+Chat.belongsTo(User);
 
 //Middlewares
 app.use("/", userRouter);
 app.use("/user", userRouter);
 
 app.use("/homePage", homePageRouter);
+
+app.use("/chat", chatRouter);
 
 async function initiate() {
   try {
