@@ -19,8 +19,6 @@ async function messageSend() {
   }
 }
 
-// by decoding token which is stored in local storage we can get userId
-// anb by userId we can differentiate ki uski chat konsi h aur dusro ki konsi
 function decodeToken(token) {
   const base64Url = token.split(".")[1];
   const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
@@ -45,7 +43,6 @@ async function getMessages() {
     const userId = decodedToken.userId;
 
     chatBoxBody.innerHTML = "";
-    console.log(res.data.messages);
 
     res.data.messages.forEach((message) => {
       if (message.userId == userId) {
@@ -108,6 +105,10 @@ async function getMessages() {
     console.error(error);
   }
 }
+
+setInterval(() => {
+  getMessages();
+}, 1000);
 
 messageSendBtn.addEventListener("click", messageSend);
 document.addEventListener("DOMContentLoaded", getMessages);
