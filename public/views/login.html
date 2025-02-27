@@ -10,37 +10,47 @@
 </head>
 
 <body>
-  <h3>Welcome To</h3>
-  <h1>Expense Tracker</h1>
-  <!-- <h2>Tracking expenses is directly proportional to saving money.</h2> -->
-  <section class="wrapper active">
-    <div class="form signup">
-      <header>Signup</header>
-      <form id="signUpForm" onsubmit="return false;">
-        <div id="signUpError" class="errorMessage"></div>
+  <h2>“We don't heal in isolation, but in community.”</h2>
+  <div class="container" id="container">
+    <div class="form-container sign-up-container">
+      <form action="/user/signUp" method="post">
+        <h1>Create Account</h1>
+        <span>fill your credentials here</span>
         <input type="text" placeholder="Name" name="name" id="name" required />
         <input type="email" placeholder="Email" name="email" id="email" required />
+        <input type="text" placeholder="Contact No." pattern="[0-9]*" name="number" id="number" required />
         <input type="password" id="password" placeholder="Password" name="password" required />
-
-        <input type="submit" value="Signup" />
+        <button id="signUpBtn">Sign Up</button>
       </form>
     </div>
-    <div class="form login">
-      <header>Login</header>
-      <form id="loginForm" onsubmit="return false;">
-        <div id="loginError" class="errorMessage"></div>
+    <div class="form-container sign-in-container">
+      <form onsubmit="return false;">
+        <h1>Login</h1>
+        <span>use your previous credentials</span>
         <input type="email" placeholder="Email" name="loginEmail" id="loginEmail" required />
         <input type="password" placeholder="Password" name="loginPassword" id="loginPassword" required />
         <a href="/password/forgotPasswordPage">Forgot your password?</a>
-        <input type="submit" value="Login" />
-        <span>Don't have an account ? <a id="signUpAnker">Sign Up</a> here</span>
+        <button id="loginBtn">Login</button>
       </form>
     </div>
-  </section>
+    <div class="overlay-container">
+      <div class="overlay">
+        <div class="overlay-panel overlay-left">
+          <h1>Welcome Back!</h1>
+          <p>
+            To keep connected with us please login with your personal info
+          </p>
+          <button class="ghost" id="signIn">Login</button>
+        </div>
+        <div class="overlay-panel overlay-right">
+          <h1>Hello, Friend!</h1>
+          <p>Enter your personal details and start journey with us</p>
+          <button class="ghost" id="signUp">Sign Up</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"
-  integrity="sha512-QTnb9BQkG4fBYIt9JGvYmxPpd6TBeKp6lsUrtiVQsrJ9sb33Bn9s0wMQO9qVBFbPX3xHRAsBHvXlcsrnJjExjg=="
-  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/js/login.js"></script>
 
 </html>

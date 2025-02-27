@@ -1,12 +1,12 @@
 const Sequelize = require("sequelize");
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME,   // your RDS DB name
-  process.env.DB_USER,   // your RDS username
-  process.env.DB_PASSWORD, // your RDS password
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
   {
-    host: process.env.DB_HOST, // your RDS endpoint
-    dialect: process.env.DB_DIALECT, // 'mysql' | 'mariadb' | 'postgres' | 'mssql'
+    host: process.env.DB_HOST,
+    dialect: process.env.DB_DIALECT,
   }
 );
 
