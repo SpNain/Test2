@@ -6,34 +6,28 @@ const groupNameHeading = document.getElementById("groupNameHeading");
 
 async function activeGroup(e) {
 
-  // clear the chatbox and group name heading
   chatBoxBody.innerHTML = "";
   groupNameHeading.innerHTML = "";
 
-  // remove the active class from previously active group
   const activeLi = document.getElementsByClassName("active");
   if (activeLi.length != 0) {
     activeLi[0].removeAttribute("class", "active");
   }
 
-  // set the clicked group as active
   let li = e.target;
   while (li.tagName !== "LI") {
     li = li.parentElement;
   }
   li.setAttribute("class", "active");
 
-  // update the group name in local storage and UI
   const groupName = li.querySelector("span").textContent;
   localStorage.setItem("groupName", groupName);
   const span = document.createElement("span");
   span.appendChild(document.createTextNode(groupName));
   groupNameHeading.appendChild(span);
 
-  // get messages from local storage
   getMessagesFromLocalStorage(groupName);
 
-  // set an interval to fetch messages
   setInterval(() => {
     getMessages(groupName);
   }, 5000);
@@ -41,6 +35,14 @@ async function activeGroup(e) {
 
 async function messageSend() {
   try {
+    // agr pahle se group memebers ki list attached h to use hta do
+    if (chatBoxBody.querySelector(".groupMembersDiv")) {
+      const members = chatBoxBody.querySelectorAll(".groupMembersDiv");
+      members.forEach((member) => {
+        member.remove();
+      });
+    }
+
     const message = messageTextArea.value;
     const token = localStorage.getItem("token");
 
@@ -96,7 +98,7 @@ async function getMessages(groupName) {
 
     if (localStorageChats) {
       res.data.messages.forEach((message) => {
-        localStorageChats.push(message); // pahle push kro fir check kro
+        localStorageChats.push(message);
         if (localStorageChats.length > 10) {
           localStorageChats.shift();
         }
