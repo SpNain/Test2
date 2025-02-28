@@ -36,7 +36,6 @@ function decodeToken(token) {
 
 async function getMessages() {
   try {
-    // getting the last chat id from the local storage
     let param;
     const localStorageChats = JSON.parse(localStorage.getItem("chats"));
     if (localStorageChats) {
@@ -49,21 +48,23 @@ async function getMessages() {
     const token = localStorage.getItem("token");
     const decodedToken = decodeToken(token);
     const userId = decodedToken.userId;
-    // chatBoxBody.innerHTML = "";
 
-    // if chat doesn't exists in the local storage then simply set the chats which come in the response
-    // if chat exists in the local storage then update those chats and then set the chats 
     const chats = JSON.parse(localStorage.getItem("chats"));
     if (!chats) {
+      while (res.data.messages.length > 10) {
+        res.data.messages.shift();
+      }
       localStorage.setItem("chats", JSON.stringify(res.data.messages));
     } else {
       res.data.messages.forEach((message) => {
+        if (chats.length > 10) {
+          chats.shift();
+        }
         chats.push(message);
       });
       localStorage.setItem("chats", JSON.stringify(chats));
     }
 
-    // showing chats in the chat box (UI)
     res.data.messages.forEach((message) => {
       if (message.userId == userId) {
         const div = document.createElement("div");
@@ -87,7 +88,7 @@ async function getMessages() {
 
         messageBox.classList.add("d-flex", "justify-content-end", "mb-4");
 
-        messageText.classList.add("msg_cotainer_send");
+        messageText.classList.add("msg_container_send");
         messageText.appendChild(document.createTextNode(message.message));
 
         messageBox.appendChild(messageText);
@@ -114,7 +115,7 @@ async function getMessages() {
 
         messageBox.classList.add("d-flex", "justify-content-start", "mb-4");
 
-        messageText.classList.add("msg_cotainer");
+        messageText.classList.add("msg_container");
         messageText.appendChild(document.createTextNode(message.message));
 
         messageBox.appendChild(messageText);
@@ -130,7 +131,6 @@ setInterval(() => {
   getMessages();
 }, 5000);
 
-// gets the message from local storage and show them on ui
 async function getMessagesFromLocalStorage() {
   const messages = JSON.parse(localStorage.getItem("chats"));
 
@@ -163,7 +163,7 @@ async function getMessagesFromLocalStorage() {
 
         messageBox.classList.add("d-flex", "justify-content-end", "mb-4");
 
-        messageText.classList.add("msg_cotainer_send");
+        messageText.classList.add("msg_container_send");
         messageText.appendChild(document.createTextNode(message.message));
 
         messageBox.appendChild(messageText);
@@ -190,7 +190,7 @@ async function getMessagesFromLocalStorage() {
 
         messageBox.classList.add("d-flex", "justify-content-start", "mb-4");
 
-        messageText.classList.add("msg_cotainer");
+        messageText.classList.add("msg_container");
         messageText.appendChild(document.createTextNode(message.message));
 
         messageBox.appendChild(messageText);
