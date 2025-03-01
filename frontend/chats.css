@@ -1,0 +1,280 @@
+ody {
+  font-family: "Poppins", "Segoe UI", sans-serif;
+  background: #f0f2f5;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.sidebar {
+  width: 20%;
+  background: #ffffff;
+  border-right: 1px solid #ddd;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+}
+
+#appname {
+  font-size: 24px;
+  font-weight: 600;
+  color: #0008fe;
+  text-shadow: #000 0px 0px 1px;
+  margin-bottom: 20px;
+}
+
+#users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.user-item:hover {
+  background-color: #eaeaea;
+}
+
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: margin-left 0.3s ease;
+}
+
+.top-navbar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background: #ffffff;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.top-navbar-icon {
+  display: flex;
+  align-items: center;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message {
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 70%;
+  word-wrap: break-word;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.message.sender {
+  background-color: #007bff;
+  color: white;
+  align-self: flex-end;
+  border-top-right-radius: 0;
+}
+
+.message.receiver {
+  background-color: #e1e1e1;
+  align-self: flex-start;
+  border-top-left-radius: 0;
+}
+
+.chat-input {
+  display: flex;
+  padding: 10px;
+  background-color: #ffffff;
+  border-top: 1px solid #ddd;
+}
+
+#message-input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  background: #ffffff;
+}
+
+#send-button {
+  background-color: #0008febc;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 17px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding: 12px;
+  margin-left: 10px;
+}
+
+#send-button:hover {
+  background-color: #000109ce;
+}
+
+.toggle-sidebar {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+}
+
+.toggle-sidebar .bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background: #333;
+  margin: 5px 0;
+  transition: all 0.3s;
+}
+
+.sidebar.collapsed {
+  width: 50px;
+}
+
+.sidebar.collapsed #users-list {
+  display: none;
+}
+
+.sidebar.collapsed .logo-container {
+  display: none;
+}
+
+.sidebar.collapsed .user-item {
+  display: none;
+}
+
+.chat-area.expanded {
+  margin-left: 50px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: 60px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    overflow: hidden;
+  }
+
+  .chat-area {
+    margin-left: 0;
+    height: calc(100vh - 60px);
+  }
+
+  .top-navbar {
+    display: flex;
+    justify-content: end;
+  }
+
+  .sidebar.collapsed {
+    height: 60px;
+    overflow: hidden;
+  }
+
+  .sidebar.collapsed .logo-container {
+    display: none;
+  }
+
+  .toggle-sidebar {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-header {
+    font-size: 18px;
+  }
+
+  #message-input {
+    font-size: 14px;
+  }
+
+  #send-button {
+    font-size: 14px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* WebKit browsers (Chrome, Edge, Safari) */
+/* This code makes scroll bar looks modern */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

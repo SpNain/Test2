@@ -21,6 +21,8 @@ async function handleSignUp() {
     document.getElementById("email").value = "";
     document.getElementById("phone").value = "";
     document.getElementById("password").value = "";
+
+    window.location.href = "login.html";
   } catch (error) {
     if (error.response) {
       signUpError.textContent = error.response.data.message;
@@ -51,6 +53,7 @@ async function handleLogin() {
 
     alert(response.data.message);
     localStorage.setItem("token", response.data.token);
+    window.location.href = "./chats.html";
   } catch (error) {
     if (error.response) {
       loginError.textContent = error.response.data.message;
