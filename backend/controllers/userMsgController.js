@@ -19,3 +19,18 @@ exports.postUserMsg = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+exports.getAllMessages = async (req, res) => {
+  try {
+    const messages = await Messages.findAll();
+
+    if (!messages) {
+      return res.status(404).json({ message: "No messages found" });
+    }
+
+    return res.status(200).json({ messages });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
