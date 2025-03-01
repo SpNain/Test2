@@ -21,10 +21,18 @@ async function handleMsgSubmit(e) {
 
 async function fetchMessages() {
   try {
+    let lastMessageId;
+    const localStorageMsgs = JSON.parse(localStorage.getItem("msgs"));
+    if (localStorageMsgs) {
+      lastMessageId = localStorageMsgs[localStorageMsgs.length - 1].id;
+    } else {
+      lastMessageId = 0;
+    }
+    console.log(lastMessageId);
     let token = localStorage.getItem("token");
 
     const response = await axios.get(
-      "http://localhost:4000/api/user/allmessages",
+      `http://localhost:4000/api/user/allmessages/?lastMessageId=${lastMessageId}`,
       {
         headers: {
           Authorization: token,
@@ -34,25 +42,44 @@ async function fetchMessages() {
 
     const messages = response.data.messages;
 
-    renderMessages(messages);
+    if (localStorageMsgs) {
+      messages.forEach((message) => {
+        localStorageMsgs.push(message);
+        if (localStorageMsgs.length > 10) {
+          localStorageMsgs.shift();
+        }
+      });
+      localStorage.setItem("msgs", JSON.stringify(localStorageMsgs));
+    } else {
+      while (messages.length > 10) {
+        messages.shift();
+      }
+      localStorage.setItem("msgs", JSON.stringify(messages));
+    }
+
+    renderMessages(messages, "new");
   } catch (err) {
     console.log(err);
     alert("Please login to view messages");
   }
 }
-function renderMessages(messages) {
+function renderMessages(messages, type) {
   const chatBox = document.getElementById("chat-messages");
-  chatBox.innerHTML = "";
+
+  if (type === "local") {
+    chatBox.innerHTML = "";
+  }
 
   const token = localStorage.getItem("token");
   const decoded = jwt_decode(token);
   const currentUserId = decoded.userId;
 
-  messages.forEach((msg) => {
-    if (msg.userId === currentUserId) {
-      var message = document.createElement("div");
-      message.className = "message sender";
-      message.innerHTML = `
+  if (messages) {
+    messages.forEach((msg) => {
+      if (msg.userId === currentUserId) {
+        var message = document.createElement("div");
+        message.className = "message sender";
+        message.innerHTML = `
            <div class="message-content">
                 <div class="message-info">
                   <span class="username">~You</span>
@@ -61,10 +88,10 @@ function renderMessages(messages) {
                 <p>${msg.message}</p>
               </div>
           `;
-    } else {
-      var message = document.createElement("div");
-      message.className = "message receiver";
-      message.innerHTML = `
+      } else {
+        var message = document.createElement("div");
+        message.className = "message receiver";
+        message.innerHTML = `
             <div class="message-content">
                 <div class="message-info">
                     <span class="username">~someone</span>
@@ -73,11 +100,12 @@ function renderMessages(messages) {
                 <p>${msg.message}</p>
                 </div>
             `;
-    }
+      }
 
-    chatBox.appendChild(message);
-    scrollToBottom();
-  });
+      chatBox.appendChild(message);
+      scrollToBottom();
+    });
+  }
 }
 
 function scrollToBottom() {
@@ -87,7 +115,10 @@ function scrollToBottom() {
 }
 
 setInterval(() => {
-    fetchMessages();
+  fetchMessages();
 }, 5000);
 
-document.addEventListener("DOMContentLoaded", fetchMessages);
+document.addEventListener("DOMContentLoaded", () => {
+  const localStorageMsgs = JSON.parse(localStorage.getItem("msgs"));
+  renderMessages(localStorageMsgs, "local");
+});

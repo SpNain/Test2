@@ -1,4 +1,5 @@
 const Messages = require("../models/Messages");
+const { Op } = require("sequelize");
 
 exports.postUserMsg = async (req, res) => {
   try {
@@ -22,8 +23,10 @@ exports.postUserMsg = async (req, res) => {
 
 exports.getAllMessages = async (req, res) => {
   try {
-    const messages = await Messages.findAll();
-
+    const messages = await Messages.findAll({
+      where: { id: { [Op.gt]: req.query.lastMessageId } },
+    });
+    console.log(req.query.lastMessageId);
     if (!messages) {
       return res.status(404).json({ message: "No messages found" });
     }
