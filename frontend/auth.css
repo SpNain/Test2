@@ -30,7 +30,8 @@ body {
   width: auto;
 }
 
-.SignUp-box {
+.SignUp-box,
+.Login-box {
   background: #ffffff;
   padding: 40px;
   border-radius: 8px;
@@ -41,17 +42,18 @@ body {
   border: 1px solid #ddd;
 }
 
+.SignUp-box h1,
+.Login-box h1 {
+  margin-bottom: 30px;
+  color: #333;
+  font-size: 24px;
+}
+
 #appname {
   font-size: 24px;
   font-weight: 600;
   color: #0008fe;
   text-shadow: #000 0px 0px 1px;
-}
-
-.SignUp-box h1 {
-  margin-bottom: 30px;
-  color: #333;
-  font-size: 24px;
 }
 
 .textbox {
@@ -112,22 +114,26 @@ body {
   background: #000109ce;
 }
 
-.forgot-password {
+.login-link,
+.signUp-link {
   margin-top: 15px;
   font-size: 14px;
 }
 
-.forgot-password a {
-  color: #000000;
+.login-link a,
+.signUp-link a {
+  color: #4062f9;
   text-decoration: none;
 }
 
-.forgot-password a:hover {
+.login-link a:hover,
+.signUp-link a:hover {
   text-decoration: underline;
 }
 
 @media (max-width: 768px) {
-  .SignUp-box {
+  .SignUp-box,
+  .Login-box {
     padding: 20px;
     width: 100%;
     max-width: 90%;
@@ -137,13 +143,15 @@ body {
     height: 30px;
   }
 
-  .SignUp-box h1 {
+  .SignUp-box h1,
+  .Login-box h1 {
     font-size: 20px;
   }
 }
 
 @media (max-width: 480px) {
-  .SignUp-box {
+  .SignUp-box,
+  .Login-box {
     padding: 15px;
   }
 
@@ -151,7 +159,8 @@ body {
     height: 25px;
   }
 
-  .SignUp-box h1 {
+  .SignUp-box h1,
+  .Login-box h1 {
     font-size: 18px;
   }
 
@@ -163,7 +172,8 @@ body {
     font-size: 14px;
   }
 
-  .forgot-password {
+  .login-link,
+  .signUp-link {
     font-size: 12px;
   }
 }
