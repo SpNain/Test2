@@ -15,15 +15,22 @@ app.use(
 );
 app.use(express.json());
 
+// Models
+const User = require("./models/User");
+const Messages = require("./models/Messages");
+
+// Associations
+User.hasMany(Messages);
+Messages.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 
 // Routers
 const userRoute = require("./routes/userRoute");
+const UserMsgRoute = require("./routes/userMsgRoute");
 
-// Models
-const User = require("./models/User");
 
 // Middlewares
-app.use("/api", userRoute);
+app.use("/api/user", userRoute);
+app.use("/api/user", UserMsgRoute);
 
 async function initiate() {
   try {
