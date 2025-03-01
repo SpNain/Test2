@@ -22,7 +22,7 @@
           <img src="./assets/chatlogo.png" alt="ChatApp Logo" class="logo" />
           <h1>SignUp to <span id="appname">ChatApp</span></h1>
         </div>
-        <form onsubmit="handleSignUp(event)">
+        <form id="signUpForm" onsubmit="return false;">
         <div id="signUpError" class="errorMessage"></div>
           <div class="textbox">
             <input type="text" id="name" required />

@@ -19,13 +19,13 @@ app.use(express.json());
 
 
 // Routers
-const signupRoute = require("./routes/signupRoute");
+const userRoute = require("./routes/userRoute");
 
 // Models
 const User = require("./models/User");
 
 // Middlewares
-app.use("/api", signupRoute);
+app.use("/api", userRoute);
 
 async function initiate() {
   try {

@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const { Op } = require("sequelize");
 
 exports.signup = async (req, res) => {
   const { name, phoneNumber, email, password } = req.body;
@@ -7,11 +8,13 @@ exports.signup = async (req, res) => {
   console.log(req.body.email);
 
   try {
-    const isUser = await User.findOne({ where: { email: email } });
+    const existingUser = await User.findOne({ where: { [Op.or]: [{ email: email }, { phoneNumber: phoneNumber }] } });
+    if (existingUser) {
+      return res
+        .status(409)
+        .json({ message: "This email or phone number is already taken. Please choose another one." });
+    }
 
-    if (isUser) {
-      return res.status(400).json({ error: "User already exists" });
-    } else {
       const hashedPassword = await bcrypt.hash(password, saltRounds);
       if (!hashedPassword) {
         return res.status(400).json({ error: "Error hashing password" });
@@ -29,7 +32,6 @@ exports.signup = async (req, res) => {
       } else {
         return res.status(400).json({ error: "Error creating user" });
       }
-    }
   } catch (err) {
     res.status(500).json({ error: "Internal Server Error" });
     console.log(err);

@@ -1,13 +1,11 @@
 const signUpError = document.getElementById("signUpError");
 
-async function handleSignUp(e) {
-  e.preventDefault();
-
+async function handleSignUp() {
   try {
-    let email = document.getElementById("email").value;
-    let password = document.getElementById("password").value;
     let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
     let phoneNumber = document.getElementById("phone").value;
+    let password = document.getElementById("password").value;
 
     const response = await axios.post("http://localhost:4000/api/user/signup", {
       email: email,
@@ -18,9 +16,10 @@ async function handleSignUp(e) {
 
     alert(response.data.message);
 
-    document.getElementById("email").value = "";
-    document.getElementById("password").value = "";
     document.getElementById("name").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("phone").value = "";
+    document.getElementById("password").value = "";
   } catch (error) {
     if (error.response) {
       signUpError.textContent = error.response.data.message;
@@ -34,3 +33,5 @@ async function handleSignUp(e) {
     }
   }
 }
+
+document.getElementById("signUpForm").addEventListener("submit", handleSignUp);
