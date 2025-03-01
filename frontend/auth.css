@@ -30,7 +30,7 @@ body {
   width: auto;
 }
 
-.SignUp-box,
+.signUp-box,
 .Login-box {
   background: #ffffff;
   padding: 40px;
@@ -42,7 +42,7 @@ body {
   border: 1px solid #ddd;
 }
 
-.SignUp-box h1,
+.signUp-box h1,
 .Login-box h1 {
   margin-bottom: 30px;
   color: #333;
@@ -132,7 +132,7 @@ body {
 }
 
 @media (max-width: 768px) {
-  .SignUp-box,
+  .signUp-box,
   .Login-box {
     padding: 20px;
     width: 100%;
@@ -143,14 +143,14 @@ body {
     height: 30px;
   }
 
-  .SignUp-box h1,
+  .signUp-box h1,
   .Login-box h1 {
     font-size: 20px;
   }
 }
 
 @media (max-width: 480px) {
-  .SignUp-box,
+  .signUp-box,
   .Login-box {
     padding: 15px;
   }
@@ -159,7 +159,7 @@ body {
     height: 25px;
   }
 
-  .SignUp-box h1,
+  .signUp-box h1,
   .Login-box h1 {
     font-size: 18px;
   }

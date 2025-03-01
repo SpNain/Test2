@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 
-// do this before importing database kyunki database me process.env use hua hai
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -9,10 +8,9 @@ const sequelize = require("./utils/database");
 
 const app = express();
 
-// if we want that no request is not blocked by CORS policy we can use *
 app.use(
   cors({
-    origin: "http://127.0.0.1:5500", // this is the frontend url from where we are making http request to backend
+    origin: "http://127.0.0.1:5500",
   })
 );
 app.use(express.json());
