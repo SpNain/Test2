@@ -1,34 +1,25 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../utils/database");
 
-const User = sequelize.define("users", {
+const Group = sequelize.define("groups", {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
-  name: {
+  groupName: {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  phoneNumber: {
+  groupDescription: {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  email: {
-    type: Sequelize.STRING,
+  groupAdmin: {
+    type: Sequelize.INTEGER,
     allowNull: false,
-  },
-
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  role: {
-    type: Sequelize.ENUM("user", "admin"),
-    defaultValue: "user",
   },
 });
 
-module.exports = User;
+module.exports = Group;

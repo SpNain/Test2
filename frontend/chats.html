@@ -15,33 +15,65 @@
 <body>
   <div class="m_container">
     <div class="sidebar" id="sidebar">
-      <button id="toggle-sidebar" class="toggle-sidebar">
-        <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
-      </button>
       <div class="logo-container">
         <img src="./assets/chatlogo.png" alt="Logo" class="logo" />
       </div>
-      <div id="users-list">
+      <button class="btn btn-primary" data-toggle="modal" style="border-bottom: 1px solid black"
+        data-target="#createGroupModal">
+        Create Group
+      </button>
+      <div id="group-list">
+        <!-- moregroups -->
       </div>
     </div>
-    <div class="chat-area">
+    <div id="chat-area">
       <div class="top-navbar">
-        <button id="toggle-sidebar-top" class="toggle-sidebar">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-        </button>
+        <div class="navbar-left">
+          <h2 id="group-name">Select or Create a group</h2>
+          <p id="group-details"></p>
+        </div>
       </div>
       <div class="chat-messages" id="chat-messages">
         <!-- messages -->
+        no messages😒
       </div>
       <div class="chat-input">
         <form id="chat-form" onsubmit="handleMsgSubmit(event)">
           <input type="text" id="message-input" placeholder="Type a message..." min="1" required />
           <button type="submit" id="send-button">Send</button>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Modal HTML for Create Group -->
+  <div class="modal fade" id="createGroupModal" tabindex="-1" role="dialog" aria-labelledby="createGroupModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createGroupModalLabel">
+            Create New Group
+          </h5>
+          <button type="button" id="close-group-form" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="create-group-form" onsubmit="handleGroupSubmit(event)">
+            <div class="form-group">
+              <label for="group-name">Group Name</label>
+              <input type="text" class="form-control" id="add-group-name" name="group-name" required />
+            </div>
+            <div class="form-group">
+              <label for="group-description">Group Description</label>
+              <textarea class="form-control" id="group-description" name="group-description" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Create Group
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   </div>

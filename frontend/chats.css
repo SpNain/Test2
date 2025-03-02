@@ -3,6 +3,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 body {
   font-family: "Poppins", "Segoe UI", sans-serif;
   background: #f0f2f5;
@@ -20,6 +21,7 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  flex-wrap: wrap;
   position: relative;
 }
 
@@ -47,41 +49,61 @@ body {
   width: auto;
 }
 
-#appname {
-  font-size: 24px;
-  font-weight: 600;
-  color: #0008fe;
-  text-shadow: #000 0px 0px 1px;
-  margin-bottom: 20px;
+#group-list {
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
+  padding: 10px;
+  background-color: #e2e2e2ac;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(243, 243, 243, 0.1);
+  box-sizing: border-box;
 }
 
-#users-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.username {
-  font-size: 16px;
-  font-weight: 500;
+.group-item {
+  margin-bottom: 10px;
 }
 
-.user-item {
+.group-item button {
   display: flex;
   align-items: center;
-  padding: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  padding: 12px;
+  border: none;
+  background-color: #ffffff;
   border-radius: 8px;
-  font-size: 16px;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.user-item:hover {
-  background-color: #eaeaea;
+.group-item button:hover {
+  background-color: #e0e0e0;
+  box-shadow: 0 4px 6px rgba(238, 238, 238, 0.62);
+}
+#group-details {
+  font-size: 1rem;
 }
 
-.chat-area {
+.sidebar.collapsed {
+  width: 50px;
+}
+
+.sidebar.collapsed .logo-container {
+  display: none;
+}
+
+.sidebar.collapsed #group-list {
+  display: none;
+}
+
+#chat-area {
   flex: 1;
   display: flex;
+
   flex-direction: column;
   background: #ffffff;
   padding: 20px;
@@ -91,7 +113,7 @@ body {
 }
 
 .top-navbar {
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px;
@@ -100,21 +122,24 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.top-navbar-icon {
-  display: flex;
-  align-items: center;
+.top-navbar h2 {
+  font-size: 18px;
+  color: #333;
 }
 
-.message-info {
-  margin-bottom: 5px;
+.top-navbar p {
+  font-size: 14px;
+  color: #666;
 }
-.chat-messages {
+
+#chat-messages {
   flex: 1;
+  display: flex;
   padding: 10px;
+  max-height: calc(90vh - 140px);
   overflow-y: auto;
   background-color: #f9f9f9;
   border-radius: 8px;
-  display: flex;
   flex-direction: column;
   gap: 10px;
 }
@@ -143,12 +168,15 @@ body {
 .message-content p {
   font-size: 18px;
 }
+
 .timestamp {
   font-size: 13px;
 }
+
 .chat-input {
   display: flex;
   padding: 10px;
+  width: calc(80vw - 80px);
   background-color: #ffffff;
   border-top: 1px solid #ddd;
 }
@@ -178,79 +206,26 @@ body {
   background-color: #000109ce;
 }
 
-.toggle-sidebar {
-  display: none;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 10px;
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 10;
-}
-
-.toggle-sidebar .bar {
-  display: block;
-  width: 25px;
-  height: 3px;
-  background: #333;
-  margin: 5px 0;
-  transition: all 0.3s;
-}
-
-.sidebar.collapsed {
-  width: 50px;
-}
-
-.sidebar.collapsed #users-list {
-  display: none;
-}
-
-.sidebar.collapsed .logo-container {
-  display: none;
-}
-
-.sidebar.collapsed .user-item {
-  display: none;
-}
-
-.chat-area.expanded {
-  margin-left: 50px;
-}
-
 @media (max-width: 768px) {
   .sidebar {
     width: 100%;
-    height: 60px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    overflow: hidden;
+    height: 80px;
   }
 
-  .chat-area {
+  .m_container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #chat-area {
     margin-left: 0;
-    height: calc(100vh - 60px);
-  }
-
-  .top-navbar {
-    display: flex;
-    justify-content: end;
+    height: calc(100vh - 80px);
+    width: calc(100vw - 20px);
   }
 
   .sidebar.collapsed {
     height: 60px;
     overflow: hidden;
-  }
-
-  .sidebar.collapsed .logo-container {
-    display: none;
-  }
-
-  .toggle-sidebar {
-    display: block;
   }
 }
 
@@ -277,8 +252,6 @@ body {
   }
 }
 
-/* WebKit browsers (Chrome, Edge, Safari) */
-/* This code makes scroll bar looks modern */
 ::-webkit-scrollbar {
   width: 8px;
 }
