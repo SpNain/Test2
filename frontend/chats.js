@@ -5,13 +5,13 @@
 let currentSet = 1;
 let loadingMessages = false;
 
-// on window load we will fetch first set of messages
-window.onload = () => fetchMessages(currentSet);
-
 const token = localStorage.getItem("token");
 
 const decoded = jwt_decode(token);
 const currentUserId = decoded.userId;
+
+// on window load we will fetch first set of messages
+window.onload = () => fetchMessages(currentSet);
 
 async function handleMsgSubmit(e) {
   e.preventDefault();
@@ -88,6 +88,7 @@ async function fetchMessages(set) {
 // ab hum kya kr rhe h ki 10th wale message ko pahle add kr rhe h, fir 9th wale ko and so on
 // ab 0th wala messages which is latest wo sbse last me add hoga
 // to aise krke hum ek ek message ko add kr rhe h
+// aur jaise hi koi nya message add hoga humne scroll to bottom lga rkha h jisse bottom tk scroll ho jaayega
 // CASE 2 : PREPEND IS TRUE
 // Prepend true h means ki messages current messages ke uper add krne
 // ye case jb hoga jb user scroll krke pahle wale messages dekhna chahta h
@@ -100,15 +101,15 @@ async function fetchMessages(set) {
 // to ab chatContainer pe ye messages add hone pe hmari newScrollheight aayegi 11000px
 // ab pahle jaha tak user ne scroll kr rkha tha wo top tha but new message aane ke baad wo top nhi rha
 // ab hum chahe to us scroll ko thoda sa uper kr skte h taaki user ko pta lg jaaye ki msg aa chuke h
-// jaise filhaal scroll 8000 pe h to hum scroll ko 8500 kr rhe h
+// jaise filhaal scroll 8000 pe h to hum scroll ko 8100 kr rhe h
 // lekin hum chahe to naa bhi scroll kre but fir user ko manually thodi thodi der me scroll krke dekhna pdega ki msg aaye ya nhi
 // to jo hum ye scroll ko thoda sa uper kr rhe h wo bas user ko ye btane ke liye h ki msg aa gye h
 function renderMessages(messages, prepend = false) {
   const chatContainer = document.getElementById("chat-messages");
 
   if (prepend) {
-    var prevScrollHeight = chatContainer.scrollHeight;
-    console.log(prevScrollHeight);
+    const prevScrollHeight = chatContainer.scrollHeight;
+
     messages.forEach((msg) => {
       const message = document.createElement("div");
       message.className =
@@ -131,7 +132,7 @@ function renderMessages(messages, prepend = false) {
       chatContainer.insertBefore(message, chatContainer.firstChild);
     });
     const newScrollHeight = chatContainer.scrollHeight;
-    const gap = 500; // Define the gap size as needed
+    const gap = 100; // Define the gap size as needed
     chatContainer.scrollTop = newScrollHeight - prevScrollHeight - gap;
   } else {
     messages.reverse().forEach((msg) => {

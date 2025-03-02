@@ -18,27 +18,19 @@ app.use(express.json());
 // Models
 const User = require("./models/User");
 const Messages = require("./models/Messages");
-const Group = require("./models/Group");
 
 // Associations
 User.hasMany(Messages);
 Messages.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 
-Group.hasMany(Messages);
-Messages.belongsTo(Group, { constraints: true, onDelete: "CASCADE" });
-
-User.belongsToMany(Group, { through: "UserGroups" });
-Group.belongsToMany(User, { through: "UserGroups" });
-
-// Routes
+// Routers
 const userRoute = require("./routes/userRoute");
 const UserMsgRoute = require("./routes/userMsgRoute");
-const groupRoute = require("./routes/groupRoute");
+
 
 // Middlewares
 app.use("/api/user", userRoute);
 app.use("/api/user", UserMsgRoute);
-app.use("/api/group", groupRoute);
 
 async function initiate() {
   try {
