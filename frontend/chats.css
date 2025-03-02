@@ -1,4 +1,9 @@
-ody {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
   font-family: "Poppins", "Segoe UI", sans-serif;
   background: #f0f2f5;
   margin: 0;
@@ -8,7 +13,7 @@ ody {
   height: 100vh;
 }
 
-.container {
+.m_container {
   display: flex;
   width: 100vw;
   height: 100vh;
@@ -55,6 +60,10 @@ ody {
   flex-direction: column;
   gap: 10px;
 }
+.username {
+  font-size: 16px;
+  font-weight: 500;
+}
 
 .user-item {
   display: flex;
@@ -96,6 +105,9 @@ ody {
   align-items: center;
 }
 
+.message-info {
+  margin-bottom: 5px;
+}
 .chat-messages {
   flex: 1;
   padding: 10px;
@@ -128,6 +140,12 @@ ody {
   border-top-left-radius: 0;
 }
 
+.message-content p {
+  font-size: 18px;
+}
+.timestamp {
+  font-size: 13px;
+}
 .chat-input {
   display: flex;
   padding: 10px;
