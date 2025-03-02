@@ -6,13 +6,10 @@ const token = localStorage.getItem("token");
 const decoded = jwt_decode(token);
 const currentUserId = decoded.userId;
 
-// ye function inputs ko clear krega aur koi modal hoga to use close krega
 function clearInputsAndCloseModal(...args) {
   let remainingArgs = args;
   let id;
 
-  // agr last me id aayi hogi to use nikal lenge aur baaki ke arguments pe for loop maarenge
-  // joki inputs honge aur unki values ko empty krdenge
   if (args.length > 0 && typeof args[args.length - 1] === "string") {
     id = args[args.length - 1];
     remainingArgs = args.slice(0, args.length - 1);
@@ -27,7 +24,6 @@ function clearInputsAndCloseModal(...args) {
   }
 }
 
-// group id saath me bhej rhe h taaki group ke hisab se msg ko backend me set kra jaa ske
 async function handleMsgSubmit(e, groupId) {
   e.preventDefault();
   const messageInput = document.getElementById("message-input");
@@ -44,20 +40,6 @@ async function handleMsgSubmit(e, groupId) {
     clearInputsAndCloseModal(messageInput);
     fetchMessages(1, groupId);
 
-    // yhape currentSet 1 set krna kyunki jruri h
-    // let say 1 set me 5 msg aate h
-    // ab maan lete h kisi group pe click kra aur wha se fetch message ko call lgi aur set 1 pass hua
-    // to 1-5 message aa gye aur currentSet 2 ho gya
-    // ab maan lete h ki total msg 13 the
-    // to user ne scroll kra top pe phuncha aur 6-10 wale msg aa gye aur currentSet 3 ho gya
-    // firse user ne scroll kra top pe phuncha aur 10-13 wale msg aa gye aur currentSet 4 ho gya
-    // ab user ne msg bheja aur handleMsgSubmit chla aur set 1 pass hua aur bottom tk scroll ho gya scroll bar
-    // ab chatContainer me 1-5 msg h kyunki hum chat container ko khaali krke fir 1-5 msg add kiye h
-    // aur ab jab user wapas se top pe jaayega to currentSet to 4 ho rkha h
-    // aur msg h total 14 ab backend se msg aayenge 15-20 tk ke joki h hi nhi to msg aayenge nhi aur user purane msg dekh nhi paayega
-    // aur agr humne msg 15 se uper kr bhi diye to fir sidhe 1-5 ke baad 15-20 ke msg show honge aur bich wale msg show nhi honge
-    // to isiliye jb bhi user msg bhej rha h to hum currentSet ko 1 set kr rhe h taaki jb user waapas se scroll kre to msg ko backend se mangwaya jaa ske
-    // agr hum nye msg ko append krte time chatContainer ko khaali naa kre to fir jrurat nhi h ye currentSet ko 1 set krne ki
     currentSet = 1;
   } catch (err) {
     console.log(err);
@@ -66,8 +48,6 @@ async function handleMsgSubmit(e, groupId) {
   }
 }
 
-// ab message group ke hisab se mangwaye jaayenge
-// jo group active hoga uske msg hi chatContainer me render honge
 async function fetchMessages(set, groupId) {
   try {
     if (loadingMessages) return;
@@ -107,7 +87,6 @@ async function fetchMessages(set, groupId) {
 function renderMessages(messages, prepend = false, groupId) {
   const chatContainer = document.getElementById("chat-messages");
 
-  // first time jb group create hoga to usme koi message nhi honge to hum uske No messages found show krenge
   if (messages.length === 0 && !prepend) {
     chatContainer.innerHTML = "<p>No messages found</p>";
   }
@@ -137,12 +116,6 @@ function renderMessages(messages, prepend = false, groupId) {
       chatContainer.insertBefore(message, chatContainer.firstChild);
     });
 
-    //  jo hmara html me message send krne wala input h wo sirf show case ke liye h
-    // kyunki usme humne jo handleMsgSubmit fxn likh rkha h wha pe groupId nhi de rkhi h
-    // us input pe message send krne se group id nhi jaayegi
-    // aur backend se reponse aayega ki group select kro kyunki backend pe groupId nhi phunchegi
-    // aur jaise hi hum koi group select krenge to ye renderMessages fxn run hoga aur hum us nya input lga denge
-    // jisme handleMsgSubmit ko us groupId ki id bhi bheji jaayegi message ke send krne pe
     const sendForm =
       document.querySelector("#chat-area form") ||
       document.createElement("form");
@@ -161,9 +134,6 @@ function renderMessages(messages, prepend = false, groupId) {
     const gap = 100;
     chatContainer.scrollTop = newScrollHeight - prevScrollHeight - gap;
   } else {
-    // jb kuch message ho tbhi chatContainer ko khaali krna
-    // nhi to agr message 0 hone pe bhi chatContainer ko khaali krenge
-    // to hmara no message found wala html bhi ud jaayega
     if (messages.length > 0) chatContainer.innerHTML = "";
 
     messages.reverse().forEach((msg) => {
@@ -215,10 +185,8 @@ function scrollToBottom() {
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-// to avoid hoisting - isko hum yha declare kr rhe h
 let currentGroupId = null;
 
-// jis bhi group me honge usi group ke message load honge scroll krne pe
 document.getElementById("chat-messages").addEventListener("scroll", () => {
   const chatContainer = document.getElementById("chat-messages");
   if (chatContainer.scrollTop === 0 && !loadingMessages) {
@@ -228,7 +196,6 @@ document.getElementById("chat-messages").addEventListener("scroll", () => {
   }
 });
 
-/* ------------- Group Logic -------------*/
 
 window.onload = () => fetchGroups();
 
@@ -317,7 +284,6 @@ function renderGroups(groups) {
   });
 }
 
-// Group click krne pe ye function us group se related messages laayega aur us group ki details set krega like name, desc, members etc.
 async function handleGroupClick(buttonElement) {
   const groupId = buttonElement.getAttribute("data-group-id");
 
@@ -338,7 +304,7 @@ async function handleGroupClick(buttonElement) {
 
       document.getElementById("group-details").innerHTML = `${truncated}`;
 
-      currentSet = 1; // ye yha pe 1 kyu set kra h iska explanation uper handleMsgSubmit me h (same hi logic h yha pe bhi)
+      currentSet = 1;
       fetchMessages(1, groupId);
       updateDropdown(groupDetails);
     } catch (error) {
@@ -350,7 +316,6 @@ async function handleGroupClick(buttonElement) {
   }
 }
 
-// Function to fetch group details from the server
 async function fetchGroupDetails(groupId) {
   const token = localStorage.getItem("token");
 
@@ -365,7 +330,6 @@ async function fetchGroupDetails(groupId) {
   return response.data;
 }
 
-// Ye function basically group me add member krne ke liye h
 async function handleAddMembersSubmit(e) {
   e.preventDefault();
 
@@ -415,7 +379,6 @@ async function handleAddMembersSubmit(e) {
   }
 }
 
-// dropdown me members ko update krta h ye fxn
 function updateDropdown(groupDetails) {
   const dropdownContent = document.getElementById("dropdown-content");
 
