@@ -3,10 +3,21 @@ const { Op } = require("sequelize");
 
 exports.postUserMsg = async (req, res) => {
   try {
+
+    const message = req.body.message;
+    const groupId = req.body.groupId;
+
+    if (!message || !groupId) {
+      return res
+        .status(400)
+        .json({ message: "Select or Create any Group to send Messages" });
+    }
+
     const isStored = await Messages.create({
-      message: req.body.message,
+      message: message,
       userId: req.user.id,
       senderName: req.user.name,
+      groupId,
     });
 
     if (!isStored) {
@@ -24,6 +35,12 @@ exports.postUserMsg = async (req, res) => {
 
 exports.getAllMessages = async (req, res) => {
   try {
+    const groupId = req.query.groupId;
+
+    if (!groupId) {
+      return res.status(400).json({ message: "Group Id is required" });
+    }
+
     let MAX_MESSAGES = 10;
 
     const set = parseInt(req.query.set, 10) || 1;
@@ -34,6 +51,7 @@ exports.getAllMessages = async (req, res) => {
     const offset = (set - 1) * MAX_MESSAGES;
 
     let messages = await Messages.findAll({
+      where: { groupId },
       order: [["createdAt", "DESC"]],
       limit: MAX_MESSAGES,
       offset: offset,

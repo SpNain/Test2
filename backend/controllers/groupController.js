@@ -64,3 +64,91 @@ exports.getGroups = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+exports.getGroupById = async (req, res) => {
+  try {
+    const groupId = req.params.groupId;
+
+    if (!groupId) {
+      return res.status(400).json({ message: "Group Id is required" });
+    }
+
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    const usersInGroup = await User.findAll({
+      include: [
+        {
+          model: Group,
+          as: "groups",
+          where: { id: groupId },
+          required: true,
+        },
+      ],
+    });
+
+    if (!usersInGroup) {
+      await Group.destroy({ where: { id: groupId } });
+      return res
+        .status(404)
+        .json({ message: "No Users or Admin ! Group has been destroyed" });
+    }
+
+    return res.status(200).json({ group, usersInGroup });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+exports.addMember = async (req, res) => {
+  try {
+    const { email, memberId, groupId } = req.body;
+
+    if (!email || !memberId || !groupId) {
+      return res.status(400).json({
+        message: "All fields are required, Select a Group first and try again",
+      });
+    }
+
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    const groupAdminId = group.groupAdmin;
+
+    if (groupAdminId !== req.user.id) {
+      return res.status(400).json({
+        message:
+          "You are not the admin of this group, Only admin can add members",
+      });
+    }
+
+    if (memberId === req.user.id) {
+      return res.status(400).json({ message: "You cannot add yourself" });
+    }
+
+    const user = await User.findOne({ where: { email, id: memberId } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isMember = await group.hasUser(user);
+
+    if (isMember) {
+      return res.status(400).json({ message: "User is already a member" });
+    }
+
+    await group.addUser(user);
+
+    return res.status(201).json({ message: "User added successfully" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};

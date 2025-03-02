@@ -32,6 +32,19 @@
           <h2 id="group-name">Select or Create a group</h2>
           <p id="group-details"></p>
         </div>
+
+        <div>
+          <div id="members-dropdown" class="dropdown">
+            <button class="dropbtn">Members</button>
+            <div class="dropdown-content" id="dropdown-content">
+              <!-- Dropdown content will be injected here -->
+            </div>
+          </div>
+
+          <button id="add-members-button" data-toggle="modal" data-target="#addMembersModal">
+            Add Members
+          </button>
+        </div>
       </div>
       <div class="chat-messages" id="chat-messages">
         <!-- messages -->
@@ -72,6 +85,36 @@
             <button type="submit" class="btn btn-primary">
               Create Group
             </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Modal HTML for Add Members -->
+  <div class="modal fade" id="addMembersModal" tabindex="-1" role="dialog" aria-labelledby="addMembersModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addMembersModalLabel">
+            Add Members to Group
+          </h5>
+          <button type="button" id="close-add-members-form" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="add-members-form" onsubmit="handleAddMembersSubmit(event)">
+            <div class="form-group">
+              <label for="user-id">User's ID</label>
+              <input type="number" class="form-control" id="user-id" name="user-id" required />
+            </div>
+            <div class="form-group">
+              <label for="user-email">User's Email</label>
+              <input type="email" class="form-control" id="user-email" name="user-email" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Add Member</button>
           </form>
         </div>
       </div>
