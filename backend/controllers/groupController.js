@@ -106,9 +106,9 @@ exports.getGroupById = async (req, res) => {
 
 exports.addMember = async (req, res) => {
   try {
-    const { email, memberId, groupId } = req.body;
+    const { id, groupId } = req.body;
 
-    if (!email || !memberId || !groupId) {
+    if (!id || !groupId) {
       return res.status(400).json({
         message: "All fields are required, Select a Group first and try again",
       });
@@ -129,11 +129,11 @@ exports.addMember = async (req, res) => {
       });
     }
 
-    if (memberId === req.user.id) {
+    if (id === req.user.id) {
       return res.status(400).json({ message: "You cannot add yourself" });
     }
 
-    const user = await User.findOne({ where: { email, id: memberId } });
+    const user = await User.findOne({ where: { id } });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -146,7 +146,62 @@ exports.addMember = async (req, res) => {
 
     await group.addUser(user);
 
-    return res.status(201).json({ message: "User added successfully" });
+    const users = await group.getUsers();
+
+    return res.status(201).json({ message: "User added successfully", users });
+    
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
+exports.removeMember = async (req, res) => {
+  try {
+    const { id, groupId } = req.query;
+
+    if (!id || !groupId) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    if (req.user.id !== group.groupAdmin) {
+      return res.status(400).json({ message: "Only admin can remove members" });
+    }
+
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isMember = await group.hasUser(user);
+
+    if (!isMember) {
+      return res.status(400).json({ message: "User is not a member" });
+    }
+
+    if (req.user.id === user.id) {
+      if (group.groupAdmin === user.id) {
+        return res.status(400).json({
+          message: "You're the admin of this group. Delete the group instead.",
+        });
+      }
+    }
+
+    await group.removeUser(user);
+
+    const users = await group.getUsers();
+
+    return res
+      .status(200)
+      .json({ message: "User removed successfully", users });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: "Internal Server Error" });

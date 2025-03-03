@@ -186,6 +186,9 @@ function scrollToBottom() {
 }
 
 let currentGroupId = null;
+// jb bhi kisi group pe click hoga to hum us group ke admin ki id isme set kr denge
+// taki jb bhi us group me members ko add krna ho to hum us time pe is variable ka use krke konsa user admin h ye pta kr paaye
+let currentGroupAdminId = null;
 
 document.getElementById("chat-messages").addEventListener("scroll", () => {
   const chatContainer = document.getElementById("chat-messages");
@@ -195,7 +198,6 @@ document.getElementById("chat-messages").addEventListener("scroll", () => {
     prepend = true;
   }
 });
-
 
 window.onload = () => fetchGroups();
 
@@ -306,7 +308,11 @@ async function handleGroupClick(buttonElement) {
 
       currentSet = 1;
       fetchMessages(1, groupId);
-      updateDropdown(groupDetails);
+      currentGroupAdminId = groupDetails.group.groupAdmin; // setting the group admin id into currentGroupAdminId variable
+      // group pe click krne pe hum us group ke users ko added-member element me add kr rhe h
+      // taaki jb view added members button pe click hoto us group ke members ko show kra jaa ske
+      // updateDropdown wala kaam hi kr rhe h
+      renderAddedMembers(groupDetails.usersInGroup);
     } catch (error) {
       console.error("Error fetching group details:", error);
     }
@@ -330,19 +336,111 @@ async function fetchGroupDetails(groupId) {
   return response.data;
 }
 
-async function handleAddMembersSubmit(e) {
-  e.preventDefault();
+// Pahle humne html me code add kr rkha tha jaha pe add member button tha
+// aur uspe click se form modal open hota tha aur uske submit pe handleAddMembersSubmit function call hota tha
+// aur handleAddMembersSubmit fxn add member route pe request maarta tha aur backend pe addMember fxn run hota tha group controller me
+// aur group me member add ho jaata tha
+// aur uske baad hum fetchGroups ko call lgate the jo us user se related group laake render group ko call lgata tha jo groups ko up pe render kr deta tha
+// aur fir un rendered groups pe click krne pe handleGroupClick fxn un groups se related info ui pe add kr deta tha
 
-  const emailInput = document.getElementById("user-email");
-  const memberIdInput = document.getElementById("user-id");
+// To abhi kya logic h?
+// humne html me search input pe type krne pe searchUsers fxn ko call lga rkhi h
+// to jaise hi user kuch search krega to searchUsers fxn ko call lgegi
+// jo response me wo saare users laake dega jo bhi input me types string se match krega
+// aur unko render krne ke liye renderUsers fxn ko call lgayega
+// Ab un users pe add button lga h jiske click ke handleAddMemeberClick fxn run hoga jisko id pass hogi jis bhi user pe click kra h uski
+// ab ye fxn renderAddedMembers ko call lgata h jo added-member id wale element me us user ko add kr deta h
+//
+
+// this fxn gives the matching users as per the search input query
+let timeoutId;
+async function searchUsers(value) {
+  /*
+Debouncing:
+This function is using a debounce technique to limit the number of API calls made while the user is typing. This is achieved using setTimeout and clearTimeout.
+timeoutId is used to store the ID of the timeout. If the function is called again before the timeout completes, the previous timeout is cleared, and a new one is set.
+
+Search Logic:
+When the searchUsers function is called, it first checks if there is an existing timeout. If so, it clears it to prevent the previous search from executing.
+It then sets a new timeout to execute the search after 300 milliseconds.
+If the value (search input) is empty, it logs an empty array and returns early.
+
+API Call:
+If there is a search value, it makes an asynchronous GET request to the server to search for users by name.
+The search query is URL-encoded using encodeURIComponent to ensure it is properly formatted for the URL.
+The request includes an authorization token in the headers.
+
+Rendering Results:
+On a successful response, it calls the renderUsers function to display the search results.
+If an error occurs during the API call, it logs the error to the console.
+
+In simple words, this function uses a debounce technique to limit the number of API calls made while the user is typing, 
+and if there is any response from the server, it then calls the renderUsers function to display the search results.
+*/
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+  }
+
+  //debounced search
+  timeoutId = setTimeout(async () => {
+    if (!value) {
+      console.log([]);
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/user/searchusers?name=${encodeURIComponent(
+          value
+        )}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      renderUsers(response.data.users);
+    } catch (err) {
+      console.log(err);
+    }
+  }, 300);
+}
+
+// search result me jo users aayenge usko searc-results div me render krega ye fxn
+function renderUsers(users) {
+  const searchResultsDiv = document.getElementById("search-results");
+  searchResultsDiv.innerHTML = "";
+
+  users.forEach((user) => {
+    const userItem = document.createElement("div");
+    userItem.className = "search-item";
+    userItem.innerHTML = `
+   <div class="user-card card">
+  <div class="p-2 d-flex justify-content-between align-items-center">
+  <div style="display:flex; justify-content:center; align-items:center; gap:15px;">
+      <h5 class="user-name mb-1">${user.name}</h5>
+      <p class="user-phone mb-0 text-muted">Phone: ${user.phoneNumber}</p> 
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="handleAddMemberClick(${user.id})">Add</button>
+   
+  </div>
+</div>
+
+    `;
+    searchResultsDiv.appendChild(userItem);
+  });
+}
+
+// this fxn adds members into group on click of add button
+async function handleAddMemberClick(id) {
+  const searchResultsDiv = document.getElementById("search-results");
+  const searchUserInput = document.getElementById("search-user");
 
   if (currentGroupId === null) {
     alert("Please select a group first");
-    clearInputsAndCloseModal(
-      emailInput,
-      memberIdInput,
-      "close-add-members-form"
-    );
+    searchResultsDiv.innerHTML = "";
+    clearInputsAndCloseModal(searchUserInput, "close-add-members-form");
     return;
   }
 
@@ -350,8 +448,7 @@ async function handleAddMembersSubmit(e) {
     const response = await axios.post(
       "http://localhost:4000/api/group/addMember",
       {
-        email: emailInput.value,
-        memberId: memberIdInput.value,
+        id,
         groupId: currentGroupId,
       },
       {
@@ -361,44 +458,78 @@ async function handleAddMembersSubmit(e) {
       }
     );
 
-    clearInputsAndCloseModal(
-      emailInput,
-      memberIdInput,
-      "close-add-members-form"
-    );
+    searchResultsDiv.innerHTML = "";
+    clearInputsAndCloseModal(searchUserInput); // yhape modal ko close nhi kr rhe taaki admin jitne user chahe utne user add krne ke baad apne app modal ko close kr ske
+
     alert(response.data.message);
+    renderAddedMembers(response.data.users);
     fetchGroups();
   } catch (err) {
     console.log(err);
+    searchResultsDiv.innerHTML = "";
+    clearInputsAndCloseModal(searchUserInput, "close-add-members-form");
     alert(err.response.data.message);
-    clearInputsAndCloseModal(
-      emailInput,
-      memberIdInput,
-      "close-add-members-form"
-    );
   }
 }
 
-function updateDropdown(groupDetails) {
-  const dropdownContent = document.getElementById("dropdown-content");
+// pahle hum admin ki id updateDropdown me hi nikal rhe the
+// kyunki pahle hum updateDropdown ko sirf group pe click krne ke call kr rhe the
+// aur wha se hum updateDropdown ko group details bhej rhe the jisme se hum admin ki id nikal skte the the
+// but ab hum admin ki id globally store kr rhe h 
+// kyunki ab renderAddedMembers fxn ko group pe click ke saath saath member add or remove krne pe bhi call lgayi jaa rhi h 
+// aur member add/remove ke time hume sirf user ki details bheji jaati h naaki group ki to tb hume admin ki id nhi milegi
+function renderAddedMembers(members) {
+  const addedMembersContainer = document.getElementById("added-members");
+  addedMembersContainer.innerHTML = "";
 
-  dropdownContent.innerHTML = "";
+  if (members.length === 0) {
+    addedMembersContainer.innerHTML = "<p>No members added yet.</p>";
+    return;
+  }
 
-  const adminId = groupDetails.group.groupAdmin;
+  members.forEach((member) => {
+    const memberCard = document.createElement("div");
+    memberCard.className =
+      "added-member d-flex justify-content-between align-items-center my-2 p-2 border rounded";
 
-  groupDetails.usersInGroup.forEach((user) => {
-    const userItem = document.createElement("a");
-    userItem.href = "#";
-
-    userItem.innerHTML = `
-      <div style="text-align:center;">
-        <span>${user.name}</span>
-        <span style="font-size: 12px; color: #F00;">ID: #${user.id} | Role: ${
-      user.id == adminId ? "Admin" : "Member"
-    }</span>
-      </div>
+    memberCard.innerHTML = `
+      <span class="member-name">${member.name}</span>
+      <span class="member-role">${
+        member.id == currentGroupAdminId ? "admin" : "member" //used currentGroupAdminId variable here to check who is admin
+      }</span>
+      <span class="member-phone">Phone: ${member.phoneNumber}</span>  
+      <button class="btn btn-danger btn-sm" onclick="handleRemoveMemberClick(${
+        member.id
+      })">Remove</button>
     `;
 
-    dropdownContent.appendChild(userItem);
+    addedMembersContainer.appendChild(memberCard);
   });
+}
+
+async function handleRemoveMemberClick(id) {
+  if (currentGroupId === null) {
+    alert("Please select a group first");
+    return;
+  }
+
+  const groupId = currentGroupId;
+
+  try {
+    const response = await axios.delete(
+      `http://localhost:4000/api/group/removeMember?id=${id}&groupId=${groupId}`,
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+
+    alert(response.data.message);
+
+    renderAddedMembers(response.data.users);
+  } catch (err) {
+    console.log(err);
+    alert(err.response.data.message);
+  }
 }
