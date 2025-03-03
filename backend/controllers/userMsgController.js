@@ -26,7 +26,12 @@ exports.postUserMsg = async (req, res) => {
         .json({ message: "Some error occured while saving the message" });
     }
 
-    return res.status(201).json({ message: "Message saved successfully" });
+    return res.status(201).json({
+      message: "Message saved successfully",
+      userId: req.user.id,
+      senderName: req.user.name,
+      createdAt: isStored.createdAt,
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: "Internal Server Error" });

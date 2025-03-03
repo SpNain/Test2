@@ -1,5 +1,6 @@
 let currentSet = 1;
 let loadingMessages = false;
+const socket = io(`http://localhost:4000`);
 
 const token = localStorage.getItem("token");
 
@@ -24,28 +25,77 @@ function clearInputsAndCloseModal(...args) {
   }
 }
 
+// Ab hum har ek msg pe backend ko request nhi bhejenge balki socket ki mdad se connection on rkhenge
+// aur jb user message krega tb us message ko backend pe send krenge database me add hone ke liye
+// aur backend se jb response aa jaayega to us message ko ui pe render krenge
+// Hum scroll aur group click pe abhi bhi messages ko fetchMessages fxn se fetch krenge
 async function handleMsgSubmit(e, groupId) {
   e.preventDefault();
   const messageInput = document.getElementById("message-input");
 
+  // Emit 'sendMessage' event to the server with message data
   try {
-    await axios.post(
-      "http://localhost:4000/api/user/message",
-      {
-        message: messageInput.value,
-        groupId: groupId,
-      },
-      { headers: { Authorization: token } }
-    );
+    socket.emit("sendMessage", {
+      message: messageInput.value,
+      groupId: groupId,
+      token,
+    });
     clearInputsAndCloseModal(messageInput);
-    fetchMessages(1, groupId);
-
     currentSet = 1;
-  } catch (err) {
-    console.log(err);
-    alert(err.response.data.message);
-    clearInputsAndCloseModal(messageInput);
   }
+  catch(err){
+    console.log(err); 
+  }
+}
+
+socket.on("receiveMessage", (msg) => {
+  if (msg.groupId === currentGroupId) {
+    renderSentMessage([msg]); // Renders the new message if it's in the current group chat
+  }
+});
+
+function renderSentMessage(messages) {
+  const chatContainer = document.getElementById("chat-messages"); // Gets the chat container
+
+  messages.forEach((msg) => {
+    const message = document.createElement("div"); // Create a new message div
+
+    // Assigns a class to differentiate between sender and receiver messages
+    message.className =
+      msg.userId === currentUserId ? "message sender" : "message receiver";
+
+    // Constructs the message HTML
+    message.innerHTML = `
+    <div class="message-content">
+      <div class="message-info">
+        <span class="username">
+          ${
+            msg.userId === currentUserId
+              ? "~You" // If the message was sent by the current user, show "You"
+              : `~${msg.senderName}` // Otherwise, show the sender's name
+          } 
+          ${
+            msg.userId != currentUserId
+              ? `<span class="message-timestamp">new</span>` // "New" label for received messages
+              : ` <span class="timestamp">${new Date(
+                  msg.createdAt
+                ).toLocaleTimeString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}</span>` // Timestamp for sent messages
+          }
+        </span>
+      </div>
+      <p>${msg.message}</p>
+    </div>`;
+
+    chatContainer.appendChild(message); // Adds the message to the chat container
+
+    // Scrolls to the bottom only if the message was sent by the current user
+    if (msg.userId === currentUserId) {
+      scrollToBottom();
+    }
+  });
 }
 
 async function fetchMessages(set, groupId) {
