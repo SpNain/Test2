@@ -1,15 +1,15 @@
 const http = require("http");
-const { app, sequelize } = require("./app"); // Import Express app
-const { setupSocket } = require("./sockets/socket"); // Import Socket.IO logic
+const { app, sequelize } = require("./app");
+const { setupSocket } = require("./sockets/socket");
 
-const server = http.createServer(app); // Create HTTP server
+const server = http.createServer(app);
 
-setupSocket(server); // Pass server to Socket.IO
+setupSocket(server);
 
 async function initiate() {
   try {
     // await sequelize.sync({ force: true })
-    await sequelize.sync(); // Sync Sequelize models with the database
+    await sequelize.sync();
     server.listen(process.env.PORT, () => {
       console.log(`Server started on port ${process.env.PORT}`);
     });

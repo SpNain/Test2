@@ -25,15 +25,10 @@ function clearInputsAndCloseModal(...args) {
   }
 }
 
-// Ab hum har ek msg pe backend ko request nhi bhejenge balki socket ki mdad se connection on rkhenge
-// aur jb user message krega tb us message ko backend pe send krenge database me add hone ke liye
-// aur backend se jb response aa jaayega to us message ko ui pe render krenge
-// Hum scroll aur group click pe abhi bhi messages ko fetchMessages fxn se fetch krenge
 async function handleMsgSubmit(e, groupId) {
   e.preventDefault();
   const messageInput = document.getElementById("message-input");
 
-  // Emit 'sendMessage' event to the server with message data
   try {
     socket.emit("sendMessage", {
       message: messageInput.value,
@@ -50,21 +45,19 @@ async function handleMsgSubmit(e, groupId) {
 
 socket.on("receiveMessage", (msg) => {
   if (msg.groupId === currentGroupId) {
-    renderSentMessage([msg]); // Renders the new message if it's in the current group chat
+    renderSentMessage([msg]);
   }
 });
 
 function renderSentMessage(messages) {
-  const chatContainer = document.getElementById("chat-messages"); // Gets the chat container
+  const chatContainer = document.getElementById("chat-messages");
 
   messages.forEach((msg) => {
-    const message = document.createElement("div"); // Create a new message div
+    const message = document.createElement("div");
 
-    // Assigns a class to differentiate between sender and receiver messages
     message.className =
       msg.userId === currentUserId ? "message sender" : "message receiver";
 
-    // Constructs the message HTML
     message.innerHTML = `
     <div class="message-content">
       <div class="message-info">
@@ -89,9 +82,8 @@ function renderSentMessage(messages) {
       <p>${msg.message}</p>
     </div>`;
 
-    chatContainer.appendChild(message); // Adds the message to the chat container
+    chatContainer.appendChild(message);
 
-    // Scrolls to the bottom only if the message was sent by the current user
     if (msg.userId === currentUserId) {
       scrollToBottom();
     }

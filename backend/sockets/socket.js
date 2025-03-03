@@ -1,7 +1,7 @@
 const { Server } = require("socket.io");
 const axios = require("axios");
 
-function setupSocket(server) { // getting server from server.js file
+function setupSocket(server) {
   const io = new Server(server, {
     cors: {
       origin: "http://127.0.0.1:5500",
@@ -12,9 +12,6 @@ function setupSocket(server) { // getting server from server.js file
   });
 
   io.on("connection", (socket) => {
-    // console.log(`User connected: ${socket.id} - ${socket.user.name}`);
-
-    // Listen for "sendMessage" event from the client
     socket.on("sendMessage", async (data) => {
       const messageData = {
         message: data.message,
@@ -22,18 +19,16 @@ function setupSocket(server) { // getting server from server.js file
       };
 
       try {
-        // Send message to backend API to store in database
         const response = await axios.post(
           "http://localhost:4000/api/user/message",
           messageData,
           {
             headers: {
-              Authorization: `${data.token}`, // Pass auth token
+              Authorization: `${data.token}`,
             },
           }
         );
 
-        // Broadcast message to all connected clients
         io.emit("receiveMessage", {
           message: data.message,
           senderName: response.data.senderName,
@@ -46,7 +41,6 @@ function setupSocket(server) { // getting server from server.js file
       }
     });
 
-    // Handle user disconnection
     socket.on("disconnect", () => {
       console.log(`User disconnected: ${socket.id}`);
     });
