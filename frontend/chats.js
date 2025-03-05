@@ -20,7 +20,13 @@ function clearInputsAndCloseModal(...args) {
     remainingArgs[i].value = "";
   }
 
+  // When i click on close button, modal remains in focus and area-hidden="true" did not get removed properly
+  // so i am getting this error - Blocked aria-hidden on an element because its descendant retained focus. The focus must not be hidden from assistive technology users.
+  // so resolve this issue i removed the focus from modal first then remove it
   if (id) {
+    // Move focus to the body before hiding the modal
+    document.activeElement.blur();
+    document.body.focus();
     document.getElementById(`${id}`).click();
   }
 }
@@ -29,17 +35,49 @@ async function handleMsgSubmit(e, groupId) {
   e.preventDefault();
   const messageInput = document.getElementById("message-input");
 
+  // agr file aati h to file ko adjust krke upload krne ke liye bhej dete h
+  // aur response me se jo fileUrl aayega uske socket ki mdad se backend pe bhej denge sendMessage wale socket connection pe
+  // aur wha se jo response aayega use recieveMessage connection pe receive krke message ko render krne ke liye bhej denge joki message ko up pe render kr dega
+  const fileInput = document.getElementById("file-input");
+  const message = messageInput.value.trim();
+
+  let fileUrl = null;
+
+  if (fileInput.files.length > 0) {
+    const formData = new FormData();
+    formData.append("file", fileInput.files[0]);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/user/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: token,
+          },
+        }
+      );
+      fileUrl = response.data.fileUrl;
+
+      document.getElementById("file-preview-container").style.display = "none";
+    } catch (error) {
+      alert("Error uploading file, please try again");
+      return;
+    }
+  }
+
   try {
     socket.emit("sendMessage", {
-      message: messageInput.value,
+      message: message.length > 0 ? message : "file sent",
       groupId: groupId,
+      fileUrl: fileUrl || null,
       token,
     });
-    clearInputsAndCloseModal(messageInput);
+    clearInputsAndCloseModal(messageInput, fileInput);
     currentSet = 1;
-  }
-  catch(err){
-    console.log(err); 
+  } catch (err) {
+    console.log(err);
   }
 }
 
@@ -51,43 +89,101 @@ socket.on("receiveMessage", (msg) => {
 
 function renderSentMessage(messages) {
   const chatContainer = document.getElementById("chat-messages");
+  //jb kisi group pe koi message nhi hota to hum No message found show krte h
+  // but jb hum first message send krenge to hum chat container ko empty kr denge kyunki ab chatContainer me msg append hoga
+  if (chatContainer.innerHTML.trim() === "<p>No messages found</p>") {
+    chatContainer.innerHTML = "";
+  }
 
   messages.forEach((msg) => {
-    const message = document.createElement("div");
-
-    message.className =
-      msg.userId === currentUserId ? "message sender" : "message receiver";
-
-    message.innerHTML = `
-    <div class="message-content">
-      <div class="message-info">
-        <span class="username">
-          ${
-            msg.userId === currentUserId
-              ? "~You" // If the message was sent by the current user, show "You"
-              : `~${msg.senderName}` // Otherwise, show the sender's name
-          } 
-          ${
-            msg.userId != currentUserId
-              ? `<span class="message-timestamp">new</span>` // "New" label for received messages
-              : ` <span class="timestamp">${new Date(
-                  msg.createdAt
-                ).toLocaleTimeString("en-US", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}</span>` // Timestamp for sent messages
-          }
-        </span>
-      </div>
-      <p>${msg.message}</p>
-    </div>`;
-
-    chatContainer.appendChild(message);
+    chatContainer.appendChild(createMsgUI(msg));
 
     if (msg.userId === currentUserId) {
       scrollToBottom();
     }
   });
+}
+// hum same kaam 3 jagah kr rhe the, renderSentMessage me aur renderMessages ke if else block dono me
+// isiliye us code ka ek fxn bna diya aur teeno jgah se iss fxn ko call lga di
+// image or video ki ui create krne ke liye iss fxn me le code me kuch updates bhi kre h
+// ye fxn msg lega aur ui create krke return krega
+function createMsgUI(msg) {
+  const message = document.createElement("div");
+  message.className =
+    msg.userId === currentUserId ? "message sender" : "message receiver";
+
+  // get the message content - matlab ki message file h ya text h aur agr file h to image h ya video us hisab se content create krlo
+  let content = null;
+  if (msg.fileUrl) {
+    const extension = msg.fileUrl.split(".").pop().toLowerCase();
+    if (["jpg", "jpeg", "png", "gif", "webp"].includes(extension)) {
+      content = `<img src="${msg.fileUrl}" alt="Sent image" class="message-file" />`;
+    }
+    else if (["mp4", "webm", "ogg", "mov"].includes(extension)) {
+      content = `<video controls class="message-file"><source src="${msg.fileUrl}" type="video/mp4">Your browser does not support videos.</video>`;
+    }
+    else {
+      content = `<p>File Type not supported</p>`
+    }
+  } else {
+    content = `<p>${msg.message}</p>`;
+  }
+  message.innerHTML = `
+  <div class="message-content">
+      <div class="message-info">
+          <span class="username">${
+            msg.userId === currentUserId ? "~You" : `~${msg.senderName}`
+          }</span>
+          <span class="timestamp">${new Date(msg.createdAt).toLocaleTimeString(
+            "en-US",
+            {
+              hour: "2-digit",
+              minute: "2-digit",
+            }
+          )}</span>
+      </div>
+      ${content}
+  </div>
+  `;
+  return message;
+}
+
+// jb bhi message me file hogi to uska pahle preview dhikega
+// ye fxn jb bhi file input me change hoga to trigger hoga
+// matlab jaise hi koi file aayegi to ye fxn run hoga
+// humne file input me sirf image/video accept kr rkha h
+// aur hum bas unhi ka preview set kr rhe h
+// aur agr file bhej rhe h to hum msg nhi bhej skte
+// isiliye humne message wale input ko disable kr diya h
+function showFilePreview() {
+  const fileInput = document.getElementById("file-input");
+  const filePreview = document.getElementById("file-preview");
+  const videoPreview = document.getElementById("video-preview");
+  const filePreviewContainer = document.getElementById(
+    "file-preview-container"
+  );
+
+  const file = fileInput.files[0];
+
+  if (file) {
+    const fileURL = URL.createObjectURL(file);
+    filePreviewContainer.style.display = "block";
+
+    if (file.type.startsWith("image/")) {
+      filePreview.src = fileURL;
+      filePreview.style.display = "block";
+      videoPreview.style.display = "none";
+    } else if (file.type.startsWith("video/")) {
+      videoPreview.src = fileURL;
+      videoPreview.style.display = "block";
+      filePreview.style.display = "none";
+    }
+  } else {
+    filePreviewContainer.style.display = "none";
+  }
+  const messageInput = document.getElementById("message-input");
+
+  messageInput.setAttribute("disabled", "true");
 }
 
 async function fetchMessages(set, groupId) {
@@ -137,40 +233,10 @@ function renderMessages(messages, prepend = false, groupId) {
     const prevScrollHeight = chatContainer.scrollHeight;
 
     messages.forEach((msg) => {
-      const message = document.createElement("div");
-      message.className =
-        msg.userId === currentUserId ? "message sender" : "message receiver";
-      message.innerHTML = `
-          <div class="message-content">
-            <div class="message-info">
-              <span class="username">${
-                msg.userId === currentUserId ? "~You" : `~${msg.senderName}`
-              }   <span class="timestamp">${new Date(
-        msg.createdAt
-      ).toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })}</span>
-            </div>
-            <p>${msg.message}</p>
-          </div>
-        `;
-      chatContainer.insertBefore(message, chatContainer.firstChild);
+      chatContainer.insertBefore(createMsgUI(msg), chatContainer.firstChild);
     });
 
-    const sendForm =
-      document.querySelector("#chat-area form") ||
-      document.createElement("form");
-    sendForm.onsubmit = (event) => handleMsgSubmit(event, groupId);
-    sendForm.innerHTML = `
-      <div class="chat-input">
-        <input type="text" id="message-input" placeholder="Type a message..." min="1" required />
-        <button type="submit" id="send-button">Send</button>
-      </div>
-    `;
-    if (!document.querySelector("#chat-area form")) {
-      document.getElementById("chat-area").appendChild(sendForm);
-    }
+    appendSendFormUI(groupId);
 
     const newScrollHeight = chatContainer.scrollHeight;
     const gap = 100;
@@ -179,46 +245,36 @@ function renderMessages(messages, prepend = false, groupId) {
     if (messages.length > 0) chatContainer.innerHTML = "";
 
     messages.reverse().forEach((msg) => {
-      const message = document.createElement("div");
-      message.className =
-        msg.userId === currentUserId ? "message sender" : "message receiver";
-      message.innerHTML = `
-          <div class="message-content">
-            <div class="message-info">
-              <span class="username">${
-                msg.userId === currentUserId ? "~You" : `~${msg.senderName}`
-              }</span>
-             <span class="timestamp">${new Date(
-               msg.createdAt
-             ).toLocaleTimeString("en-US", {
-               hour: "2-digit",
-               minute: "2-digit",
-             })}</span>
-
-            </div>
-            <p>${msg.message}</p>
-          </div>
-        `;
-      chatContainer.appendChild(message);
+      chatContainer.appendChild(createMsgUI(msg));
     });
 
-    const sendForm =
-      document.querySelector("#chat-area form") ||
-      document.createElement("form");
-    sendForm.onsubmit = (event) => handleMsgSubmit(event, groupId);
-    sendForm.innerHTML = `
-      <div class="chat-input">
-        <input type="text" id="message-input" placeholder="Type a message..." min="1" required />
-        <button type="submit" id="send-button">Send</button>
-      </div>
-    `;
-    if (!document.querySelector("#chat-area form")) {
-      document.getElementById("chat-area").appendChild(sendForm);
-    }
+    appendSendFormUI(groupId);
 
     if (!prepend) {
       scrollToBottom();
     }
+  }
+}
+
+// ye send form ki ui ko append krne wala kaam rednerMessages ke if else dono block me jo rha tha
+// to wha se code utha ke fxn bna diya aur un dono jgah iss fxn ko call lga di
+function appendSendFormUI(groupId) {
+  const sendForm =
+    document.querySelector("#chat-area form") || document.createElement("form");
+  sendForm.onsubmit = (event) => handleMsgSubmit(event, groupId);
+  sendForm.innerHTML = `
+      <div class="chat-input">
+        <input type="text" id="message-input" placeholder="Type a message..." min="1" required />
+        <input type="file" id="file-input" accept="image/*,video/*" onchange="showFilePreview()" />
+        <button type="submit" id="send-button">Send</button>
+      </div>
+      <div id="file-preview-container" class="file-preview">
+        <img id="file-preview" src="" alt="File Preview" style="display: none;" />
+        <video id="video-preview" controls style="display: none;"></video>
+      </div>
+    `;
+  if (!document.querySelector("#chat-area form")) {
+    document.getElementById("chat-area").appendChild(sendForm);
   }
 }
 

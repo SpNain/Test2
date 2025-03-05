@@ -8,10 +8,78 @@ body {
   font-family: "Poppins", "Segoe UI", sans-serif;
   background: #f0f2f5;
   margin: 0;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
+}
+
+.message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.message-input-container {
+  display: flex;
+  align-items: center;
+}
+
+#message-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+#upload-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+#send-button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.file-preview {
+  position: relative;
+  width: 100px;
+
+  background-color: #007bff;
+
+  top: -180px;
+  left: 620px;
+}
+
+.file-preview img,
+.file-preview video {
+  max-width: 100px;
+  border-radius: 5px;
+}
+
+.message-file {
+  padding-top: 5px;
+  border-radius: 16px;
+  max-width: 500px;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.message-file:hover {
+  opacity: 0.9;
+  transform: scale(1.01);
 }
 
 .m_container {
@@ -86,19 +154,6 @@ body {
 }
 #group-details {
   font-size: 1rem;
-}
-
-.message-timestamp {
-  background-color: #005ce6;
-  color: #ffffff;
-  padding: 0px 5px;
-  padding-bottom: 4px;
-  border-radius: 10px;
-  font-size: 0.8em;
-  margin-left: 6px;
-  font-weight: 700;
-
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .dropdown {

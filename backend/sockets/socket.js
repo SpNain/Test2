@@ -13,9 +13,12 @@ function setupSocket(server) {
 
   io.on("connection", (socket) => {
     socket.on("sendMessage", async (data) => {
+      const { message, fileUrl, groupId } = data;
+
       const messageData = {
-        message: data.message,
-        groupId: data.groupId,
+        message,
+        fileUrl,
+        groupId,
       };
 
       try {
@@ -30,10 +33,11 @@ function setupSocket(server) {
         );
 
         io.emit("receiveMessage", {
-          message: data.message,
+          message: message || "file message",
+          fileUrl: fileUrl || null,
           senderName: response.data.senderName,
           userId: response.data.userId,
-          groupId: data.groupId,
+          groupId: groupId,
           createdAt: response.data.createdAt,
         });
       } catch (dbError) {

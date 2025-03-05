@@ -10,15 +10,18 @@
   "author": "hardeep",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.1692.0",
     "axios": "^1.8.1",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.21.0",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
     "mysql2": "^3.11.2",
     "nodemon": "^3.1.4",
     "sequelize": "^6.37.3",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "uuid": "^11.1.0"
   }
 }

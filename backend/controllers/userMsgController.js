@@ -1,16 +1,14 @@
 const User = require("../models/User");
 const Messages = require("../models/Messages");
 const { Op } = require("sequelize");
+const { uploadFileToS3 } = require("../services/awsService");
 
 exports.postUserMsg = async (req, res) => {
   try {
-    const message = req.body.message;
-    const groupId = req.body.groupId;
+    const { message, groupId, fileUrl } = req.body;
 
-    if (!message || !groupId) {
-      return res
-        .status(400)
-        .json({ message: "Select or Create any Group to send Messages" });
+    if (!groupId) {
+      return res.status(400).json({ message: "Group Id is required" });
     }
 
     const isStored = await Messages.create({
@@ -18,6 +16,7 @@ exports.postUserMsg = async (req, res) => {
       userId: req.user.id,
       senderName: req.user.name,
       groupId,
+      fileUrl,
     });
 
     if (!isStored) {
@@ -106,5 +105,24 @@ exports.searchUsers = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+exports.uploadFile = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const fileUrl = await uploadFileToS3(req.file);
+    req.user.upd;
+    return res
+      .status(201)
+      .json({ message: "File uploaded successfully", fileUrl });
+  } catch (error) {
+    console.error("Upload error:", error);
+    return res
+      .status(500)
+      .json({ message: "Error uploading file", error: error.message });
   }
 };
