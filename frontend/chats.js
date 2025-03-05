@@ -20,11 +20,7 @@ function clearInputsAndCloseModal(...args) {
     remainingArgs[i].value = "";
   }
 
-  // When i click on close button, modal remains in focus and area-hidden="true" did not get removed properly
-  // so i am getting this error - Blocked aria-hidden on an element because its descendant retained focus. The focus must not be hidden from assistive technology users.
-  // so resolve this issue i removed the focus from modal first then remove it
   if (id) {
-    // Move focus to the body before hiding the modal
     document.activeElement.blur();
     document.body.focus();
     document.getElementById(`${id}`).click();
@@ -35,9 +31,6 @@ async function handleMsgSubmit(e, groupId) {
   e.preventDefault();
   const messageInput = document.getElementById("message-input");
 
-  // agr file aati h to file ko adjust krke upload krne ke liye bhej dete h
-  // aur response me se jo fileUrl aayega uske socket ki mdad se backend pe bhej denge sendMessage wale socket connection pe
-  // aur wha se jo response aayega use recieveMessage connection pe receive krke message ko render krne ke liye bhej denge joki message ko up pe render kr dega
   const fileInput = document.getElementById("file-input");
   const message = messageInput.value.trim();
 
@@ -89,8 +82,6 @@ socket.on("receiveMessage", (msg) => {
 
 function renderSentMessage(messages) {
   const chatContainer = document.getElementById("chat-messages");
-  //jb kisi group pe koi message nhi hota to hum No message found show krte h
-  // but jb hum first message send krenge to hum chat container ko empty kr denge kyunki ab chatContainer me msg append hoga
   if (chatContainer.innerHTML.trim() === "<p>No messages found</p>") {
     chatContainer.innerHTML = "";
   }
@@ -103,27 +94,20 @@ function renderSentMessage(messages) {
     }
   });
 }
-// hum same kaam 3 jagah kr rhe the, renderSentMessage me aur renderMessages ke if else block dono me
-// isiliye us code ka ek fxn bna diya aur teeno jgah se iss fxn ko call lga di
-// image or video ki ui create krne ke liye iss fxn me le code me kuch updates bhi kre h
-// ye fxn msg lega aur ui create krke return krega
 function createMsgUI(msg) {
   const message = document.createElement("div");
   message.className =
     msg.userId === currentUserId ? "message sender" : "message receiver";
 
-  // get the message content - matlab ki message file h ya text h aur agr file h to image h ya video us hisab se content create krlo
   let content = null;
   if (msg.fileUrl) {
     const extension = msg.fileUrl.split(".").pop().toLowerCase();
     if (["jpg", "jpeg", "png", "gif", "webp"].includes(extension)) {
       content = `<img src="${msg.fileUrl}" alt="Sent image" class="message-file" />`;
-    }
-    else if (["mp4", "webm", "ogg", "mov"].includes(extension)) {
+    } else if (["mp4", "webm", "ogg", "mov"].includes(extension)) {
       content = `<video controls class="message-file"><source src="${msg.fileUrl}" type="video/mp4">Your browser does not support videos.</video>`;
-    }
-    else {
-      content = `<p>File Type not supported</p>`
+    } else {
+      content = `<p>File Type not supported</p>`;
     }
   } else {
     content = `<p>${msg.message}</p>`;
@@ -148,13 +132,6 @@ function createMsgUI(msg) {
   return message;
 }
 
-// jb bhi message me file hogi to uska pahle preview dhikega
-// ye fxn jb bhi file input me change hoga to trigger hoga
-// matlab jaise hi koi file aayegi to ye fxn run hoga
-// humne file input me sirf image/video accept kr rkha h
-// aur hum bas unhi ka preview set kr rhe h
-// aur agr file bhej rhe h to hum msg nhi bhej skte
-// isiliye humne message wale input ko disable kr diya h
 function showFilePreview() {
   const fileInput = document.getElementById("file-input");
   const filePreview = document.getElementById("file-preview");
@@ -256,8 +233,6 @@ function renderMessages(messages, prepend = false, groupId) {
   }
 }
 
-// ye send form ki ui ko append krne wala kaam rednerMessages ke if else dono block me jo rha tha
-// to wha se code utha ke fxn bna diya aur un dono jgah iss fxn ko call lga di
 function appendSendFormUI(groupId) {
   const sendForm =
     document.querySelector("#chat-area form") || document.createElement("form");
