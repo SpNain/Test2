@@ -40,4 +40,8 @@ app.use("/api/user", userRoute);
 app.use("/api/user", UserMsgRoute);
 app.use("/api/group", groupRoute);
 
+// services
+const cronService = require('./services/cronservice');
+cronService;
+
 module.exports = { app, sequelize };
