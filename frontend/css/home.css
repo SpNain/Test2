@@ -93,16 +93,7 @@ body {
   }
 }
 
-/*Dynamic Login-Signup Form CSS*/
-
-#form-section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Forms Section */
+/* Form Modals Section */
 
 .modal-content {
   background: linear-gradient(135deg, #feb47b, #5ff2ff);
@@ -112,6 +103,11 @@ body {
 }
 .modal-footer button:hover {
   background-color: #ff8e38;
+}
+
+.errorMessage{
+  color: red;
+  font-weight: bold;
 }
 
 /* Scroll bar css */

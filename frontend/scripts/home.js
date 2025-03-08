@@ -1,66 +1,176 @@
-// Example of how to initialize a map (you'll need to adapt this to your chosen map library)
-document.addEventListener("DOMContentLoaded", function () {
-  // Example with a placeholder map. Replace with your actual map initialization.
-  const map = L.map("charity-signup-map").setView([0, 0], 2); // Example using Leaflet
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  }).addTo(map);
+const DOMAIN_URL = "http://localhost:3000";
 
-  let marker = null;
-  map.on("click", function (e) {
-    if (marker) {
-      map.removeLayer(marker);
+document.addEventListener("DOMContentLoaded", () => {
+  // User Signup
+  async function handleUserSignup() {
+    try {
+      let name = document.getElementById("user-signup-name").value;
+      let email = document.getElementById("user-signup-email").value;
+      let password = document.getElementById("user-signup-password").value;
+
+      const response = await axios.post(`${DOMAIN_URL}/api/user/signup`, {
+        name,
+        email,
+        password,
+      });
+
+      alert(response.data.message);
+      window.location.reload();
+    } catch (error) {
+      showError("user-signup-error", error);
     }
-    marker = L.marker(e.latlng).addTo(map);
-    document.getElementById("charity-signup-latitude").value = e.latlng.lat;
-    document.getElementById("charity-signup-longitude").value = e.latlng.lng;
-  });
+  }
 
-  document
-    .getElementById("charity-signup-submit")
-    .addEventListener("click", function () {
-      // Collect form data and send to your backend
-      const name = document.getElementById("charity-signup-name").value;
-      const email = document.getElementById("charity-signup-email").value;
-      const address = document.getElementById("charity-signup-address").value;
-      const mission = document.getElementById("charity-signup-mission").value;
-      const latitude = document.getElementById("charity-signup-latitude").value;
-      const longitude = document.getElementById(
-        "charity-signup-longitude"
-      ).value;
-      const categories = Array.from(
-        document.querySelectorAll(
-          '#charity-signup-categories input[type="checkbox"]:checked'
-        )
-      ).map((el) => el.value);
+  // User Login
+  async function handleUserLogin() {
+    try {
+      let email = document.getElementById("user-login-email").value;
+      let password = document.getElementById("user-login-password").value;
 
-      // Send data to backend (example using fetch)
-      fetch("/api/charity/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          address,
-          mission,
-          latitude,
-          longitude,
-          categories,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            // Handle successful signup (e.g., close modal, show success message)
-            $("#charity-signup-modal").modal("hide");
-          } else {
-            // Handle signup errors (e.g., display error message)
-            document.getElementById("charity-signup-error").textContent =
-              data.message;
-          }
-        });
-    });
+      const response = await axios.post(`${DOMAIN_URL}/api/user/login`, {
+        email,
+        password,
+      });
+      alert(response.data.message);
+      localStorage.setItem("user-token", response.data.token);
+
+      window.location.href = "/user.html";
+
+    } catch (error) {
+      showError("user-login-error", error);
+    }
+  }
+
+  // Charity Signup
+  async function handleCharitySignup() {
+    try {
+      let name = document.getElementById("charity-signup-name").value;
+      let email = document.getElementById("charity-signup-email").value;
+      let password = document.getElementById("charity-signup-password").value;
+      let mission = document.getElementById("charity-signup-mission").value;
+      let categories = getSelectedCategories();
+      let city = document.getElementById("charity-signup-city").value;
+      let state = document.getElementById("charity-signup-state").value;
+      let country = document.getElementById("charity-signup-country").value;
+      
+      const response = await axios.post(`${DOMAIN_URL}/api/charity/signup`, {
+        name,
+        email,
+        password,
+        mission,
+        categories,
+        location: {
+          city,
+          state,
+          country,
+        }
+      });
+
+      alert(response.data.message);
+      window.location.reload();
+
+    } catch (error) {
+      showError("charity-signup-error", error);
+    }
+  }
+
+  // Charity Login
+  async function handleCharityLogin() {
+    try {
+      let email = document.getElementById("charity-login-email").value;
+      let password = document.getElementById("charity-login-password").value;
+
+      const response = await axios.post(`${DOMAIN_URL}/api/charity/login`, {
+        email,
+        password,
+      });
+
+      alert(response.data.message);
+      localStorage.setItem("charity-token", response.data.token);
+
+      window.location.href = "/charity.html";
+
+    } catch (error) {
+      showError("charity-login-error", error);
+    }
+  }
+
+  // Admin Login
+  async function handleAdminLogin() {
+    try {
+      let email = document.getElementById("admin-login-email").value;
+      let password = document.getElementById("admin-login-password").value;
+
+      const response = await axios.post(`${DOMAIN_URL}/api/admin/login`, {
+        email,
+        password,
+      });
+
+      alert(response.data.message);
+      localStorage.setItem("admin-token", response.data.token);
+
+      window.location.href = "/admin.html";
+
+    } catch (error) {
+      showError("admin-login-error", error);
+    }
+  }
+
+  // Function to get selected categories for charity signup
+  function getSelectedCategories() {
+    let categories = [];
+    document
+      .querySelectorAll("#charity-signup-categories input:checked")
+      .forEach((checkbox) => {
+        categories.push(checkbox.value);
+      });
+    return categories;
+  }
+
+  // Function to show error messages
+  function showError(elementId, error) {
+    const errorElement = document.getElementById(elementId);
+    if (error.response) {
+      errorElement.textContent = error.response.data.message;
+      errorElement.style.display = "block";
+      setTimeout(() => {
+        errorElement.textContent = "";
+        errorElement.style.display = "none";
+      }, 3000);
+    } else {
+      console.error(error);
+      alert("An error occurred. Please try again later.");
+    }
+  }
+
+  // Event Listeners
+  if (document.getElementById("user-signup-submit")) {
+    document
+      .getElementById("user-signup-submit")
+      .addEventListener("click", handleUserSignup);
+  }
+
+  if (document.getElementById("user-login-submit")) {
+    document
+      .getElementById("user-login-submit")
+      .addEventListener("click", handleUserLogin);
+  }
+
+  if (document.getElementById("charity-signup-submit")) {
+    document
+      .getElementById("charity-signup-submit")
+      .addEventListener("click", handleCharitySignup);
+  }
+
+  if (document.getElementById("charity-login-submit")) {
+    document
+      .getElementById("charity-login-submit")
+      .addEventListener("click", handleCharityLogin);
+  }
+
+  if (document.getElementById("admin-login-submit")) {
+    document
+      .getElementById("admin-login-submit")
+      .addEventListener("click", handleAdminLogin);
+  }
 });
