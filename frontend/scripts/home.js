@@ -15,9 +15,10 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       alert(response.data.message);
-      window.location.reload();
+      clearInputs("user-signup-name", "user-signup-email", "user-signup-password");
     } catch (error) {
       showError("user-signup-error", error);
+      clearInputs("user-signup-name", "user-signup-email", "user-signup-password");
     }
   }
 
@@ -38,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (error) {
       showError("user-login-error", error);
+      clearInputs("user-login-email", "user-login-password");
     }
   }
 
@@ -67,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       alert(response.data.message);
-      window.location.reload();
+      clearInputs("charity-signup-name", "charity-signup-email", "charity-signup-password", "charity-signup-mission", "charity-signup-city", "charity-signup-state", "charity-signup-country");
 
     } catch (error) {
       showError("charity-signup-error", error);
@@ -92,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (error) {
       showError("charity-login-error", error);
+      clearInputs("charity-login-email", "charity-login-password");
     }
   }
 
@@ -113,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (error) {
       showError("admin-login-error", error);
+      clearInputs("admin-login-email", "admin-login-password");
     }
   }
 
@@ -125,6 +129,13 @@ document.addEventListener("DOMContentLoaded", () => {
         categories.push(checkbox.value);
       });
     return categories;
+  }
+
+  // Function to clear inputs
+  function clearInputs(...args) {
+    for (let i = 0; i < args.length; i++) { 
+      document.getElementById(args[i]).value = "";
+    }
   }
 
   // Function to show error messages
@@ -144,33 +155,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Event Listeners
-  if (document.getElementById("user-signup-submit")) {
-    document
-      .getElementById("user-signup-submit")
-      .addEventListener("click", handleUserSignup);
-  }
-
-  if (document.getElementById("user-login-submit")) {
-    document
-      .getElementById("user-login-submit")
-      .addEventListener("click", handleUserLogin);
-  }
-
-  if (document.getElementById("charity-signup-submit")) {
-    document
-      .getElementById("charity-signup-submit")
-      .addEventListener("click", handleCharitySignup);
-  }
-
-  if (document.getElementById("charity-login-submit")) {
-    document
-      .getElementById("charity-login-submit")
-      .addEventListener("click", handleCharityLogin);
-  }
-
-  if (document.getElementById("admin-login-submit")) {
-    document
-      .getElementById("admin-login-submit")
-      .addEventListener("click", handleAdminLogin);
-  }
+  document.getElementById("user-signup-form").addEventListener("submit", handleUserSignup);
+  document.getElementById("user-login-form").addEventListener("submit", handleUserLogin);
+  document.getElementById("charity-signup-form").addEventListener("submit", handleCharitySignup);
+  document.getElementById("charity-login-form").addEventListener("submit", handleCharityLogin);
+  document.getElementById("admin-login-form").addEventListener("submit", handleAdminLogin);
 });

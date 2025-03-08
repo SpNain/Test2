@@ -98,10 +98,10 @@ body {
 .modal-content {
   background: linear-gradient(135deg, #feb47b, #5ff2ff);
 }
-.modal-footer button {
+.modal-content button {
   background-color: #feb47b;
 }
-.modal-footer button:hover {
+.modal-content button:hover {
   background-color: #ff8e38;
 }
 
