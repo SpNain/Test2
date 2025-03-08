@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
       alert(response.data.message);
       localStorage.setItem("user-token", response.data.token);
 
-      window.location.href = "/user.html";
+      window.location.href = "../views/user.html";
 
     } catch (error) {
       showError("user-login-error", error);
