@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
       alert(response.data.message);
       localStorage.setItem("charity-token", response.data.token);
 
-      window.location.href = "/charity.html";
+      window.location.href = "../views/charity.html";
 
     } catch (error) {
       showError("charity-login-error", error);
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
       alert(response.data.message);
       localStorage.setItem("admin-token", response.data.token);
 
-      window.location.href = "/admin.html";
+      window.location.href = "../views/admin.html";
 
     } catch (error) {
       showError("admin-login-error", error);

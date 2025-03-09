@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 const jwtService = require("../services/jwtService");
+const { Op } = require("sequelize");
 
 exports.postAdminLogin = async (req, res, next) => {
   const { email, password } = req.body;
@@ -44,5 +45,78 @@ exports.postAdminLogin = async (req, res, next) => {
       message: "Something went wrong!",
       error: err,
     });
+  }
+};
+
+
+exports.getAdminProfile = async (req, res, next) => {
+  console.log(req.user.id);
+  try {
+    const user = await User.findByPk(req.user.dataValues.id, {
+      attributes: ["id", "name", "email"],
+    });
+
+    if (!user) return res.status(404).json({ message: "Admin not found" });
+
+    let adminInfo = {
+      id: user.dataValues.id,
+      name: user.dataValues.name,
+      email: user.dataValues.email,
+    };
+
+    res.status(200).json({ adminInfo });
+  } catch (error) {
+    console.error("Error fetching admin profile:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.updateAdminProfile = async (req, res, next) => {
+
+  try {
+    const userId = req.params.id;
+    const { name, email, password } = req.body;
+
+    const existingUser = await User.findOne({
+      where: {
+        email,
+        id: { [Op.ne]: userId },
+      },
+    });
+
+    if (existingUser) {
+      return res.status(409).json({
+        message: "This email is already taken. Please choose another one.",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await User.update(
+      {
+        name,
+        email,
+        password: hashedPassword,
+      },
+      {
+        where: { id: userId },
+      }
+    );
+
+    res.status(200).json({ message: "Admin profile updated successfully!" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
+  }
+};
+
+exports.deleteAdminProfile = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    await User.destroy({ where: { id: userId } });
+    res.status(200).json({ message: "Admin deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
   }
 };

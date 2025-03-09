@@ -4,11 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kindred Hearts - User Dashboard</title>
+    <title>Kindred Hearts - Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../css/common.css">
-
 </head>
 
 <body>
@@ -26,10 +25,13 @@
                         <a class="nav-link active" href="#profile-page" id="profile-tab">Profile</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="#users-page" id="users-tab">Users</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="#charities-page" id="charities-tab">Charities</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#donation-history-page" id="donation-history-tab">Donation History</a>
+                        <a class="nav-link" href="#pending-charities-page" id="pending-charities-tab">Charities</a>
                     </li>
                 </ul>
             </div>
@@ -47,54 +49,80 @@
                 </div>
             </div>
 
-            <!-- Charities Page -->
-            <div id="charities-page" style="display: none;">
-                <h2>Charities</h2>
-
-                <div id="charity-list"></div>
-            </div>
-
-            <!-- Donation History Page -->
-            <div id="donation-history-page" style="display: none;">
-                <h2>Donation History</h2>
-
-                <div class="container mt-4 p-3 " id="donation-table-container">
-                    <table id class="table table-hover" id="donation-table">
+            <!-- Users Page -->
+            <div id="users-page" style="display: none;">
+                <h2>Users List</h2>
+                <div class="container mt-4 p-3 " id="users-table-container">
+                    <table id class="table table-hover" id="users-table">
 
                         <!-- table head -->
-                        <thead id="donation-table-head">
+                        <thead id="users-table-head">
                             <tr>
                                 <th scope="col" class="rounded-start">S.No</th>
-                                <th scope="col">Charity Name</th>
-                                <th scope="col">Project Name</th>
-                                <th scope="col">Donation Amount</th>
-                                <th scope="col" class="rounded-end"> Download Receipt</th>
+                                <th scope="col">User Name</th>
+                                <th scope="col">User Email</th>
+                                <th scope="col" class="rounded-end"> Delete User</th>
                             </tr>
                         </thead>
 
                         <!-- table body -->
 
-                        <tbody id="donation-table-body">
-                            <!-- Donation data will be appended dynamically -->
+                        <tbody id="users-table-body">
+                            <!-- Users data will be appended dynamically -->
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            <!-- Charities Page -->
+            <div id="charities-page" style="display: none;">
+                <h2>Charities List</h2>
+                <div class="container mt-4 p-3 " id="charities-table-container">
+                    <table id class="table table-hover" id="charities-table">
+
+                        <!-- table head -->
+                        <thead id="charities-table-head">
+                            <tr>
+                                <th scope="col" class="rounded-start">S.No</th>
+                                <th scope="col">Charity Name</th>
+                                <th scope="col">Charity Email</th>
+                                <th scope="col">Charity Mission</th>
+                                <th scope="col" class="rounded-end"> Delete Charity</th>
+                            </tr>
+                        </thead>
+
+                        <!-- table body -->
+
+                        <tbody id="charities-table-body">
+                            <!-- Charities data will be appended dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pending Charities Page -->
+            <div id="pending-charities-page" style="display: none;">
+                <h2>Charities List</h2>
+                <div class="container mt-4 p-3 " id="pending-charities-container">
+
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
         $(document).ready(function () {
-            // Switch between tabs
             function showPage(page) {
-                $("#profile-page, #charities-page, #donation-history-page").hide();
+                $("#profile-page, #users-page, #charities-page, #pending-charities-page",).hide();
                 $(page).show();
-                if (page == "#profile-page") fetchUserProfile();
+                if (page == "#profile-page") fetchAdminProfile();
+                // else if (page == "#users-page") fetchUsersList();
                 // else if (page == "#charities-page") fetchCharitiesList();
-                // else if (page == "#donation-history-page") fetchDonationHistory();
+                // else if (page == "#pending-charities-page") fetchPendingCharitiesList();
+
             }
 
-            // Function to handle active class switch
             function handleActiveClass(page) {
                 $(".active").removeClass("active");
                 $(page).addClass("active");
@@ -105,35 +133,36 @@
                 handleActiveClass("#profile-tab");
             });
 
+            $("#users-tab").click(function () {
+                handleActiveClass("#users-tab");
+            });
+
             $("#charities-tab").click(function () {
                 handleActiveClass("#charities-tab");
             });
 
-            $("#donation-history-tab").click(function () {
-                handleActiveClass("#donation-history-tab");
+            $("#pending-charities-tab").click(function () {
+                handleActiveClass("#pending-charities-tab");
             });
 
-            // Function to handle hash changes
             function handleHashChange() {
                 let hash = window.location.hash;
                 if (hash) 
                     showPage(hash);
                 else 
-                    showPage("#profile-page"); // Default to profile if no hash
+                    showPage("#profile-page");
             }
 
-            // Initial load
             handleHashChange();
-
-            // Event listener for hash changes
             $(window).on('hashchange', handleHashChange);
+
         });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js"></script>
 
-    <script src="../scripts/user.js"></script>
+    <script src="../scripts/admin.js"></script>
 
 </body>
 

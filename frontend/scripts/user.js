@@ -13,10 +13,7 @@ async function fetchUserProfile() {
       },
     });
 
-    //   const user = response.data.user;
     renderUserProfile(response.data.userInfo);
-    // alert(`Name: ${user.name}\nEmail: ${user.email}`);
-    // You can update the UI here to display user details dynamically
   } catch (error) {
     console.error("Error fetching profile:", error);
     alert("Failed to load profile. Please try again.");
@@ -30,7 +27,7 @@ function renderUserProfile(userInfo) {
         <h3>Name : ${userInfo.name}</h3>
         <h3>Email : ${userInfo.email}</h3>
         <div class="d-flex justify-content-end gap-3">
-        <button class="btn btn-secondary col-2" data-toggle="modal" data-target="#user-update-profile-modal" onclick="addUpdateProfileForm('${userInfo.id}', '${userInfo.name}', '${userInfo.email}')">Update Profile</button>
+        <button class="btn btn-secondary col-2" data-toggle="modal" onclick="addUpdateProfileForm('${userInfo.id}', '${userInfo.name}', '${userInfo.email}')">Update Profile</button>
         <button class="btn btn-danger col-3" onclick="deleteProfile(${userInfo.id})">Delete Your Account</button>
         </div>
     </div>
