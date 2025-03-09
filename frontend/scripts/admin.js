@@ -1,10 +1,16 @@
 const DOMAIN_URL = "http://localhost:3000";
 const token = localStorage.getItem("admin-token");
 const users_rowsPerPageSelect = document.getElementById("users-rowsPerPageSelect");
+const charities_rowsPerPageSelect = document.getElementById("charities-rowsPerPageSelect");
 
 users_rowsPerPageSelect.addEventListener("change", () => {
   localStorage.setItem("users-rowsPerPageSelect", users_rowsPerPageSelect.value);
   fetchUsersList(1);
+});
+
+charities_rowsPerPageSelect.addEventListener("change", () => {
+  localStorage.setItem("charities-rowsPerPageSelect", charities_rowsPerPageSelect.value);
+  fetchCharitiesList(1);
 });
 
 async function fetchAdminProfile() {
@@ -176,6 +182,85 @@ async function deleteUser(id) {
   } catch (error) {
     console.error("Error deleting user:", error);
     alert("Failed to delete user. Please try again.");
+  }
+}
+
+async function fetchCharitiesList(pageNo) {
+  const charitiesTableBody = document.getElementById("charities-table-body");
+  if (localStorage.getItem("charities-rowsPerPageSelect")) {
+    charities_rowsPerPageSelect.value = parseInt(localStorage.getItem("charities-rowsPerPageSelect"));
+  }
+  let rowsPerPage = parseInt(charities_rowsPerPageSelect.value);
+  let sno = 1;
+
+  try {
+
+    const response = await axios.get(
+      `${DOMAIN_URL}/api/admin/getcharitieslist?pageNo=${pageNo}&rowsPerPage=${rowsPerPage}`,
+      { headers: { Authorization: token } }
+    );
+
+    charitiesTableBody.innerHTML = "";
+    console.log(response.data)
+
+    response.data.charities.forEach((charity) => {
+      const id = charity.id;
+      const name = charity.name;
+      const email = charity.email;
+      const mission = charity.mission;
+
+      let tr = document.createElement("tr");
+      tr.className = "trStyle";
+
+      charitiesTableBody.appendChild(tr);
+
+      let th = document.createElement("th");
+      th.setAttribute("scope", "row");
+      tr.appendChild(th);
+      th.appendChild(document.createTextNode(sno++));
+
+      let td1 = document.createElement("td");
+      td1.appendChild(document.createTextNode(name));
+
+      let td2 = document.createElement("td");
+      td2.appendChild(document.createTextNode(email));
+
+      let td3 = document.createElement("td");
+      td3.appendChild(document.createTextNode(mission));
+
+      let td4 = document.createElement("td");
+
+      let deleteBtn = document.createElement("button");
+      deleteBtn.className = "btn btn-danger delete";
+      deleteBtn.addEventListener("click", () => deleteCharity(id));
+      deleteBtn.appendChild(document.createTextNode("Delete"));
+
+      td4.appendChild(deleteBtn);
+
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      tr.appendChild(td3);
+      tr.appendChild(td4);
+    });
+
+    addPaginationNav("charities-table-pagination-nav", pageNo, response.data.totalPages, fetchCharitiesList);
+  } catch (error) {
+    console.error("Error fetching Charities:", error);
+    alert("Failed to load Charities. Please try again.");
+  }
+}
+
+async function deleteCharity(id) {
+  try {
+    const response = await axios.delete(
+      `${DOMAIN_URL}/api/admin/deletecharity/${id}`,
+      { headers: { Authorization: token } }
+    );
+    alert(response.data.message);
+    fetchCharitiesList(1);
+  } catch (error) {
+    console.error("Error deleting charity:", error);
+    alert("Failed to delete charity. Please try again.");
   }
 }
 

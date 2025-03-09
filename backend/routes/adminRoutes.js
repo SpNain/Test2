@@ -10,5 +10,7 @@ router.put("/updateprofile/:id", authenticate, adminController.updateAdminProfil
 router.delete("/deleteprofile/:id", authenticate, adminController.deleteAdminProfile);
 router.get("/getuserslist", authenticate, adminController.getUsersList);
 router.delete("/deleteuser/:id", authenticate, adminController.deleteUser);
+router.get("/getcharitieslist", authenticate, adminController.getCharitiesList);
+router.delete("/deletecharity/:id", authenticate, adminController.deleteCharity);
 
 module.exports = router;

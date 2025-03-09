@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
+const Charity = require("../models/charityModel");
 const jwtService = require("../services/jwtService");
 const { Op } = require("sequelize");
 
@@ -159,3 +160,43 @@ exports.deleteUser = async (req, res, next) => {
     res.status(500).json({ error: err });
   }
 };
+
+exports.getCharitiesList = async (req, res, next) => {
+  try {
+    const pageNo = parseInt(req.query.pageNo) || 1;
+    const limit = parseInt(req.query.rowsPerPage) || 10;
+
+    if (pageNo < 1 || limit < 1) {
+      return res.status(400).json({ error: "Invalid pagination parameters" });
+    }
+
+    const offset = (pageNo - 1) * limit;
+    const totalCharities = await Charity.count({
+      where: { isApproved: true }
+    });
+
+    const totalPages = Math.ceil(totalCharities / limit);
+
+    const charities = await Charity.findAll({
+      where: { isApproved: true },
+      offset: offset,
+      limit: limit,
+    });
+    res.json({ charities: charities, totalPages: totalPages });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
+  }
+};
+
+exports.deleteCharity = async (req, res, next) => {
+  try {
+    const charityId = req.params.id;
+    await Charity.destroy({ where: { id: charityId } });
+    res.status(200).json({ message: "Charity deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
+  }
+};
+

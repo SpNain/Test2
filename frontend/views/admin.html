@@ -179,7 +179,10 @@
                     $("#users-tab").addClass("active");
                     fetchUsersList(1);
                 }
-                // else if (page == "#charities-page") fetchCharitiesList();
+                else if (page == "#charities-page") {
+                    $("#charities-tab").addClass("active");
+                    fetchCharitiesList(1);
+                }
                 // else if (page == "#pending-charities-page") fetchPendingCharitiesList();
 
             }
