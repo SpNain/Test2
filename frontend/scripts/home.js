@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let email = document.getElementById("charity-signup-email").value;
       let password = document.getElementById("charity-signup-password").value;
       let mission = document.getElementById("charity-signup-mission").value;
-      let categories = getSelectedCategories();
+      let category = document.getElementById("charity-signup-category").value;
       let city = document.getElementById("charity-signup-city").value;
       let state = document.getElementById("charity-signup-state").value;
       let country = document.getElementById("charity-signup-country").value;
@@ -60,12 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
         email,
         password,
         mission,
-        categories,
-        location: {
-          city,
-          state,
-          country,
-        }
+        category,
+        location: `${city}, ${state}, ${country}`,
       });
 
       alert(response.data.message);
@@ -118,17 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
       showError("admin-login-error", error);
       clearInputs("admin-login-email", "admin-login-password");
     }
-  }
-
-  // Function to get selected categories for charity signup
-  function getSelectedCategories() {
-    let categories = [];
-    document
-      .querySelectorAll("#charity-signup-categories input:checked")
-      .forEach((checkbox) => {
-        categories.push(checkbox.value);
-      });
-    return categories;
   }
 
   // Function to clear inputs

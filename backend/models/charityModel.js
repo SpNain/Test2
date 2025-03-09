@@ -27,13 +27,12 @@ const Charity = sequelize.define("Charity", {
         type: DataTypes.TEXT,
         allowNull: false,
     },
-    categories: {
-        type: DataTypes.JSON, // Use JSON for array of strings in MySQL
+    category: {
+        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: [], // Initialize as an empty array
     },
     location: {
-        type: DataTypes.JSON, // Storing address as JSON (city, state, country)
+        type: DataTypes.STRING,
         allowNull: true,
     },
     isApproved: {

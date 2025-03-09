@@ -3,7 +3,7 @@ const Charity = require("../models/charityModel");
 const jwtService = require("../services/jwtService");
 
 exports.postCharitySignup = async (req, res, next) => {
-  const { name, email, password, mission, categories, location } = req.body;
+  const { name, email, password, mission, category, location } = req.body;
 
   try {
     const existingCharity = await Charity.findOne({ where: { email } });
@@ -19,7 +19,7 @@ exports.postCharitySignup = async (req, res, next) => {
       email,
       password: hashedPassword,
       mission,
-      categories,
+      category,
       location,
     });
 

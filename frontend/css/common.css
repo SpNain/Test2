@@ -1,0 +1,85 @@
+/* COMMON CSS */
+
+/* GENERAL CSS */
+
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    #feb47b,
+    #5ff2ff
+  ); /* Applied to whole page */
+  color: white;
+}
+
+/* NAVBAR CSS */
+
+.menu-navbar {
+  background: rgba(0, 0, 0, 0.308);
+}
+
+.main-title {
+  font-size: 27px;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+.main-title:hover {
+  scale: 1.1;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#main-content {
+  margin-top: 40px;
+}
+
+/* PROFILE TAB CSS */
+
+.profile-info-card {
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0px 5px 9px rgba(0, 0, 0, 0.5);
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 1200px;
+}
+
+/* TABLE CSS */
+
+#donation-table-container {
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0px 5px 9px rgba(0, 0, 0, 0.5);
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 1000px;
+}
+
+/* overriding table class property */
+.table {
+  --bs-body-bg: transparent !important;
+}
+
+/* SCROLL BAR CSS */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #feb47b;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff8e38;
+}
