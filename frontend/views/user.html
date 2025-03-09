@@ -41,7 +41,9 @@
         <div id="content">
             <!-- Profile Page -->
             <div id="profile-page">
-                <h2>Profile</h2>
+                <div class="d-flex justify-content-center">
+                    <h2><b>Profile</b></h2>
+                </div>
                 <div id="profile-info" class="card p-3 profile-info-card">
                     <!-- Profile Data will be appended dynamically here -->
                 </div>
@@ -49,14 +51,18 @@
 
             <!-- Charities Page -->
             <div id="charities-page" style="display: none;">
-                <h2>Charities</h2>
+                <div class="d-flex justify-content-center">
+                    <h2><b>Charities</b></h2>
+                </div>
 
                 <div id="charity-list"></div>
             </div>
 
             <!-- Donation History Page -->
             <div id="donation-history-page" style="display: none;">
-                <h2>Donation History</h2>
+                <div class="d-flex justify-content-center">
+                    <h2><b>Donation History</b></h2>
+                </div>
 
                 <div class="container mt-4 p-3 " id="donation-table-container">
                     <table id class="table table-hover" id="donation-table">
@@ -89,16 +95,20 @@
             function showPage(page) {
                 $("#profile-page, #charities-page, #donation-history-page").hide();
                 $(page).show();
-                if (page == "#profile-page") fetchUserProfile();
+                $(".active").removeClass("active");
+                if (page == "#profile-page") {
+                    $("#profile-tab").addClass("active");
+                    fetchUserProfile();
+                }
                 // else if (page == "#charities-page") fetchCharitiesList();
                 // else if (page == "#donation-history-page") fetchDonationHistory();
             }
 
             // Function to handle active class switch
-            function handleActiveClass(page) {
+            function handleActiveClass(tab) {
                 $(".active").removeClass("active");
-                $(page).addClass("active");
-                showPage(page);
+                $(tab).addClass("active");
+                showPage(tab);
             }
 
             $("#profile-tab").click(function () {

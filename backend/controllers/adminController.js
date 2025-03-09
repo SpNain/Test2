@@ -120,3 +120,42 @@ exports.deleteAdminProfile = async (req, res, next) => {
     res.status(500).json({ error: err });
   }
 };
+
+exports.getUsersList = async (req, res, next) => {
+  try {
+    const pageNo = parseInt(req.query.pageNo) || 1;
+    const limit = parseInt(req.query.rowsPerPage) || 10;
+
+    if (pageNo < 1 || limit < 1) {
+      return res.status(400).json({ error: "Invalid pagination parameters" });
+    }
+
+    const offset = (pageNo - 1) * limit;
+    const totalUsers = await User.count({
+      where: { role: "user" }
+    });
+
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    const users = await User.findAll({
+      where: { role: "user" },
+      offset: offset,
+      limit: limit,
+    });
+    res.json({ users: users, totalPages: totalPages });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
+  }
+};
+
+exports.deleteUser = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    await User.destroy({ where: { id: userId } });
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
+  }
+};
