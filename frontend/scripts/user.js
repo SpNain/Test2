@@ -35,11 +35,8 @@ function renderUserProfile(userInfo) {
 }
 
 function addUpdateProfileForm(id, name, email) {
-  // console.log(userInfo)
-  // const updateProfileFormDiv = document.createElement("div");
+  
   const profileInfoElement = document.getElementById("profile-info");
-
-  // updateProfileFormDiv.setAttribute("z-index", "2");
 
   profileInfoElement.innerHTML = `<form id="user-update-profile-form" onsubmit="updateProfile(event,${id})">
         <h2> Update Profile</h2>

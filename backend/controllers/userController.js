@@ -73,24 +73,7 @@ exports.postUserLogin = async (req, res, next) => {
 };
 
 exports.getUserProfile = async (req, res, next) => {
-  try {
-    const user = await User.findByPk(req.user.dataValues.id, {
-      attributes: ["id", "name", "email"],
-    });
-
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    let userInfo = {
-      id: user.dataValues.id,
-      name: user.dataValues.name,
-      email: user.dataValues.email,
-    };
-
-    res.status(200).json({ userInfo });
-  } catch (error) {
-    console.error("Error fetching user profile:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
+  res.status(200).json({ userInfo : req.user });
 };
 
 exports.updateUserProfile = async (req, res, next) => {

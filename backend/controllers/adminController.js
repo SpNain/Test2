@@ -51,24 +51,7 @@ exports.postAdminLogin = async (req, res, next) => {
 };
 
 exports.getAdminProfile = async (req, res, next) => {
-  try {
-    const user = await User.findByPk(req.user.id, {
-      attributes: ["id", "name", "email"],
-    });
-
-    if (!user) return res.status(404).json({ message: "Admin not found" });
-
-    let adminInfo = {
-      id: user.dataValues.id,
-      name: user.dataValues.name,
-      email: user.dataValues.email,
-    };
-
-    res.status(200).json({ adminInfo });
-  } catch (error) {
-    console.error("Error fetching admin profile:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
+  res.status(200).json({ userInfo : req.user });
 };
 
 exports.updateAdminProfile = async (req, res, next) => {
@@ -252,8 +235,7 @@ async function sendVerificationMailToCharity(admin, charityId) {
     const charityInfo = {
       emails: [charityEmail],
       subject: "Charity Approval Notification",
-      textContent: "Your charity has been approved.",
-      htmlContent: `<h3>Congratulations!</h3><p>Your charity has been approved.</p>`,
+      content: `<h3>Congratulations!</h3><p>Your charity has been approved.</p>`,
     };
 
     await sendEmail(adminInfo, charityInfo);

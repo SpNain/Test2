@@ -17,8 +17,7 @@ exports.sendEmail = async (senderInfo, receiversInfo) => {
       sender,
       To: receivers,
       subject: receiversInfo.subject,
-      textContent: receiversInfo.textContent,
-      htmlContent: receiversInfo.htmlContent,
+      content: receiversInfo.content,
     });
   } catch (error) {
     console.error("Error sending email:", error);

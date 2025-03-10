@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
+const Charity = require("../models/charityModel");
 
 const authenticate = async (req, res, next) => {
   try {
@@ -11,15 +12,28 @@ const authenticate = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
-    const user = await User.findByPk(decoded.userId);
-
-    if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found." });
+    console.log(decoded)
+    if(decoded.role){
+      const user = await User.findByPk(decoded.id);
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found." });
+      }
+  
+      req.user = user;
+    }
+    else {
+      const charity = await Charity.findByPk(decoded.id);
+      if (!charity) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found." });
+      }
+  
+      req.charity = charity;
     }
 
-    req.user = user;
     next();
   } catch (err) {
     console.error(err);

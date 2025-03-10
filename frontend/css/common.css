@@ -45,7 +45,7 @@ body {
   box-shadow: 0px 5px 9px rgba(0, 0, 0, 0.5);
   margin: 20px auto;
   padding: 20px;
-  max-width: 50%;
+  max-width: 75%;
 }
 
 .active{
@@ -90,7 +90,7 @@ body {
 
 /* TABLE CSS */
 
-#donation-table-container, #users-table-container, #charities-table-container, #pending-charities-container {
+#donation-table-container, #users-table-container, #charities-table-container, #pending-charities-container, #projects-table-container {
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0px 5px 9px rgba(0, 0, 0, 0.5);
@@ -136,4 +136,15 @@ body {
 .disabledPage{
   pointer-events: none;
   background-color: #feffffc0;
+}
+
+/* MODALS CSS */
+.modal-content {
+  background: linear-gradient(135deg, #feb47b, #5ff2ff);
+}
+.modal-content button {
+  background-color: #feb47b;
+}
+.modal-content button:hover {
+  background-color: #ff8e38;
 }
