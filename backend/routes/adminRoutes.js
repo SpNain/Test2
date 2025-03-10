@@ -12,5 +12,7 @@ router.get("/getuserslist", authenticate, adminController.getUsersList);
 router.delete("/deleteuser/:id", authenticate, adminController.deleteUser);
 router.get("/getcharitieslist", authenticate, adminController.getCharitiesList);
 router.delete("/deletecharity/:id", authenticate, adminController.deleteCharity);
+router.get("/getpendingcharitieslist", authenticate, adminController.getPendingCharitiesList);
+router.patch("/approvecharity/:id", authenticate, adminController.approveCharity);
 
 module.exports = router;

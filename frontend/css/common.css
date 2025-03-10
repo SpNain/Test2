@@ -53,6 +53,41 @@ body {
   color: white !important;
 }
 
+/* Pending charities cards css */
+
+.pending-charity-card {
+  border-radius: 10px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.pending-charity-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.pending-charity-card .card-title {
+  font-size: 1.4rem;
+}
+
+.pending-charity-card .card-text {
+  font-size: 1rem;
+}
+
+.btn-success, .btn-danger {
+  transition: 0.3s ease-in-out;
+}
+
+.btn-success:hover {
+  background-color: #28a745;
+  box-shadow: 0px 4px 10px rgba(40, 167, 69, 0.4);
+}
+
+.btn-danger:hover {
+  background-color: #dc3545;
+  box-shadow: 0px 4px 10px rgba(220, 53, 69, 0.4);
+}
+
+
 /* TABLE CSS */
 
 #donation-table-container, #users-table-container, #charities-table-container, #pending-charities-container {

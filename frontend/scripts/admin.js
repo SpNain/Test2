@@ -2,6 +2,7 @@ const DOMAIN_URL = "http://localhost:3000";
 const token = localStorage.getItem("admin-token");
 const users_rowsPerPageSelect = document.getElementById("users-rowsPerPageSelect");
 const charities_rowsPerPageSelect = document.getElementById("charities-rowsPerPageSelect");
+const pendingCharities_rowsPerPageSelect = document.getElementById("pending-charities-rowsPerPageSelect");
 
 users_rowsPerPageSelect.addEventListener("change", () => {
   localStorage.setItem("users-rowsPerPageSelect", users_rowsPerPageSelect.value);
@@ -11,6 +12,11 @@ users_rowsPerPageSelect.addEventListener("change", () => {
 charities_rowsPerPageSelect.addEventListener("change", () => {
   localStorage.setItem("charities-rowsPerPageSelect", charities_rowsPerPageSelect.value);
   fetchCharitiesList(1);
+});
+
+pendingCharities_rowsPerPageSelect.addEventListener("change", () => {
+  localStorage.setItem("pending-charities-rowsPerPageSelect", pendingCharities_rowsPerPageSelect.value);
+  fetchPendingCharitiesList(1);
 });
 
 async function fetchAdminProfile() {
@@ -258,9 +264,84 @@ async function deleteCharity(id) {
     );
     alert(response.data.message);
     fetchCharitiesList(1);
+    fetchPendingCharitiesList(1);
   } catch (error) {
     console.error("Error deleting charity:", error);
     alert("Failed to delete charity. Please try again.");
   }
 }
 
+async function fetchPendingCharitiesList(pageNo) {
+  const pendingCharitiesContainer = document.getElementById("pending-charities-container");
+  if (localStorage.getItem("pending-charities-rowsPerPageSelect")) {
+    pendingCharities_rowsPerPageSelect.value = parseInt(localStorage.getItem("pending-charities-rowsPerPageSelect"));
+  }
+  let rowsPerPage = parseInt(pendingCharities_rowsPerPageSelect.value);
+
+  try {
+
+    const response = await axios.get(
+      `${DOMAIN_URL}/api/admin/getpendingcharitieslist?pageNo=${pageNo}&rowsPerPage=${rowsPerPage}`,
+      { headers: { Authorization: token } }
+    );
+
+    pendingCharitiesContainer.innerHTML = "";
+
+    response.data.pendingCharities.forEach((pendingCharity) => {
+      const id = pendingCharity.id;
+      const name = pendingCharity.name;
+      const email = pendingCharity.email;
+      const mission = pendingCharity.mission;
+      const category = pendingCharity.category;
+      const location = pendingCharity.location;
+      pendingCharitiesContainer.innerHTML +=
+        `
+        <div id="pending-charity-card-template">
+          <div class="card m-3 pending-charity-card shadow-lg">
+              <div class="card-body">
+                  <h5 class="card-title pending-charity-name text-primary font-weight-bold">${name}</h5>
+                  <p class="card-text pending-charity-email text-muted"><i class="fas fa-envelope"></i> ${email}</p>
+                  <p class="card-text pending-charity-mission text-dark"><i class="fas fa-hand-holding-heart"></i> ${mission}</p>
+                  <p class="card-text">
+                      <strong class="text-secondary">Category:</strong> 
+                      <span class="badge bg-info text-white pending-charity-category">${category}</span>
+                  </p>
+                  <p class="card-text">
+                      <strong class="text-secondary">Location:</strong> 
+                      <span class="pending-charity-location text-dark">${location}</span>
+                  </p>
+                  <div class="d-flex justify-content-end">
+                      <button class="btn btn-success me-2" onclick="approveCharity(${id})">
+                          <i class="fas fa-check-circle"></i> Approve
+                      </button>
+                      <button class="btn btn-danger" onclick="deleteCharity(${id})">
+                          <i class="fas fa-times-circle"></i> Reject
+                      </button>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+        `;
+    });
+
+    addPaginationNav("pending-charities-pagination-nav", pageNo, response.data.totalPages, fetchPendingCharitiesList);
+  } catch (error) {
+    console.error("Error fetching Pending Charities:", error);
+    alert("Failed to load Pending Charities. Please try again.");
+  }
+}
+
+async function approveCharity(id) {
+  try {
+    const response = await axios.patch(
+      `${DOMAIN_URL}/api/admin/approvecharity/${id}`, {},
+      { headers: { Authorization: token } }
+    );
+    alert(response.data.message);
+    fetchPendingCharitiesList(1);
+  } catch (error) {
+    console.error("Error approving charity:", error);
+    alert("Failed to approve charity. Please try again.");
+  }
+}
