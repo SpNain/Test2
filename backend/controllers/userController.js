@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 const Charity = require("../models/charityModel");
+const Project = require("../models/projectModel");
 const jwtService = require("../services/jwtService");
 const { Op } = require("sequelize");
 
@@ -205,6 +206,20 @@ exports.getCharitiesList = async (req, res, next) => {
     }
 
     res.json({ charities: charities, totalPages: totalPages });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
+  }
+};
+
+exports.getCharityDetails = async (req, res, next) => {
+  try {
+    const charityId = req.params.id;
+    const charity = await Charity.findOne({
+      where: { id: charityId },
+      include: [{ model: Project, where: { status: "Active" } }], // Include only active projects
+    });
+    res.status(200).json({ charityDetails: charity });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err });

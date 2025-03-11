@@ -10,5 +10,6 @@ router.get("/getprofile", authenticate, userController.getUserProfile);
 router.put("/updateprofile/:id", authenticate, userController.updateUserProfile);
 router.delete("/deleteprofile/:id", authenticate, userController.deleteUserProfile);
 router.get("/getcharitieslist", authenticate, userController.getCharitiesList);
+router.get("/getCharityDetails/:id", authenticate, userController.getCharityDetails);
 
 module.exports = router;

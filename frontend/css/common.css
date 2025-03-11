@@ -153,3 +153,7 @@ body {
 .modal-content button:hover {
   background-color: #ff8e38;
 }
+
+#cherity-details-modal .modal-content {
+  min-width: 100%;
+}

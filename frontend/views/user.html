@@ -55,17 +55,17 @@
 
                 <div class="d-flex align-items-center justify-content-around w-50" id="charities-filter-container">
                     <div>
-                    <label for="charities-filter" class="m-0">Select Filter</label>
-                    <select id="charities-filter" class="form-select w-auto">
-                        <option value="String" selected>String</option>
-                        <option value="Category">Category</option>
-                        <option value="Location">Location</option>
-                    </select>
-                </div>
+                        <label for="charities-filter" class="m-0">Select Filter</label>
+                        <select id="charities-filter" class="form-select w-auto">
+                            <option value="String" selected>String</option>
+                            <option value="Category">Category</option>
+                            <option value="Location">Location</option>
+                        </select>
+                    </div>
                     <div class="form-group w-50">
                         <label for="charities-search">Search</label>
                         <input type="text" class="form-control" id="charities-search" placeholder="Type to search..."
-                          oninput="fetchCharitiesList(1,this.value)" />
+                            oninput="fetchCharitiesList(1,this.value)" />
                     </div>
                 </div>
 
@@ -138,6 +138,54 @@
             </div>
         </div>
     </div>
+
+    <!-- Modals Section -->
+    <section>
+
+        <!-- Charity Details Modal -->
+        <div class="modal fade" id="charity-details-modal" tabindex="-1" role="dialog"
+            aria-labelledby="charity-details-modal-label" aria-hidden="true" data-bs-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="charity-details-title">Charity Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Charity Name:</strong> <span id="charity-details-modal-charityName"></span></p>
+                        <p><strong>Charity Mission:</strong> <span id="charity-details-modal-charityMission"></span></p>
+                        <p><strong>Charity Category:</strong> <span id="charity-details-modal-charityCategory"></span>
+                        </p>
+                        <p><strong>Charity Location:</strong> <span id="charity-details-modal-charityLocation"></span>
+                        </p>
+                        <p><strong>Charity Projects:</strong></p>
+                        <div class="container mt-4 p-3 table-responsive" id="projects-table-container">
+                            <table id class="table table-hover" id="projects-table">
+
+                                <!-- table head -->
+                                <thead id="projects-table-head">
+                                    <tr>
+                                        <th scope="col" class="rounded-start">S.No</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Raised Funds</th>
+                                        <th scope="col">Required Funds</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col" class="rounded-end">Donate</th>
+                                    </tr>
+                                </thead>
+
+                                <!-- table body -->
+                                <tbody id="projects-table-body">
+                                    <!-- Projects data will be appended dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <script>
         $(document).ready(function () {

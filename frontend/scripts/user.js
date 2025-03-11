@@ -14,7 +14,7 @@ charities_rowsPerPageSelect.addEventListener("change", () => {
 
 document.getElementById("charities-filter").addEventListener("change", () => {
   fetchCharitiesList(1);
-})
+});
 
 async function fetchUserProfile() {
   try {
@@ -184,7 +184,7 @@ async function fetchCharitiesList(pageNo, search) {
 
         let detailsBtn = document.createElement("button");
         detailsBtn.className = "btn btn-sm btn-info";
-        detailsBtn.addEventListener("click", () => getCharityPage(id));
+        detailsBtn.addEventListener("click", () => getCharityDetails(id));
         detailsBtn.appendChild(document.createTextNode("Details"));
 
         td5.appendChild(detailsBtn);
@@ -207,4 +207,92 @@ async function fetchCharitiesList(pageNo, search) {
       alert("Failed to load Charities. Please try again.");
     }
   }, 500);
+}
+
+async function getCharityDetails(id) {
+  try {
+    const response = await axios.get(
+      `${DOMAIN_URL}/api/user/getcharitydetails/${id}`,
+      { headers: { Authorization: token } }
+    );
+    const charityDetails = response.data.charityDetails;
+    console.log(charityDetails)
+
+    document.getElementById("charity-details-modal-charityName").textContent =
+      charityDetails.name;
+    document.getElementById(
+      "charity-details-modal-charityMission"
+    ).textContent = charityDetails.mission;
+    document.getElementById(
+      "charity-details-modal-charityCategory"
+    ).textContent = charityDetails.category;
+    document.getElementById(
+      "charity-details-modal-charityLocation"
+    ).textContent = charityDetails.location;
+
+    const projectsTableBody = document.getElementById("projects-table-body");
+    projectsTableBody.innerHTML = "";
+
+    let sno = 1;
+
+    charityDetails.Projects.forEach((project) => {
+      const id = project.id;
+      const name = project.name;
+      const description = project.description;
+      const raisedFunds = project.raisedFunds;
+      const requiredFunds = project.requiredFunds;
+      const projectStatus = project.status;
+
+      let tr = document.createElement("tr");
+      tr.className = "trStyle";
+
+      projectsTableBody.appendChild(tr);
+
+      let th = document.createElement("th");
+      th.setAttribute("scope", "row");
+      tr.appendChild(th);
+      th.appendChild(document.createTextNode(sno++));
+
+      let td1 = document.createElement("td");
+      td1.appendChild(document.createTextNode(name));
+
+      let td2 = document.createElement("td");
+      td2.appendChild(document.createTextNode(description));
+
+      let td3 = document.createElement("td");
+      td3.appendChild(document.createTextNode(raisedFunds));
+
+      let td4 = document.createElement("td");
+      td4.appendChild(document.createTextNode(requiredFunds));
+
+      let td5 = document.createElement("td");
+      td5.appendChild(document.createTextNode(projectStatus));
+
+      let td6 = document.createElement("td");
+
+      let donateBtn = document.createElement("button");
+      donateBtn.className = "btn btn-info btn-sm";
+      donateBtn.addEventListener("click", () => {
+        donate(id);
+      });
+      donateBtn.appendChild(document.createTextNode("Donate"));
+
+      td6.appendChild(donateBtn);
+
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      tr.appendChild(td3);
+      tr.appendChild(td4);
+      tr.appendChild(td5);
+      tr.appendChild(td6);
+    });
+
+    const charityDetailsModal = new bootstrap.Modal(
+      document.getElementById("charity-details-modal")
+    );
+    charityDetailsModal.show();
+  } catch (error) {
+    console.error("Error fetching Charity Details:", error);
+    alert("Failed to load Charity Details. Please try again.");
+  }
 }
