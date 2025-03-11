@@ -48,7 +48,7 @@ body {
   max-width: 75%;
 }
 
-.active{
+.active {
   font-weight: bold;
   color: white !important;
 }
@@ -73,7 +73,8 @@ body {
   font-size: 1rem;
 }
 
-.btn-success, .btn-danger {
+.btn-success,
+.btn-danger {
   transition: 0.3s ease-in-out;
 }
 
@@ -87,10 +88,14 @@ body {
   box-shadow: 0px 4px 10px rgba(220, 53, 69, 0.4);
 }
 
-
 /* TABLE CSS */
 
-#donation-table-container, #users-table-container, #charities-table-container, #pending-charities-container, #projects-table-container {
+#donation-table-container,
+#users-table-container,
+#charities-table-container,
+#pending-charities-container,
+#projects-table-container,
+#charities-filter-container {
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0px 5px 9px rgba(0, 0, 0, 0.5);
@@ -125,15 +130,15 @@ body {
 }
 
 /* PAGINATION CSS */
-.page-link:hover{
+.page-link:hover {
   cursor: pointer;
 }
 
-.activePage{
+.activePage {
   background-color: #f0f0f0;
 }
 
-.disabledPage{
+.disabledPage {
   pointer-events: none;
   background-color: #feffffc0;
 }

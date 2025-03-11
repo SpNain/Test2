@@ -52,12 +52,60 @@
 
             <!-- Charities Page -->
             <div id="charities-page" style="display: none;">
-                <div class="d-flex justify-content-center">
-                    <h2><b>Charities</b></h2>
+
+                <div class="d-flex align-items-center justify-content-around w-50" id="charities-filter-container">
+                    <div>
+                    <label for="charities-filter" class="m-0">Select Filter</label>
+                    <select id="charities-filter" class="form-select w-auto">
+                        <option value="String" selected>String</option>
+                        <option value="Category">Category</option>
+                        <option value="Location">Location</option>
+                    </select>
+                </div>
+                    <div class="form-group w-50">
+                        <label for="charities-search">Search</label>
+                        <input type="text" class="form-control" id="charities-search" placeholder="Type to search..."
+                          oninput="fetchCharitiesList(1,this.value)" />
+                    </div>
                 </div>
 
-                <div id="charity-list">
-                    <!-- Charities data will be appended dynamically -->
+                <div class="d-flex justify-content-center">
+                    <h2><b>Charities List</b></h2>
+                </div>
+                <div class="container mt-4 p-3 " id="charities-table-container">
+                    <table id class="table table-hover" id="charities-table">
+
+                        <!-- table head -->
+                        <thead id="charities-table-head">
+                            <tr>
+                                <th scope="col" class="rounded-start">S.No</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Mission</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Location</th>
+                                <th scope="col" class="rounded-end">Check Details</th>
+                            </tr>
+                        </thead>
+
+                        <!-- table body -->
+                        <tbody id="charities-table-body">
+                            <!-- Charities data will be appended dynamically -->
+                        </tbody>
+                    </table>
+                    <nav aria-label="Page navigation example" id="charities-table-pagination-nav"
+                        class="d-flex justify-content-between align-items-center">
+
+                        <!-- Rows per page -->
+                        <div class="d-flex align-items-center">
+                            <label for="charities-rowsPerPageSelect" class="me-2">Rows per page:</label>
+                            <select id="charities-rowsPerPageSelect" class="form-select w-auto">
+                                <option value="5">5</option>
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                    </nav>
                 </div>
             </div>
 
@@ -102,7 +150,10 @@
                     $("#profile-tab").addClass("active");
                     fetchUserProfile();
                 }
-                // else if (page == "#charities-page") fetchCharitiesList();
+                else if (page == "#charities-page") {
+                    $("#charities-tab").addClass("active");
+                    fetchCharitiesList(1);
+                }
                 // else if (page == "#donation-history-page") fetchDonationHistory();
             }
 
@@ -146,6 +197,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js"></script>
 
     <script src="../scripts/user.js"></script>
+    <script src="../scripts/pagination.js"></script>
 
 </body>
 

@@ -1,5 +1,21 @@
 const DOMAIN_URL = "http://localhost:3000";
 const token = localStorage.getItem("user-token");
+const charities_rowsPerPageSelect = document.getElementById(
+  "charities-rowsPerPageSelect"
+);
+
+charities_rowsPerPageSelect.addEventListener("change", () => {
+  localStorage.setItem(
+    "charities-rowsPerPageSelect",
+    charities_rowsPerPageSelect.value
+  );
+  fetchCharitiesList(1);
+});
+
+document.getElementById("charities-filter").addEventListener("change", () => {
+  fetchCharitiesList(1);
+})
+
 async function fetchUserProfile() {
   try {
     if (!token) {
@@ -35,7 +51,6 @@ function renderUserProfile(userInfo) {
 }
 
 function addUpdateProfileForm(id, name, email) {
-  
   const profileInfoElement = document.getElementById("profile-info");
 
   profileInfoElement.innerHTML = `<form id="user-update-profile-form" onsubmit="updateProfile(event,${id})">
@@ -98,4 +113,98 @@ async function deleteProfile(id) {
     console.error("Error deleting profile:", error);
     alert("Failed to delete profile. Please try again.");
   }
+}
+
+let timeoutId;
+async function fetchCharitiesList(pageNo, search) {
+  const charitiesTableBody = document.getElementById("charities-table-body");
+  const filter = document.getElementById("charities-filter").value;
+  if (!search) {
+    search = document.getElementById("charities-search").value;
+  }
+
+  if (localStorage.getItem("charities-rowsPerPageSelect")) {
+    charities_rowsPerPageSelect.value = parseInt(
+      localStorage.getItem("charities-rowsPerPageSelect")
+    );
+  }
+  let rowsPerPage = parseInt(charities_rowsPerPageSelect.value);
+  let sno = 1;
+
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+  }
+
+  timeoutId = setTimeout(async () => {
+    // if (!search) {
+    //   console.log([]);
+    //   return;
+    // }
+
+    try {
+      const response = await axios.get(
+        `${DOMAIN_URL}/api/user/getcharitieslist?pageNo=${pageNo}&rowsPerPage=${rowsPerPage}&filter=${filter}&search=${encodeURIComponent(
+          search
+        )}`,
+        { headers: { Authorization: token } }
+      );
+
+      charitiesTableBody.innerHTML = "";
+
+      response.data.charities.forEach((charity) => {
+        const id = charity.id;
+        const name = charity.name;
+        const mission = charity.mission;
+        const category = charity.category;
+        const location = charity.location;
+
+        let tr = document.createElement("tr");
+        tr.className = "trStyle";
+
+        charitiesTableBody.appendChild(tr);
+
+        let th = document.createElement("th");
+        th.setAttribute("scope", "row");
+        tr.appendChild(th);
+        th.appendChild(document.createTextNode(sno++));
+
+        let td1 = document.createElement("td");
+        td1.appendChild(document.createTextNode(name));
+
+        let td2 = document.createElement("td");
+        td2.appendChild(document.createTextNode(mission));
+
+        let td3 = document.createElement("td");
+        td3.appendChild(document.createTextNode(category));
+
+        let td4 = document.createElement("td");
+        td4.appendChild(document.createTextNode(location));
+
+        let td5 = document.createElement("td");
+
+        let detailsBtn = document.createElement("button");
+        detailsBtn.className = "btn btn-sm btn-info";
+        detailsBtn.addEventListener("click", () => getCharityPage(id));
+        detailsBtn.appendChild(document.createTextNode("Details"));
+
+        td5.appendChild(detailsBtn);
+
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        tr.appendChild(td4);
+        tr.appendChild(td5);
+      });
+
+      addPaginationNav(
+        "charities-table-pagination-nav",
+        pageNo,
+        response.data.totalPages,
+        fetchCharitiesList
+      );
+    } catch (error) {
+      console.error("Error fetching Charities:", error);
+      alert("Failed to load Charities. Please try again.");
+    }
+  }, 500);
 }
