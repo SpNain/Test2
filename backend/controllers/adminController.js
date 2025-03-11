@@ -2,8 +2,8 @@ const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 const Charity = require("../models/charityModel");
 const jwtService = require("../services/jwtService");
-const { Op } = require("sequelize");
 const { sendEmail } = require("../services/emailService");
+const { Op } = require("sequelize");
 
 exports.postAdminLogin = async (req, res, next) => {
   const { email, password } = req.body;
@@ -51,7 +51,7 @@ exports.postAdminLogin = async (req, res, next) => {
 };
 
 exports.getAdminProfile = async (req, res, next) => {
-  res.status(200).json({ userInfo : req.user });
+  res.status(200).json({ adminInfo : req.user });
 };
 
 exports.updateAdminProfile = async (req, res, next) => {
@@ -225,7 +225,6 @@ async function sendVerificationMailToCharity(admin, charityId) {
   try {
     const adminInfo = {
       name: admin.name,
-      email: admin.email,
     };
 
     const { email: charityEmail } = await Charity.findOne({

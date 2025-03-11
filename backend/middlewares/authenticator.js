@@ -12,7 +12,7 @@ const authenticate = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
-    console.log(decoded)
+    
     if(decoded.role){
       const user = await User.findByPk(decoded.id);
       if (!user) {

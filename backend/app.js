@@ -5,6 +5,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const sequelize = require("./utils/database");
+const Charity = require("./models/charityModel");
+const Project = require("./models/projectModel");
 
 const app = express();
 app.use(
@@ -23,6 +25,10 @@ const charityRoutes = require("./routes/charityRoutes");
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/charity", charityRoutes);
+
+// Associations
+Charity.hasMany(Project, { onDelete: "CASCADE" });
+Project.belongsTo(Charity);
 
 async function initiate() {
   try {

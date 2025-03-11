@@ -49,15 +49,16 @@
             <!-- Projects Page -->
             <div id="projects-page" style="display: none;">
                 <div class="d-flex justify-content-between">
-                    <button class="btn btn-warning" id="fetch-all-projects" onclick="fetchProjectsList(null,1)">Fetch
+                    <button class="btn btn-warning" id="fetch-all-projects" onclick="fetchProjectsList(1)">Fetch
                         All Projects</button>
                     <button class="btn btn-warning" id="fetch-active-projects"
-                        onclick="fetchProjectsList('active',1)">Fetch Active Projects</button>
+                        onclick="fetchProjectsList(1,'Active')">Fetch Active Projects</button>
                     <button class="btn btn-warning" id="fetch-completed-projects"
-                        onclick="fetchProjectsList('completed',1)">Fetch Completed Projects</button>
-                    <button class="btn btn-success" id="create-new-project-btn">Create New Project</button>
+                        onclick="fetchProjectsList(1,'Completed')">Fetch Completed Projects</button>
+                    <button class="btn btn-success" id="create-new-project-btn" data-bs-toggle="modal"
+                        data-bs-target="#create-project-modal">Create New Project</button>
                 </div>
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-center mt-5">
                     <h2><b>Projects List</b></h2>
                 </div>
                 <div class="container mt-4 p-3 " id="projects-table-container">
@@ -67,11 +68,11 @@
                         <thead id="projects-table-head">
                             <tr>
                                 <th scope="col" class="rounded-start">S.No</th>
-                                <th scope="col">Project Name</th>
+                                <th scope="col">Name</th>
                                 <th scope="col">Description</th>
                                 <th scope="col">Raised Funds</th>
                                 <th scope="col">Required Funds</th>
-                                <th scope="col">Project Status</th>
+                                <th scope="col">Status</th>
                                 <th scope="col">Edit or Delete</th>
                                 <th scope="col" class="rounded-end">Send Email To Donors</th>
                             </tr>
@@ -106,33 +107,62 @@
 
         <!-- Create Project Modal -->
         <div class="modal fade" id="create-project-modal" tabindex="-1" role="dialog"
-            aria-labelledby="create-project-modal-label" aria-hidden="true" data-backdrop="static">
+            aria-labelledby="create-project-modal-label" aria-hidden="true" data-bs-backdrop="static">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="create-project-label">Create New Project</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form id="create-project-form" onsubmit="return false;">
-                            <div class="form-group">
+                            <div class="form-group mt-2">
                                 <label for="project-name">Project Name</label>
                                 <input type="text" class="form-control" id="project-name"
                                     placeholder="Enter project name" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mt-2">
                                 <label for="project-description">Description</label>
                                 <textarea class="form-control" id="project-description" rows="3"
                                     placeholder="Enter project Description" required></textarea>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mt-2">
                                 <label for="required-funds">Required Funds</label>
                                 <input type="number" class="form-control" id="required-funds"
                                     placeholder="Enter required funds" required>
                             </div>
-                            <button type="submit" class="btn" id="create-project-submit">Signup</button>
+                            <button type="submit" class="btn mt-3" id="create-project-submit">Create</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Project Modal -->
+        <div class="modal fade" id="edit-project-modal" tabindex="-1" role="dialog"
+            aria-labelledby="edit-project-modal-label" aria-hidden="true" data-bs-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="edit-project-label">Edit Project</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="edit-project-form" onsubmit="return false;">
+                            <div class="form-group mt-2">
+                                <label for="edit-project-name">Project Name</label>
+                                <input type="text" class="form-control" id="edit-project-name" required>
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="edit-project-description">Description</label>
+                                <textarea class="form-control" id="edit-project-description" rows="3"
+                                    required></textarea>
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="edit-required-funds">Required Funds</label>
+                                <input type="number" class="form-control" id="edit-required-funds" required>
+                            </div>
+                            <button type="submit" class="btn mt-3" id="edit-project-submit">Update</button>
                         </form>
                     </div>
                 </div>
@@ -141,28 +171,26 @@
 
         <!-- Create Email Modal -->
         <div class="modal fade" id="create-email-modal" tabindex="-1" role="dialog"
-            aria-labelledby="create-email-modal-label" aria-hidden="true" data-backdrop="static">
+            aria-labelledby="create-email-modal-label" aria-hidden="true" data-bs-backdrop="static">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="create-email-label">Create New Email</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form id="create-email-form" onsubmit="return false;">
-                            <div class="form-group">
+                            <div class="form-group mt-2">
                                 <label for="email-subject">Subject</label>
                                 <input type="text" class="form-control" id="email-subject"
                                     placeholder="Enter email subject" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mt-2">
                                 <label for="email-content">Content</label>
-                                <textarea class="form-control" id="email-content" rows="3"
-                                    placeholder="Enter content" required></textarea>
+                                <textarea class="form-control" id="email-content" rows="3" placeholder="Enter content"
+                                    required></textarea>
                             </div>
-                            <button type="submit" class="btn" id="create-email-submit">Send Email</button>
+                            <button type="submit" class="btn mt-3" id="create-email-submit">Send Email</button>
                         </form>
                     </div>
                 </div>
@@ -182,7 +210,7 @@
                 }
                 else if (page == "#projects-page") {
                     $("#projects-tab").addClass("active");
-                    fetchProjectsList(null, 1);
+                    fetchProjectsList(1);
                 }
 
             }

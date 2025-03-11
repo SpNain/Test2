@@ -31,6 +31,7 @@ async function fetchAdminProfile() {
         Authorization: token,
       },
     });
+    console.log(response.data.adminInfo)
 
     renderAdminProfile(response.data.adminInfo);
   } catch (error) {
@@ -159,7 +160,7 @@ async function fetchUsersList(pageNo) {
       let td3 = document.createElement("td");
 
       let deleteBtn = document.createElement("button");
-      deleteBtn.className = "btn btn-danger delete";
+      deleteBtn.className = "btn btn-danger";
       deleteBtn.addEventListener("click", () => deleteUser(id));
       deleteBtn.appendChild(document.createTextNode("Delete"));
 
@@ -237,7 +238,7 @@ async function fetchCharitiesList(pageNo) {
       let td4 = document.createElement("td");
 
       let deleteBtn = document.createElement("button");
-      deleteBtn.className = "btn btn-danger delete";
+      deleteBtn.className = "btn btn-danger";
       deleteBtn.addEventListener("click", () => deleteCharity(id));
       deleteBtn.appendChild(document.createTextNode("Delete"));
 
