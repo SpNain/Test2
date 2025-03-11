@@ -5,8 +5,6 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const sequelize = require("./utils/database");
-const Charity = require("./models/charityModel");
-const Project = require("./models/projectModel");
 
 const app = express();
 app.use(
@@ -15,6 +13,13 @@ app.use(
   })
 );
 app.use(express.json());
+
+// Models
+const Charity = require("./models/charityModel");
+const Project = require("./models/projectModel");
+const User = require("./models/userModel");
+const Order = require("./models/orderModel");
+const Donation = require("./models/donationModel");
 
 // Routes
 const userRoutes = require("./routes/userRoutes");
@@ -29,6 +34,12 @@ app.use("/api/charity", charityRoutes);
 // Associations
 Charity.hasMany(Project, { onDelete: "CASCADE" });
 Project.belongsTo(Charity);
+
+User.hasMany(Order, { onDelete: "CASCADE" });
+Order.belongsTo(User);
+
+User.hasMany(Donation, { onDelete: "CASCADE" });
+Donation.belongsTo(User);
 
 async function initiate() {
   try {

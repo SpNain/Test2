@@ -3,6 +3,8 @@ const token = localStorage.getItem("user-token");
 const charities_rowsPerPageSelect = document.getElementById(
   "charities-rowsPerPageSelect"
 );
+const donation_rowsPerPageSelect = document.getElementById("donation-rowsPerPageSelect");
+
 
 charities_rowsPerPageSelect.addEventListener("change", () => {
   localStorage.setItem(
@@ -10,6 +12,11 @@ charities_rowsPerPageSelect.addEventListener("change", () => {
     charities_rowsPerPageSelect.value
   );
   fetchCharitiesList(1);
+});
+
+donation_rowsPerPageSelect.addEventListener("change", () => {
+  localStorage.setItem("donation-rowsPerPageSelect", donation_rowsPerPageSelect.value);
+  fetchDonationHistory(1);
 });
 
 document.getElementById("charities-filter").addEventListener("change", () => {
@@ -236,7 +243,6 @@ async function getCharityDetails(id) {
     let sno = 1;
 
     charityDetails.Projects.forEach((project) => {
-      const id = project.id;
       const name = project.name;
       const description = project.description;
       const raisedFunds = project.raisedFunds;
@@ -273,7 +279,7 @@ async function getCharityDetails(id) {
       let donateBtn = document.createElement("button");
       donateBtn.className = "btn btn-info btn-sm";
       donateBtn.addEventListener("click", () => {
-        donate(id);
+        donate(project.id, charityDetails.id);
       });
       donateBtn.appendChild(document.createTextNode("Donate"));
 
@@ -294,5 +300,159 @@ async function getCharityDetails(id) {
   } catch (error) {
     console.error("Error fetching Charity Details:", error);
     alert("Failed to load Charity Details. Please try again.");
+  }
+}
+
+async function donate(projectId, charityId) {
+  const donateModal = new bootstrap.Modal(
+    document.getElementById("donation-modal")
+  );
+  donateModal.show();
+
+  document
+    .getElementById("donation-form")
+    .addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const donationAmount = document.getElementById("donation-amount").value;
+
+      if (isNaN(donationAmount) || donationAmount <= 0) {
+        alert("Please enter a valid donation amount.");
+        return;
+      }
+
+      donateModal.hide();
+
+      try {
+        const response = await axios.post(
+          `${DOMAIN_URL}/api/user/donate/createOrder`,
+          { orderId: `${Date.now()}`, orderAmount: donationAmount },
+          {
+            headers: { Authorization: token },
+            "Content-Type": "application/json",
+          }
+        );
+
+        const orderId = response.data.orderId;
+        const paymentId = response.data.paymentId;
+
+        if (paymentId) {
+          const cashfree = Cashfree({
+            mode: "sandbox",
+          });
+
+          let checkoutOptions = {
+            paymentSessionId: paymentId,
+
+            //? Payment page option
+            redirectTarget: "_modal",
+          };
+
+          const result = await cashfree.checkout(checkoutOptions);
+
+          if (result.error) {
+            console.log(
+              "User has closed the popup or there is some payment error, Check for Payment Status"
+            );
+            console.log(result.error);
+          }
+          if (result.redirect) {
+            console.log("Payment will be redirected");
+          }
+          if (result.paymentDetails) {
+            console.log("Payment has been completed, Check for Payment Status");
+            const statusResponse = await axios.get(
+              `${DOMAIN_URL}/api/user/donate/getPaymentStatus/${orderId}`
+            );
+
+            const statusUpdateResponse = await axios.post(
+              `${DOMAIN_URL}/api/user/donate/updateTransactionStatus`,
+              {
+                orderId: orderId,
+                status: statusResponse.data.orderStatus,
+                projectId: projectId,
+                charityId: charityId,
+                donationAmount: donationAmount,
+              },
+              { headers: { Authorization: token } }
+            );
+
+            alert(statusUpdateResponse.data.message);
+          }
+          window.location.reload();
+          getCharityDetails(charityId);
+        }
+      } catch (err) {
+        console.error("Error:", err);
+      }
+    });
+}
+
+
+async function fetchDonationHistory(pageNo) {
+  const donationTableBody = document.getElementById("donation-table-body");
+  if (localStorage.getItem("donation-rowsPerPageSelect")) {
+    donation_rowsPerPageSelect.value = parseInt(localStorage.getItem("donation-rowsPerPageSelect"));
+  }
+  let rowsPerPage = parseInt(donation_rowsPerPageSelect.value);
+  let sno = 1;
+
+  try {
+
+    const response = await axios.get(
+      `${DOMAIN_URL}/api/user/getdonationhistory?pageNo=${pageNo}&rowsPerPage=${rowsPerPage}`,
+      { headers: { Authorization: token } }
+    );
+
+    donationTableBody.innerHTML = "";
+
+    response.data.donations.forEach((donation) => {
+      const date = donation.createdAt;
+      const charityName = donation.charityName;
+      const projectName = donation.projectName;
+      const donationAmount = donation.donationAmount;
+      const receiptUrl = donation.receiptUrl;
+
+      let tr = document.createElement("tr");
+      tr.className = "trStyle";
+
+      donationTableBody.appendChild(tr);
+
+      let th = document.createElement("th");
+      th.setAttribute("scope", "row");
+      tr.appendChild(th);
+      th.appendChild(document.createTextNode(sno++));
+
+      let td1 = document.createElement("td");
+      td1.appendChild(document.createTextNode(date));
+
+      let td2 = document.createElement("td");
+      td2.appendChild(document.createTextNode(charityName));
+
+      let td3 = document.createElement("td");
+      td3.appendChild(document.createTextNode(projectName));
+      
+      let td4 = document.createElement("td");
+      td4.appendChild(document.createTextNode(donationAmount));
+
+      let td5 = document.createElement("td");
+
+      let downloadBtn = document.createElement("button");
+      downloadBtn.className = "btn btn-info btn-sm";
+      downloadBtn.addEventListener("click", () => window.location.href = receiptUrl);
+      downloadBtn.appendChild(document.createTextNode("Download"));
+
+      td5.appendChild(downloadBtn);
+
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      tr.appendChild(td3);
+      tr.appendChild(td4);
+      tr.appendChild(td5);
+    });
+
+    addPaginationNav("donation-table-pagination-nav", pageNo, response.data.totalPages, fetchDonationHistory);
+  } catch (error) {
+    console.error("Error fetching Charities:", error);
+    alert("Failed to load Charities. Please try again.");
   }
 }

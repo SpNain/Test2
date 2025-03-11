@@ -51,6 +51,8 @@ body {
 .active {
   font-weight: bold;
   color: white !important;
+  box-shadow: 0px 5px 9px rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
 }
 
 /* Pending charities cards css */
@@ -95,7 +97,8 @@ body {
 #charities-table-container,
 #pending-charities-container,
 #projects-table-container,
-#charities-filter-container {
+#charities-filter-container,
+#donation-table-container {
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0px 5px 9px rgba(0, 0, 0, 0.5);

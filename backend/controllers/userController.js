@@ -2,7 +2,13 @@ const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 const Charity = require("../models/charityModel");
 const Project = require("../models/projectModel");
+const Order = require("../models/orderModel");
+const Donation = require("../models/donationModel");
 const jwtService = require("../services/jwtService");
+const CashfreeService = require("../services/cashfreeService");
+const { uploadFileToS3 } = require("../services/awsService");
+const { sendEmail } = require("../services/emailService");
+const { generatePDF } = require("../services/pdfService");
 const { Op } = require("sequelize");
 
 exports.postUserSignup = async (req, res, next) => {
@@ -220,6 +226,157 @@ exports.getCharityDetails = async (req, res, next) => {
       include: [{ model: Project, where: { status: "Active" } }], // Include only active projects
     });
     res.status(200).json({ charityDetails: charity });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err });
+  }
+};
+
+exports.createOrder = async (req, res) => {
+  try {
+    const { orderId, orderAmount, orderCurrency = "INR" } = req.body;
+
+    const response = await CashfreeService.createOrder(
+      orderId,
+      orderAmount,
+      orderCurrency,
+      req.user
+    );
+
+    if (response.data) {
+      await req.user.createOrder({
+        orderId: response.data.order_id,
+        paymentId: response.data.payment_session_id,
+        status: "PENDING",
+      });
+
+      res.status(200).json({
+        orderId: response.data.order_id,
+        paymentId: response.data.payment_session_id,
+      });
+    } else {
+      res.status(500).json({ error: "Failed to create order" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getPaymentStatus = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const orderStatus = await CashfreeService.getPaymentStatus(orderId);
+
+    res.status(200).json({ orderStatus });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.updateTransactionStatus = async (req, res) => {
+  try {
+    const { orderId, status, projectId, charityId, donationAmount } = req.body;
+    const order = await Order.findOne({ where: { orderId } });
+
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    await order.update({ status });
+
+    await updateData(projectId, charityId, donationAmount, order, req);
+
+    return res.status(202).json({
+      success: true,
+      message: "Transaction Successful",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+async function updateData(projectId, charityId, donationAmount, order, req) {
+  const project = await Project.findOne({ where: { id: projectId } });
+  const charity = await Charity.findOne({ where: { id: charityId } });
+
+  const updatedRaisedFunds = project.raisedFunds + donationAmount;
+  let projectStatus = project.status;
+
+  if (updatedRaisedFunds >= project.requiredFunds) {
+    projectStatus = "Completed";
+  }
+
+  const donorsEmails = project.donors.map((donor) => donor.email);
+  if (!donorsEmails.includes(req.user.email)) {
+    project.donors.push({ "email": req.user.email });
+  }
+
+  await project.update({
+    raisedFunds: updatedRaisedFunds,
+    status: projectStatus,
+    donors: project.donors,
+  });
+
+  const charityInfo = {
+    name: charity.name,
+  };
+
+  const userInfo = {
+    emails: [req.user.email],
+    subject: "Thank you for your donation",
+    content: `Dear ${req.user.name},\n\nThank you for your generous donation of ${donationAmount} to ${charity.name} for the project ${project.name}.\n\nBest regards,\n${charity.name}`,
+  };
+
+  await sendEmail(charityInfo, userInfo);
+
+  const pdfBuffer = await generatePDF(
+    charity,
+    project,
+    donationAmount,
+    order.paymentId
+  );
+
+  const receiptUrl = await uploadFileToS3({
+    originalname: "receipt.pdf",
+    buffer: pdfBuffer,
+    mimetype: "application/pdf",
+  });
+
+  await req.user.createDonation({
+    paymentId: order.paymentId,
+    charityName: charity.name,
+    projectName: project.name,
+    donationAmount: donationAmount,
+    receiptUrl: receiptUrl,
+  });
+}
+
+
+exports.getDonationHistory = async (req, res, next) => {
+  try {
+    const pageNo = parseInt(req.query.pageNo) || 1;
+    const limit = parseInt(req.query.rowsPerPage) || 10;
+
+    if (pageNo < 1 || limit < 1) {
+      return res.status(400).json({ error: "Invalid pagination parameters" });
+    }
+
+    const offset = (pageNo - 1) * limit;
+    const totalDonations = await Donation.count({
+      where: { userId: req.user.id },
+    });
+
+    const totalPages = Math.ceil(totalDonations / limit);
+
+    const donations = await Donation.findAll({
+      where: { userId: req.user.id },
+      offset: offset,
+      limit: limit,
+    });
+    res.json({ donations: donations, totalPages: totalPages });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err });
