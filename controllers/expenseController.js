@@ -2,7 +2,7 @@ const path = require("path");
 
 const Expense = require("../models/expenseModel");
 const User = require("../models/userModel");
-const sequelize = require("../util/database");
+const Download = require("../models/downloadModel");
 const AwsService = require("../services/awsService");
 
 exports.getHomePage = async (req, res, next) => {
@@ -17,35 +17,23 @@ exports.getHomePage = async (req, res, next) => {
 };
 
 exports.addExpense = async (req, res, next) => {
-  const t = await sequelize.transaction();
   try {
     const { date, category, description, amount } = req.body;
 
-    await User.update(
-      {
-        totalExpenses: req.user.totalExpenses + Number(amount),
-      },
-      {
-        where: { id: req.user.id },
-        transaction: t,
-      }
-    );
+    const user = await User.findById(req.user._id);
+    user.totalExpenses += Number(amount);
+    await user.save();
 
-    await Expense.create(
-      {
-        date,
-        category,
-        description,
-        amount,
-        userId: req.user.id,
-      },
-      { transaction: t }
-    );
+    await Expense.create({
+      date,
+      category,
+      description,
+      amount,
+      userId: req.user._id,
+    });
 
-    await t.commit();
     res.status(200).json({ message: "Expense added successfully." });
   } catch (err) {
-    await t.rollback();
     console.error(err);
     res.status(500).json({ error: err });
   }
@@ -53,7 +41,7 @@ exports.addExpense = async (req, res, next) => {
 
 exports.getAllExpenses = async (req, res, next) => {
   try {
-    const expenses = await Expense.findAll({ where: { userId: req.user.id } });
+    const expenses = await Expense.find({ userId: req.user._id });
     res.status(200).json(expenses);
   } catch (err) {
     console.error(err);
@@ -71,15 +59,13 @@ exports.getAllExpensesForPage = async (req, res, next) => {
     }
 
     const offset = (pageNo - 1) * limit;
-    const totalExpenses = await Expense.count({
-      where: { userId: req.user.id },
+    const totalExpenses = await Expense.countDocuments({
+      userId: req.user._id,
     });
     const totalPages = Math.ceil(totalExpenses / limit);
-    const expenses = await Expense.findAll({
-      where: { userId: req.user.id },
-      offset: offset,
-      limit: limit,
-    });
+    const expenses = await Expense.find({ userId: req.user._id })
+      .skip(offset)
+      .limit(limit);
     res.json({ expenses: expenses, totalPages: totalPages });
   } catch (err) {
     console.error(err);
@@ -88,70 +74,43 @@ exports.getAllExpensesForPage = async (req, res, next) => {
 };
 
 exports.deleteExpense = async (req, res, next) => {
-  const t = await sequelize.transaction();
   const id = req.params.id;
 
   try {
-    const expense = await Expense.findByPk(id, { transaction: t });
+    const expense = await Expense.findOne({ _id: id, userId: req.user._id });
+    const user = await User.findById(req.user._id);
+    user.totalExpenses -= expense.amount;
+    await user.save();
+    await Expense.deleteOne({ _id: id, userId: req.user._id });
 
-    await User.update(
-      {
-        totalExpenses: req.user.totalExpenses - expense.amount,
-      },
-      {
-        where: { id: req.user.id },
-        transaction: t,
-      }
-    );
-
-    await Expense.destroy({
-      where: { id: id, userId: req.user.id },
-      transaction: t,
-    });
-
-    await t.commit();
     res.status(200).json({ message: "Expense deleted successfully." });
   } catch (err) {
-    await t.rollback();
     console.error(err);
     res.status(500).json({ error: err });
   }
 };
 
 exports.editExpense = async (req, res, next) => {
-  const t = await sequelize.transaction();
   try {
     const id = req.params.id;
     const { category, description, amount } = req.body;
 
-    const expense = await Expense.findByPk(id, { transaction: t });
+    const expense = await Expense.findOne({ _id: id, userId: req.user._id });
+    const user = await User.findById(req.user._id);
 
-    await User.update(
+    user.totalExpenses = user.totalExpenses - expense.amount + Number(amount);
+    await user.save();
+
+    await Expense.updateOne(
+      { _id: id, userId: req.user._id },
       {
-        totalExpenses: req.user.totalExpenses - expense.amount + Number(amount),
-      },
-      {
-        where: { id: req.user.id },
-        transaction: t,
+        category: category,
+        description: description,
+        amount: amount,
       }
     );
-
-    await Expense.update(
-      {
-        category,
-        description,
-        amount,
-      },
-      {
-        where: { id: id, userId: req.user.id },
-        transaction: t,
-      }
-    );
-
-    await t.commit();
     res.status(200).json({ message: "Expense updated successfully." });
   } catch (err) {
-    await t.rollback();
     console.error(err);
     res.status(500).json({ error: err });
   }
@@ -159,10 +118,10 @@ exports.editExpense = async (req, res, next) => {
 
 exports.downloadAllExpenses = async (req, res, next) => {
   try {
-
-    const expenses = await req.user.getExpenses({
-      attributes: ["date", "category", "description", "amount"],
-    });
+    const expenses = await Expense.find(
+      { userId: req.user._id },
+      "date category description amount -_id"
+    );
 
     const filename = `AllExpenses/${
       req.user.name
@@ -171,26 +130,26 @@ exports.downloadAllExpenses = async (req, res, next) => {
     let csv = "";
 
     if (expenses.length > 0) {
-      
-      const headers = Object.keys(expenses[0].dataValues);
+      const headers = Object.keys(expenses[0].toObject());
       csv += headers.join(",") + "\n";
 
       expenses.forEach((row) => {
-        const values = headers.map((header) => `"${row.dataValues[header]}"`);
+        const rowObject = row.toObject();
+        const values = headers.map((header) => `"${rowObject[header]}"`);
         csv += values.join(",") + "\n";
       });
     }
 
     const downloadURL = await AwsService.uploadToS3(csv, filename);
 
-    await req.user.createDownload({
-      downloadLink: downloadURL
+    await Download.create({
+      downloadLink: downloadURL,
+      userId: req.user._id,
     });
 
-    res.status(200).json({downloadURL, success:true});
-
+    res.status(200).json({ downloadURL, success: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err , success:false});
+    res.status(500).json({ error: err, success: false });
   }
 };

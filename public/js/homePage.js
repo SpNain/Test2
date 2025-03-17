@@ -72,7 +72,6 @@ async function addExpense() {
 
 async function getAllExpensesForPage(pageNo) {
   try {
-    
     if (localStorage.getItem("rpp")) {
       rowsPerPageSelect.value = parseInt(localStorage.getItem("rpp"));
     }
@@ -86,7 +85,7 @@ async function getAllExpensesForPage(pageNo) {
     tableBody.innerHTML = "";
 
     response.data.expenses.forEach((expenses) => {
-      const id = expenses.id;
+      const id = expenses._id;
       const date = expenses.date;
       const categoryValue = expenses.category;
       const descriptionValue = expenses.description;
@@ -231,12 +230,11 @@ async function editExpense(e) {
       let tr = e.target.parentElement.parentElement;
       let id = tr.children[0].textContent;
 
-      const allExpenses = await axios.get(
-        "/expense/getAllExpenses",
-        { headers: { Authorization: token } }
-      );
+      const allExpenses = await axios.get("/expense/getAllExpenses", {
+        headers: { Authorization: token },
+      });
       allExpenses.data.forEach((expense) => {
-        if (expense.id == id) {
+        if (expense._id == id) {
           categoryValue.textContent = expense.category;
           descriptionValue.value = expense.description;
           amountValue.value = expense.amount;
@@ -372,12 +370,9 @@ async function isPremiumUser() {
 async function downloadAllExpenses() {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get(
-      "/expense/downloadAllExpenses",
-      {
-        headers: { Authorization: token },
-      }
-    );
+    const response = await axios.get("/expense/downloadAllExpenses", {
+      headers: { Authorization: token },
+    });
     window.location.href = response.data.downloadURL;
   } catch (error) {
     console.error("Error in downloading all the expenses:", error);
@@ -391,7 +386,7 @@ document.addEventListener("DOMContentLoaded", isPremiumUser);
 document.addEventListener("DOMContentLoaded", () => getAllExpensesForPage(1));
 rowsPerPageSelect.addEventListener("change", () => {
   localStorage.setItem("rpp", rowsPerPageSelect.value);
-  getAllExpensesForPage(1)
+  getAllExpensesForPage(1);
 });
 
 tableBody.addEventListener("click", (e) => {

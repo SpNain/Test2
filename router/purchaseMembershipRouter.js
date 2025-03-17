@@ -4,7 +4,6 @@ const router = express.Router();
 const purchaseMembershipController = require("../controllers/purchaseMembershipController");
 const authenticatemiddleware = require("../middleware/auth");
 
-
 router.post(
   "/createOrder",
   authenticatemiddleware,

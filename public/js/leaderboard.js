@@ -4,10 +4,9 @@ const logoutBtn = document.getElementById("logoutBtn");
 async function getLeaderboard() {
   try {
     const token = localStorage.getItem("token");
-    const allUsers = await axios.get(
-      "/premium/getAllUsersForLeaderboard",
-      { headers: { Authorization: token } }
-    );
+    const allUsers = await axios.get("/premium/getAllUsersForLeaderboard", {
+      headers: { Authorization: token },
+    });
     let position = 1;
     allUsers.data.forEach((user) => {
       let name = user.name;

@@ -29,19 +29,19 @@ exports.sendMail = async (req, res, next) => {
   try {
     const email = req.body.email;
     const requestId = uuidv4();
-    
-    const recepientEmail = await User.findOne({ where: { email: email } });
-    
+
+    const recepientEmail = await User.findOne({ email: email });
+
     if (!recepientEmail) {
       return res
-      .status(404)
-      .json({ message: "Please provide the registered email!" });
+        .status(404)
+        .json({ message: "Please provide the registered email!" });
     }
-    
+
     await ResetPassword.create({
       id: requestId,
       isActive: true,
-      userId: recepientEmail.dataValues.id,
+      userId: recepientEmail._id,
     });
 
     await sendResetPasswordEmail(email, requestId);
@@ -55,6 +55,7 @@ exports.sendMail = async (req, res, next) => {
     return res.status(409).json({ message: "Failed changing password" });
   }
 };
+
 exports.resetPasswordPage = async (req, res, next) => {
   try {
     res
@@ -67,19 +68,31 @@ exports.resetPasswordPage = async (req, res, next) => {
     res.status(500).json({ error: err });
   }
 };
+
 exports.updatePassword = async (req, res, next) => {
   try {
     const requestId = req.headers.referer.split("/").pop();
-    const resetRequest = await ResetPassword.findOne({ where: { id: requestId, isActive: true } });
+    const resetRequest = await ResetPassword.findOne({
+      id: requestId,
+      isActive: true,
+    });
 
     if (!resetRequest) {
-      return res.status(409).json({ message: "Reset link expired or already used" });
+      return res
+        .status(409)
+        .json({ message: "Reset link expired or already used" });
     }
 
-    await resetRequest.update({ isActive: false });
+    const result = await ResetPassword.updateOne(
+      { id: requestId },
+      { $set: { isActive: false } }
+    );
 
     const newPassword = await hashPassword(req.body.password);
-    await User.update({ password: newPassword }, { where: { id: resetRequest.userId } });
+    await User.updateOne(
+      { _id: resetRequest.userId },
+      { $set: { password: newPassword } }
+    );
 
     return res.status(200).json({ message: "Password updated successfully!" });
   } catch (err) {

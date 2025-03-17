@@ -10,7 +10,7 @@ loginHeader.addEventListener("click", () => {
   // login active hote hi sign up input khaali krdo
   document.getElementById("name").value = "";
   document.getElementById("email").value = "";
-  document.getElementById("password").value ="";
+  document.getElementById("password").value = "";
 });
 
 signupHeader.addEventListener("click", () => {

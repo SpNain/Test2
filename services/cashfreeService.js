@@ -35,17 +35,28 @@ class CashfreeService {
 
   static async getPaymentStatus(orderId) {
     try {
-      const response = await Cashfree.PGOrderFetchPayments("2023-08-01", orderId);
+      const response = await Cashfree.PGOrderFetchPayments(
+        "2023-08-01",
+        orderId
+      );
 
       if (!response.data || response.data.length === 0) {
         return "FAILURE"; // No transactions found
       }
 
-      if (response.data.some(transaction => transaction.payment_status === "SUCCESS")) {
+      if (
+        response.data.some(
+          (transaction) => transaction.payment_status === "SUCCESS"
+        )
+      ) {
         return "SUCCESS";
       }
 
-      if (response.data.some(transaction => transaction.payment_status === "PENDING")) {
+      if (
+        response.data.some(
+          (transaction) => transaction.payment_status === "PENDING"
+        )
+      ) {
         return "PENDING";
       }
 

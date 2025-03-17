@@ -1,4 +1,5 @@
 const path = require("path");
+const Download = require("../models/downloadModel");
 
 exports.getDownloadsPage = async (req, res, next) => {
   try {
@@ -7,16 +8,16 @@ exports.getDownloadsPage = async (req, res, next) => {
     );
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err });
+    res.status(500).json({ error: err.message });
   }
 };
 
 exports.getAllDownloads = async (req, res, next) => {
   try {
-    const allDownloads = await req.user.getDownloads();
+    const allDownloads = await Download.find({ userId: req.user._id });
     res.status(200).json(allDownloads);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err });
+    res.status(500).json({ error: err.message });
   }
-}
+};

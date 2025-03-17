@@ -21,8 +21,8 @@
   border-radius: 20px;
 }
 
-.input-group{
-  width:auto;
+.input-group {
+  width: auto;
 }
 
 .input-group-text {
@@ -35,7 +35,8 @@
   color: white;
 }
 
-#categoryBtn:hover, #submitBtn:hover {
+#categoryBtn:hover,
+#submitBtn:hover {
   background-color: var(--hover-color);
   border: 1px solid var(--hover-color);
 }
@@ -62,7 +63,6 @@
 
 .trStyle:hover {
   background-color: var(--tr-hover-color);
-
 }
 
 button {

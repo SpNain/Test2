@@ -48,10 +48,9 @@ function extractInfo(str) {
 async function getAllDownloads() {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get(
-      "/download/getAllDownloads",
-      { headers: { Authorization: token } }
-    );
+    const response = await axios.get("/download/getAllDownloads", {
+      headers: { Authorization: token },
+    });
 
     let sno = 1;
     response.data.forEach((row) => {

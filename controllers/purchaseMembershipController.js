@@ -6,13 +6,19 @@ exports.createOrder = async (req, res) => {
   try {
     const { orderId, orderAmount = 500, orderCurrency = "INR" } = req.body;
 
-    const response = await CashfreeService.createOrder(orderId, orderAmount, orderCurrency, req.user);
+    const response = await CashfreeService.createOrder(
+      orderId,
+      orderAmount,
+      orderCurrency,
+      req.user
+    );
 
     if (response.data) {
-      await req.user.createOrder({
+      await Order.create({
         orderId: response.data.order_id,
         paymentId: response.data.payment_session_id,
         status: "PENDING",
+        userId: req.user._id,
       });
 
       res.status(200).json({
@@ -43,19 +49,22 @@ exports.getPaymentStatus = async (req, res) => {
 exports.updateTransactionStatus = async (req, res) => {
   try {
     const { orderId, status } = req.body;
-    const order = await Order.findOne({ where: { orderId } });
+    const order = await Order.findOne({ orderId });
 
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    await order.update({ status });
-    await req.user.update({ isPremiumUser: true });
+    order.status = status;
+    await order.save();
+
+    req.user.isPremiumUser = true;
+    await req.user.save();
 
     return res.status(202).json({
       success: true,
       message: "Transaction Successful",
-      token: userController.generateAccessToken(req.user.id, req.user.email),
+      token: userController.generateAccessToken(req.user._id, req.user.email),
     });
   } catch (err) {
     console.error(err);

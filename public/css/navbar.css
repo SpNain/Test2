@@ -1,14 +1,14 @@
 :root {
   --primary-color: #52616b;
   --hover-color: #343d43;
-  --soft-color: #F8F9FA;
+  --soft-color: #f8f9fa;
 }
 
 html,
 body {
   height: 100%;
   width: 100%;
-  background: radial-gradient(circle, var(--soft-color) 10%, #52616B 100%);
+  background: radial-gradient(circle, var(--soft-color) 10%, #52616b 100%);
   color: #424242;
 }
 
@@ -17,8 +17,8 @@ body {
   transition: transform 0.3s ease;
 }
 
-.navbar-brand:hover{
-    color: var(--hover-color);
+.navbar-brand:hover {
+  color: var(--hover-color);
 }
 
 #png:hover {
@@ -40,7 +40,6 @@ body {
 
 .navbar-nav .nav-link:hover {
   color: var(--hover-color);
-
 }
 
 .topBtn {

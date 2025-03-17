@@ -35,6 +35,4 @@ router.get(
   expenseController.downloadAllExpenses
 );
 
-
-
 module.exports = router;

@@ -1,6 +1,5 @@
 const path = require("path");
 const User = require("../models/userModel");
-const sequelize = require("../util/database");
 
 exports.getLeaderboardPage = async (req, res, next) => {
   try {
@@ -15,17 +14,13 @@ exports.getLeaderboardPage = async (req, res, next) => {
 
 exports.getAllUsersForLeaderboard = async (req, res, next) => {
   try {
-    const users = await User.findAll({
-      attributes: [
-        [sequelize.col("name"), "name"],
-        [sequelize.col("totalExpenses"), "totalExpenses"],
-      ],
-      order: [[sequelize.col("totalExpenses"), "DESC"]],
+    const users = await User.find({}, "name totalExpenses").sort({
+      totalExpenses: -1,
     });
 
     const result = users.map((user) => ({
-      name: user.getDataValue("name"),
-      totalExpenses: user.getDataValue("totalExpenses"),
+      name: user.name,
+      totalExpenses: user.totalExpenses,
     }));
 
     res.status(200).json(result);

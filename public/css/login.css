@@ -1,8 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
 
 :root {
-  --primary-color: #52616B;
-  --soft-color: #F8F9FA;
+  --primary-color: #52616b;
+  --soft-color: #f8f9fa;
   --text-color: #424242;
 }
 
@@ -19,7 +19,7 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background: radial-gradient(circle, var(--soft-color) 10%, #52616B 100%);
+  background: radial-gradient(circle, var(--soft-color) 10%, #52616b 100%);
 }
 
 .wrapper {
@@ -28,7 +28,11 @@ body {
   width: 100%;
   border-radius: 12px;
   padding: 20px 30px 120px;
-  background: linear-gradient(360deg, var(--primary-color) 0%, var(--soft-color) 80%);
+  background: linear-gradient(
+    360deg,
+    var(--primary-color) 0%,
+    var(--soft-color) 80%
+  );
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   margin-top: 20px;
