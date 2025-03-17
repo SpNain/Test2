@@ -1,0 +1,70 @@
+:root {
+  --primary-color: #52616B;
+  --secondary-color: #849BA5;
+  --table-color: #eef7fc;
+  --tr-hover-color: rgb(217, 253, 253);
+}
+
+.rTheadId {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.reportTable {
+  border-radius: 10px;
+  background-color: var(--table-color);
+  box-shadow: 2px 2px 9px rgba(0, 0, 0, 0.5), -2px -2px 9px rgba(0, 0, 0, 0.5);
+}
+
+.showBtn {
+  width: 80px;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+.trStyle {
+  background-color: transparent;
+}
+
+.trStyle:hover {
+  background-color: var(--tr-hover-color);
+}
+
+#dailyTotal,
+#dailyTotalAmount,
+#weeklyTotal,
+#weeklyTotalAmount,
+#monthlyTotal,
+#monthlyTotalAmount {
+  font-weight: bolder !important;
+}
+
+.btn-download {
+  background-color: #28a745;
+  color: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1;
+  transition: background-color 0.3s ease;
+}
+
+.btn-download:hover {
+  background-color: #218838;
+}
+
+.btn-download:visited,
+.btn-download:active,
+.btn-download:focus {
+  background-color: #28a745;
+  color: white;
+  text-decoration: none;
+}
